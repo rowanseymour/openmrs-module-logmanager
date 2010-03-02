@@ -39,7 +39,7 @@
 			<th><spring:message code="${moduleId}.loggers.level"/></th>
 			<td>
 				<spring:bind path="params.level">
-					<logmgr_tag:levelList name="${status.expression}" value="${status.value}" showALL="true" showOFF="true" />
+					<logmgr_tag:levelList name="${status.expression}" value="${status.value}" showALL="true" showOFF="true" showInherit="true" />
 				</spring:bind>
 			</td>
 		</tr>	
