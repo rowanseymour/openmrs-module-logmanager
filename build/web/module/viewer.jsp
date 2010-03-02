@@ -79,9 +79,9 @@ function showThrowable(index, show) {
 	
 		<c:forEach var="event" items="${events}" varStatus="rowStatus">
 			<tr class="<c:choose><c:when test="${rowStatus.index % 2 == 0}">evenRow</c:when><c:otherwise>oddRow</c:otherwise></c:choose>">
-				<td valign="top">
+				<td valign="top" width="16">
 					<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/${levelIcons[event.level]}"
-						alt="${event.level}"
+						title="${event.level}"
 						width="16" height="16" />
 				</td>
 				<td nowrap="nowrap" style="font-size: 10px" valign="top">
