@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	        http://www.springframework.org/schema/context
+	        http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	        http://www.springframework.org/schema/util
+	        http://www.springframework.org/schema/util/spring-util-2.0.xsd
+	        http://www.springframework.org/schema/aop
+			http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+	<context:component-scan base-package="org.openmrs.module.logmanager" />
+
+	<!-- ========================= URL mappings ========================== -->
+
+	<bean id="logMgrUrlMapping"
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="order">
+			<value>5</value>
+		</property>
+		<property name="mappings">
+			<props>
+				<prop key="module/logmanager/logger.list">logMgrLoggerListController</prop>
+				<prop key="module/logmanager/logger.form">logMgrLoggerFormController</prop>
+				<prop key="module/logmanager/appender.list">logMgrAppenderListController</prop>
+				<prop key="module/logmanager/appender.form">logMgrAppenderFormController</prop>
+				<prop key="module/logmanager/viewer.htm">logMgrViewerController</prop>
+				<prop key="module/logmanager/config.htm">logMgrConfigController</prop>
+				
+				<prop key="admin/maintenance/serverLog.form">logMgrViewerController</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="logMgrLoggerListController" class="org.openmrs.module.logmanager.web.controller.LoggerListController">
+		<property name="viewName">
+			<value>module/logmanager/loggerList</value>
+		</property>
+	</bean>
+	
+	<bean id="logMgrLoggerFormController" class="org.openmrs.module.logmanager.web.controller.LoggerFormController">
+		<property name="commandName"><value>params</value></property>
+		<property name="formView"><value>module/logmanager/loggerForm</value></property>
+		<property name="successView"><value>logger.list</value></property>
+	</bean>
+	
+	<bean id="logMgrAppenderListController" class="org.openmrs.module.logmanager.web.controller.AppenderListController">
+		<property name="viewName">
+			<value>module/logmanager/appenderList</value>
+		</property>
+	</bean>
+	
+	<bean id="logMgrAppenderFormController" class="org.openmrs.module.logmanager.web.controller.AppenderFormController">
+		<property name="commandName"><value>appender</value></property>
+		<property name="formView"><value>module/logmanager/appenderForm</value></property>
+		<property name="successView"><value>appender.list</value></property>
+		<property name="validator">
+			<bean class="org.openmrs.module.logmanager.validator.AppenderValidator" />
+		</property>
+	</bean>
+	
+	<bean id="logMgrViewerController" class="org.openmrs.module.logmanager.web.controller.ViewerController">
+		<property name="viewName">
+			<value>module/logmanager/viewer</value>
+		</property>
+	</bean>
+	
+	<bean id="logMgrConfigController" class="org.openmrs.module.logmanager.web.controller.ConfigController">
+		<property name="viewName">
+			<value>module/logmanager/config</value>
+		</property>
+	</bean>
+
+	<!-- ========================= Services ========================= -->
+
+	<bean parent="serviceContext">
+		<property name="moduleService">
+			<list>
+				<value>org.openmrs.module.logmanager.LogManagerService</value>
+				<bean
+					class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+					<property name="transactionManager">
+						<ref bean="transactionManager" />
+					</property> <!-- more req stuff -->
+					<property name="target">
+						<bean class="org.openmrs.module.logmanager.impl.LogManagerServiceImpl" />
+					</property>
+					<property name="preInterceptors">
+						<list>
+							<ref bean="authorizationInterceptor" />
+						</list>
+					</property>
+					<property name="transactionAttributeSource">
+						<bean
+							class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+</beans>
