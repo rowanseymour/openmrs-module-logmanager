@@ -6,6 +6,7 @@
 <%@ attribute name="showOFF" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="showALL" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="showAny" required="false" type="java.lang.Boolean" %>
+<%@ attribute name="showInherit" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="value" required="false" type="java.lang.Integer" %>
 
 <c:set var="level_OFF" value="<%= Level.OFF_INT %>" />
@@ -21,6 +22,11 @@
 	<c:if test="${showAny}">
 		<option value="${level_ALL}" ${value == level_ALL ? 'selected="selected"' : ""}>
 			&lt;<spring:message code="general.allOptions" />&gt;
+		</option>
+	</c:if>
+	<c:if test="${showInherit}">
+		<option value="" ${value == null ? 'selected="selected"' : ""}>
+			&lt;<spring:message code="logmanager.level.inherit" />&gt;
 		</option>
 	</c:if>
 	<c:if test="${showOFF}">

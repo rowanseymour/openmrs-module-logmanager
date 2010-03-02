@@ -27,7 +27,7 @@ public class LevelEditor extends PropertyEditorSupport {
 	 */
 	@Override
 	public String getAsText() {
-		return "" + ((Level)getValue()).toInt();
+		return "" + (getValue() != null ? ((Level)getValue()).toInt() : "");
 	}
 
 	/**
@@ -35,8 +35,12 @@ public class LevelEditor extends PropertyEditorSupport {
 	 */
 	@Override
 	public void setAsText(String text) throws IllegalArgumentException {
-		int ordinal = Integer.parseInt(text);
-		setValue(Level.toLevel(ordinal));
+		if (!text.isEmpty()) {
+			int ordinal = Integer.parseInt(text);
+			setValue(Level.toLevel(ordinal));
+		}
+		else
+			setValue(null);
 	}
 	
 }
