@@ -80,6 +80,7 @@
 
 	<table cellpadding="3" cellspacing="0" width="100%">
 		<tr>
+			<th>&nbsp;</th>
 			<th><spring:message code="${moduleId}.loggers.name"/></th>
 			<th><spring:message code="${moduleId}.loggers.level"/></th>
 			<th><spring:message code="${moduleId}.loggers.appenders"/></th>
@@ -87,6 +88,10 @@
 	
 		<c:forEach var="logger" items="${loggers}" varStatus="rowStatus">
 			<tr class="<c:choose><c:when test="${rowStatus.index % 2 == 0}">evenRow</c:when><c:otherwise>oddRow</c:otherwise></c:choose>">
+				<td valign="top" width="16">
+					<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/${levelIcons[logger.effectiveLevel]}"
+						width="16" height="16" title="${logger.effectiveLevel}" />
+				</td>
 				<td>
 					<a href="logger.form?logger=${logger.name}">
 						<c:choose>
@@ -98,14 +103,7 @@
 					</a>
 				</td>
 				<td>
-					<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/${levelIcons[logger.effectiveLevel]}"
-						width="16" height="16" />
-					<c:choose>
-						<c:when test="${logger.level == null}">
-							<i>${logger.effectiveLevel}</i>
-						</c:when>
-						<c:otherwise>${logger.level}</c:otherwise>
-					</c:choose>
+					${logger.level}
 				<td>
 					<c:forEach var="appender" items="${logger.allAppenders}">
 						${appender.name != null ? appender.name : appender.class.simpleName}
