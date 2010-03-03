@@ -40,7 +40,7 @@ function showThrowable(index, show) {
 			<td>	
 				<spring:message code="${moduleId}.viewer.from" />
 				
-				<select name="appender">
+				<select name="viewId">
 					<c:forEach var="app" items="${appenders}">
 						<option value="${app.id}" ${app.id == appender.id ? 'selected="selected"' : ""}>${app.name}</option>
 					</c:forEach>
