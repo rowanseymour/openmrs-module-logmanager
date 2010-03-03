@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
+import org.openmrs.module.logmanager.LoggerProxy;
 import org.openmrs.module.logmanager.util.PagingInfo;
 import org.openmrs.module.logmanager.web.IconFactory;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -53,7 +54,9 @@ public class LoggerListController extends ParameterizableViewController {
 		if (request.getParameter("rootLoggerLevel") != null) {
 			int rootLoggerLevel = ServletRequestUtils.getIntParameter(request, "rootLoggerLevel", Level.ALL_INT);
 			
-			svc.getRootLogger().setLevel(Level.toLevel(rootLoggerLevel));
+			LoggerProxy root = svc.getRootLogger();
+			root.setLevel(Level.toLevel(rootLoggerLevel));
+			root.updateTarget();		
 		}
 		
 		// Add new logger if specified

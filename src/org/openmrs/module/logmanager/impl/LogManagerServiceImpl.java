@@ -23,8 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import javax.swing.event.ListSelectionEvent;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Appender;
@@ -36,6 +34,7 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.logmanager.AppenderProxy;
 import org.openmrs.module.logmanager.LogManagerService;
+import org.openmrs.module.logmanager.LoggerProxy;
 import org.openmrs.module.logmanager.QueryField;
 import org.openmrs.module.logmanager.util.PagingInfo;
 
@@ -49,22 +48,22 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	/**
 	 * @see org.openmrs.module.logmanager.LogManagerService#getRootLogger()
 	 */
-	public Logger getRootLogger() {
-		return LogManager.getRootLogger();
+	public LoggerProxy getRootLogger() {
+		return new LoggerProxy(LogManager.getRootLogger());
 	}
 	
 	/**
 	 * @see org.openmrs.module.logmanager.LogManagerService#getLoggers(boolean, PagingInfo)
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Logger> getLoggers(boolean incImplicit, PagingInfo paging) {
+	public List<LoggerProxy> getLoggers(boolean incImplicit, PagingInfo paging) {
 		Enumeration<Logger> loggersEnum = (Enumeration<Logger>)LogManager.getCurrentLoggers();
 		
 		// Convert enum to a list
-		List<Logger> loggersAll = incImplicit ? Collections.list(loggersEnum) : getNonDynamicLoggersFromEnum(loggersEnum);
+		List<Logger> loggers = incImplicit ? Collections.list(loggersEnum) : getNonDynamicLoggersFromEnum(loggersEnum);
 		
 		// Sort list by logger name
-		Collections.sort(loggersAll, new Comparator<Logger>() {
+		Collections.sort(loggers, new Comparator<Logger>() {
 			public int compare(Logger log1, Logger log2) {
 				return log1.getName().compareTo(log2.getName());
 			}
@@ -72,16 +71,21 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 		
 		if (paging != null)
 			// Select only the loggers for this page
-			return selectListPage(loggersAll, paging);
+			loggers = selectListPage(loggers, paging);
 		
-		return loggersAll;
+		// Convert to proxy objects
+		List<LoggerProxy> proxies = new ArrayList<LoggerProxy>();
+		for (Logger logger : loggers)
+			proxies.add(new LoggerProxy(logger));
+		
+		return proxies;
 	}
 	
 	/**
 	 * @see org.openmrs.module.logmanager.LogManagerService#getAppender(int)
 	 */
 	public AppenderProxy getAppender(int id) throws APIException {
-		Set<AppenderProxy> appenders = getAppenders();
+		Collection<AppenderProxy> appenders = getAppenders(false);
 		for (AppenderProxy appender : appenders)
 			if (appender.getId() == id)
 				return appender;
@@ -92,7 +96,7 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	 * @see org.openmrs.module.logmanager.LogManagerService#getAppenders()
 	 */
 	@SuppressWarnings("unchecked")
-	public Set<AppenderProxy> getAppenders() {
+	public Collection<AppenderProxy> getAppenders(boolean sorted) {
 		Set<AppenderProxy> appenders = new HashSet<AppenderProxy>();
 		
 		// Add appenders attached to the root logger
@@ -110,7 +114,20 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 				appenders.add(new AppenderProxy(appendersEnum.nextElement(), true));
 		}
 		
-		return appenders;
+		// Optionally sort into a list
+		if (sorted) {
+			List<AppenderProxy> appenderList = new ArrayList<AppenderProxy>(appenders);
+			Collections.sort(appenderList, new Comparator<AppenderProxy>() {
+				public int compare(AppenderProxy ap1, AppenderProxy ap2) {
+					String s1 = ap1.getName() != null ? ap1.getName() : "";
+					String s2 = ap2.getName() != null ? ap2.getName() : "";
+					return s1.compareToIgnoreCase(s2);
+				}	
+			});
+			return appenderList;
+		}
+		else
+			return appenders;
 	}
 	
 	/**

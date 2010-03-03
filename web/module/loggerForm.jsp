@@ -49,8 +49,19 @@
 				<c:choose>
 					<c:when test="${!empty appenders}">
 						<c:forEach items="${appenders}" var="appender" varStatus="status">
-							<input type="checkbox" name="appender_${status}" />
-							<span>${appender.name}</span>
+							<input type="checkbox" name="appenders" value="${appender.id}" 
+								${appRelations[appender] == 1 || appRelations[appender] == 2 ? 'checked="checked"' : ''}
+								${appRelations[appender] == 2 ? 'disabled="disabled"' : ''} />
+							<span>
+								<c:choose>
+									<c:when test="${!empty appender.name}">
+										${appender.name}
+									</c:when>
+									<c:otherwise>
+										<i>${appender.displayName}</i>
+									</c:otherwise>
+								</c:choose>
+							</span>
 							<br/>
 						</c:forEach>
 						<br />

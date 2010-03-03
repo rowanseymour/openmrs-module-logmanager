@@ -13,12 +13,10 @@
  */
 package org.openmrs.module.logmanager;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
-import org.apache.log4j.Appender;
 import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
@@ -36,7 +34,7 @@ public interface LogManagerService extends OpenmrsService {
 	 * @return the root logger
 	 * @throws APIException
 	 */
-	public Logger getRootLogger() throws APIException;
+	public LoggerProxy getRootLogger() throws APIException;
 	
 	/**
 	 * Gets all loggers currently being used by log4j
@@ -45,7 +43,7 @@ public interface LogManagerService extends OpenmrsService {
 	 * @return the list of loggers
 	 * @throws APIException
 	 */
-	public List<Logger> getLoggers(boolean incImplicit, PagingInfo paging) throws APIException;
+	public List<LoggerProxy> getLoggers(boolean incImplicit, PagingInfo paging) throws APIException;
 	
 	/**
 	 * Gets the appender with the given id
@@ -57,9 +55,10 @@ public interface LogManagerService extends OpenmrsService {
 	
 	/**
 	 * Gets all the appenders currently attached to a logger
+	 * @param sorted true if method should return a sorted list, otherwise returns a set
 	 * @return the set of appenders
 	 */
-	public Set<AppenderProxy> getAppenders() throws APIException;
+	public Collection<AppenderProxy> getAppenders(boolean sorted) throws APIException;
 	
 	/**
 	 * Gets logging events from a suitable appender

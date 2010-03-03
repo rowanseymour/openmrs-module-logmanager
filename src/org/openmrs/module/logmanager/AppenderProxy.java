@@ -97,6 +97,10 @@ public class AppenderProxy {
 		this.name = name;
 	}
 	
+	public String getDisplayName() {
+		return (name != null && !name.isEmpty()) ? name : ("Anonymous " + target.getClass().getSimpleName());
+	}
+	
 	/**
 	 * @return the layoutType
 	 */
@@ -212,5 +216,22 @@ public class AppenderProxy {
 	 */
 	public void setPort(int port) {
 		this.port = port;
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		AppenderProxy proxy = (AppenderProxy)obj;
+		return proxy.target.equals(this.target);
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return target.hashCode();
 	}
 }

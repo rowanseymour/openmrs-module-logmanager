@@ -24,8 +24,15 @@
 		<tr>
 			<th><spring:message code="${moduleId}.loggers.appenders"/></th>
 			<td>
-				<c:forEach var="appender" items="${rootLogger.allAppenders}">
-					${appender.name != null ? appender.name : appender.class.simpleName}
+				<c:forEach var="appender" items="${rootLogger.appenders}" varStatus="status">								
+					<c:choose>
+						<c:when test="${!empty appender.name}">
+							<a href="appender.form?editId=${appender.id}">${appender.name}</a>${!status.last ? ", " : ""}
+						</c:when>
+						<c:otherwise>
+							<a href="appender.form?editId=${appender.id}"><i>${appender.displayName}</i></a>${!status.last ? ", " : ""}
+						</c:otherwise>
+					</c:choose>	
 				</c:forEach>
 			</td>
 		</tr>
@@ -105,8 +112,15 @@
 				<td>
 					${logger.level}
 				<td>
-					<c:forEach var="appender" items="${logger.allAppenders}">
-						${appender.name != null ? appender.name : appender.class.simpleName}
+					<c:forEach var="appender" items="${logger.appenders}" varStatus="status">					
+						<c:choose>
+							<c:when test="${!empty appender.name}">
+								${appender.name}${!status.last ? ", " : ""}
+							</c:when>
+							<c:otherwise>
+								<i>${appender.displayName}</i>${!status.last ? ", " : ""}
+							</c:otherwise>
+						</c:choose>
 					</c:forEach>
 				</td>
 			</tr>

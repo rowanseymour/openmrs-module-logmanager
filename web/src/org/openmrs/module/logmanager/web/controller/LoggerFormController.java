@@ -12,6 +12,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.logmanager.AppenderProxy;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.LoggerProxy;
 import org.openmrs.module.logmanager.propertyeditor.LevelEditor;
@@ -47,8 +48,23 @@ public class LoggerFormController extends SimpleFormController {
 			HttpServletResponse response, Object command, BindException errors)
 			throws Exception {
 		
-		LoggerProxy proxy = (LoggerProxy)command;
-		proxy.updateTarget();
+		LogManagerService svc = Context.getService(LogManagerService.class);
+		LoggerProxy logger = (LoggerProxy)command;
+		
+		// Remove all appenders
+		logger.removeAllAppenders();
+		
+		// Add those specified on form
+		String[] appIds = request.getParameterValues("appenders");
+		if (appIds != null) {
+			for (String appIdStr : appIds) {
+				int appId = Integer.parseInt(appIdStr);
+				AppenderProxy appender = svc.getAppender(appId);
+				logger.addAppender(appender);
+			}
+		}
+		
+		logger.updateTarget();
 		
 		return new ModelAndView(new RedirectView(getSuccessView()));
 	}
@@ -65,7 +81,14 @@ public class LoggerFormController extends SimpleFormController {
 		
 		LogManagerService svc = Context.getService(LogManagerService.class);
 		
-		map.put("appenders", svc.getAppenders());
+		Map<AppenderProxy, Integer> appRelations = new HashMap<AppenderProxy, Integer>();
+		for (AppenderProxy appender : proxy.getEffectiveAppenders())
+			appRelations.put(appender, 2);
+		for (AppenderProxy appender : proxy.getAppenders())
+			appRelations.put(appender, 1);
+		
+		map.put("appenders", svc.getAppenders(true));
+		map.put("appRelations", appRelations);
 		map.put("existing", proxy.isExisting());
 		
 		return map;
