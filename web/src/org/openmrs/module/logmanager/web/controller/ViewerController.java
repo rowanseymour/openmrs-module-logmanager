@@ -78,15 +78,27 @@ public class ViewerController extends ParameterizableViewController {
 		PagingInfo paging = new PagingInfo(offset, Constants.VIEWER_PAGE_SIZE);
 		model.put("paging", paging);
 		
+		// Get list of existing viewable appenders 
+		Collection<AppenderProxy> appendersAll = svc.getAppenders(true);
+		List<AppenderProxy> appenders = new ArrayList<AppenderProxy>();	
+		for (AppenderProxy app : appendersAll) {
+			if (app.isViewable())
+				appenders.add(app);
+		}
+		
 		// Get specific appender or default to MEMORY_APPENDER
-		int appId = ServletRequestUtils.getIntParameter(request, "id", 0);
+		int viewId = ServletRequestUtils.getIntParameter(request, "viewId", 0);
 		AppenderProxy appender = null;
-		if (appId != 0)
-			appender = svc.getAppender(appId);
+		if (viewId != 0)
+			appender = svc.getAppender(viewId);
 		else {
+			// Try default appender from Constants
 			Appender target = Logger.getRootLogger().getAppender(Constants.DEF_APPENDER);
 			if (target != null)
 				appender = new AppenderProxy(target, true);
+			// Resort to first viewable appender
+			else if (appenders.size() > 0)
+				appender = appenders.get(0);
 		}
 		
 		if (appender != null && appender.isViewable())
@@ -95,15 +107,6 @@ public class ViewerController extends ParameterizableViewController {
 			String msg = getMessageSourceAccessor().getMessage(Constants.MODULE_ID + ".error.invalidAppender");
 			request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, msg);
 			model.put("events", new ArrayList<LoggingEvent>());
-		}
-		
-		// Create list of existing viewable appenders 
-		Collection<AppenderProxy> appendersAll = svc.getAppenders(true);
-		List<AppenderProxy> appenders = new ArrayList<AppenderProxy>();
-		
-		for (AppenderProxy app : appendersAll) {
-			if (app.isViewable())
-				appenders.add(app);
 		}
 		
 		model.put("levelIcons", IconFactory.getLevelIconMap());
