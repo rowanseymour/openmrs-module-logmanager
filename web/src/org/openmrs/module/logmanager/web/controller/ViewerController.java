@@ -14,10 +14,10 @@
 package org.openmrs.module.logmanager.web.controller;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -98,7 +98,7 @@ public class ViewerController extends ParameterizableViewController {
 		}
 		
 		// Create list of existing viewable appenders 
-		Set<AppenderProxy> appendersAll = svc.getAppenders();
+		Collection<AppenderProxy> appendersAll = svc.getAppenders(true);
 		List<AppenderProxy> appenders = new ArrayList<AppenderProxy>();
 		
 		for (AppenderProxy app : appendersAll) {

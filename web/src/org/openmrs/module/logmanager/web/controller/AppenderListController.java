@@ -13,13 +13,9 @@
  */
 package org.openmrs.module.logmanager.web.controller;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -65,16 +61,7 @@ public class AppenderListController extends ParameterizableViewController {
 		Map<String, Object> model = new HashMap<String, Object>();
 		
 		// Get sorted list of existing appenders
-		Set<AppenderProxy> appenderSet = svc.getAppenders();
-		List<AppenderProxy> appenders = new ArrayList<AppenderProxy>(appenderSet);
-		Collections.sort(appenders, new Comparator<AppenderProxy>() {
-			public int compare(AppenderProxy ap1, AppenderProxy ap2) {
-				String s1 = ap1.getName() != null ? ap1.getName() : "";
-				String s2 = ap2.getName() != null ? ap2.getName() : "";
-				return s1.compareToIgnoreCase(s2);
-			}	
-		});
-		
+		Collection<AppenderProxy> appenders = svc.getAppenders(true);	
 		model.put("appenders", appenders);
 		
 		return new ModelAndView(getViewName(), model);

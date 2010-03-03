@@ -12,7 +12,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Appender;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.net.SocketAppender;
 import org.apache.log4j.spi.OptionHandler;
@@ -22,6 +21,7 @@ import org.openmrs.module.logmanager.AppenderType;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LayoutType;
 import org.openmrs.module.logmanager.LogManagerService;
+import org.openmrs.module.logmanager.LoggerProxy;
 import org.openmrs.module.logmanager.propertyeditor.LayoutTypeEditor;
 import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.openmrs.util.MemoryAppender;
@@ -121,7 +121,7 @@ public class AppenderFormController extends SimpleFormController {
 		AppenderProxy appender = (AppenderProxy)command;
 		
 		LogManagerService svc = Context.getService(LogManagerService.class);
-		List<Logger> loggers = svc.getLoggers(false, null);
+		List<LoggerProxy> loggers = svc.getLoggers(false, null);
 		
 		map.put("id", appender.getId());
 		map.put("type", appender.getType());

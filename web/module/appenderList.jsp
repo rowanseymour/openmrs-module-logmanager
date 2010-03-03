@@ -58,16 +58,25 @@ function clearAppender(id) {
 			<th><spring:message code="${moduleId}.appenders.name"/></th>
 			<th><spring:message code="${moduleId}.appenders.type"/></th>
 			<th><spring:message code="${moduleId}.appenders.layout"/></th>
-			<th><spring:message code="general.action"/></th>
+			<th><spring:message code="${moduleId}.appenders.messages"/></th>
 		</tr>
 			
 		<c:forEach var="appender" items="${appenders}" varStatus="rowStatus">
 			<tr class="<c:choose><c:when test="${rowStatus.index % 2 == 0}">evenRow</c:when><c:otherwise>oddRow</c:otherwise></c:choose>">
-				<td>${appender.name}</td>
+				<td>
+					<a href="appender.form?editId=${appender.id}">
+					<c:choose>
+						<c:when test="${!empty appender.name}">
+							${appender.name}
+						</c:when>
+						<c:otherwise>
+							<i>${appender.displayName}</i>
+						</c:otherwise>
+					</c:choose></a>
+				</td>
 				<td>${appender.target.class.simpleName}</td>
 				<td>${appender.layoutStr}</td>
 				<td>
-					<a href="appender.form?editId=${appender.id}"><spring:message code="general.edit"/></a>
 					<c:if test="${appender.viewable}">
 						<a href="viewer.htm?id=${appender.id}"><spring:message code="general.view"/></a>
 					</c:if>

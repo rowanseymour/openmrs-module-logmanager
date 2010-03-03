@@ -13,6 +13,15 @@
  */
 package org.openmrs.module.logmanager;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.log4j.Appender;
+import org.apache.log4j.Category;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -80,6 +89,14 @@ public class LoggerProxy {
 	}
 	
 	/**
+	 * Gets the effective level of the logger
+	 * @return the effective level
+	 */
+	public Level getEffectiveLevel() {
+		return target.getEffectiveLevel();
+	}
+	
+	/**
 	 * Sets the name of the logger
 	 * @param level the level to set
 	 */
@@ -92,5 +109,39 @@ public class LoggerProxy {
 	 */
 	public boolean isExisting() {
 		return existing;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<AppenderProxy> getAppenders() {
+		Set<AppenderProxy> appenders = new HashSet<AppenderProxy>();
+		
+		Enumeration<Appender> appEnum = target.getAllAppenders();
+		while (appEnum.hasMoreElements())
+			appenders.add(new AppenderProxy(appEnum.nextElement(), true));
+		return appenders;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Collection<AppenderProxy> getEffectiveAppenders() {
+		Set<AppenderProxy> appenders = getAppenders();
+		
+		// TODO this won't work with log4j 1.3 !!!
+		Category cat = target;
+		while ((cat = cat.getParent()) != null) {
+			Enumeration<Appender> appEnum = cat.getAllAppenders();
+			while (appEnum.hasMoreElements())
+				appenders.add(new AppenderProxy(appEnum.nextElement(), true));
+		}
+		
+		return appenders;
+	}
+	
+	public void addAppender(AppenderProxy appender) {
+		target.addAppender(appender.getTarget());
+	}
+	
+	public void removeAllAppenders() {
+		if (target != null)
+			target.removeAllAppenders();
 	}
 }
