@@ -23,7 +23,7 @@ import org.apache.log4j.spi.LocationInfo;
  */
 public class ELFunctions {
 	
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	/**
 	 * Formats a timestamp
