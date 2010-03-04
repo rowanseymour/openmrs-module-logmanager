@@ -78,7 +78,8 @@ public class AppenderFormController extends SimpleFormController {
 			HttpServletResponse response, Object command, BindException errors)
 			throws Exception {
 		
-		AppenderProxy appender = (AppenderProxy)command;		
+		AppenderProxy appender = (AppenderProxy)command;
+		boolean exists = appender.isExisting();
 		
 		// Some appenders require initialising after options have been loaded
 		if (appender.isExisting()
@@ -88,13 +89,14 @@ public class AppenderFormController extends SimpleFormController {
 				&& appender.isRestartOnUpdateRequired())
 			appender.getTarget().close();
 		
+		// Ensure appender exists and is synced with proxy
 		appender.updateTarget();
 		
 		// Some appenders require initialising after options have been loaded
 		if (appender.isRestartOnUpdateRequired())
 			((OptionHandler)appender.getTarget()).activateOptions();
 		
-		if (!appender.isExisting()) {
+		if (!exists) {
 			String attachTo = request.getParameter("attachTo");
 			if (attachTo.isEmpty())
 				attachTo = request.getParameter("attachToOther");
@@ -106,7 +108,7 @@ public class AppenderFormController extends SimpleFormController {
 		}
 		
 		LogManagerUtils.setInfoMessage(request, getMessageSourceAccessor(), 
-				Constants.MODULE_ID + ".appenders." + (appender.isExisting() ? "editSuccess" : "createSuccess"));
+				Constants.MODULE_ID + ".appenders." + (exists ? "editSuccess" : "createSuccess"));
 		
 		return new ModelAndView(new RedirectView(getSuccessView()));
 	}
@@ -143,26 +145,24 @@ public class AppenderFormController extends SimpleFormController {
 		String name = request.getParameter("newName");
 		AppenderType type = LogManagerUtils.getAppenderTypeParameter(request, "newType", AppenderType.CONSOLE);
 		
-		// Create the actual target appender object based on the requested type
-		Appender target = null;
+		// Create the appender object based on the requested type
+		AppenderProxy appender = new AppenderProxy(type, name);
 		switch (type) {
-		case CONSOLE:
-			target = new ConsoleAppender();
-			break;
-		case MEMORY: 
-			target = new MemoryAppender();
-			break;
+		case MEMORY:
+			appender.setBufferSize(100);
 		case SOCKET:		
-			target = new SocketAppender(request.getRemoteAddr(), Constants.DEF_PORT);
+			appender.setRemoteHost(request.getRemoteAddr());
+			appender.setPort(Constants.DEF_PORT);
 			break;
 		}
 		
-		// Set general appender properties
-		target.setName(name);
-		if (target.requiresLayout())
-			target.setLayout(new PatternLayout(Constants.DEF_LAYOUT));
+		// Default to pattern layout
+		if (appender.getRequiresLayout()) {
+			appender.setLayoutType(LayoutType.PATTERN);
+			appender.setLayoutPattern(Constants.DEF_LAYOUT);
+		}
 		
-		return new AppenderProxy(target, false);
+		return appender;
 	}
 
 }
