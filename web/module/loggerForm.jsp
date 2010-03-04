@@ -11,7 +11,7 @@
 
 <b class="boxHeader">
 	<c:choose>
-		<c:when test="${existing}">
+		<c:when test="${logger.existing}">
 			<spring:message code="${moduleId}.loggers.editLogger" />
 		</c:when>
 		<c:otherwise>
@@ -20,15 +20,15 @@
 	</c:choose>
 </b>
 <form:form commandName="logger" cssClass="box">
-	<table cellpadding="2" cellspacing="0" width="100%">
+	<table cellpadding="2" cellspacing="2" width="100%">
 		<tr>
 			<th width="200"><spring:message code="${moduleId}.loggers.name"/></th>
 			<td>
 				<c:choose>
-					<c:when test="${root}">
+					<c:when test="${logger.root}">
 						&lt;ROOT&gt;
 					</c:when>
-					<c:when test="${existing}">
+					<c:when test="${logger.existing}">
 						${logger.name}
 					</c:when>
 					<c:otherwise>
@@ -42,7 +42,7 @@
 			<th><spring:message code="${moduleId}.loggers.level"/></th>
 			<td>
 				<spring:bind path="logger.level">
-					<logmgr_tag:levelList name="${status.expression}" value="${status.value}" showALL="true" showOFF="true" showInherit="${not root}" />
+					<logmgr_tag:levelList name="${status.expression}" value="${status.value}" showALL="true" showOFF="true" showInherit="${not logger.root}" />
 				</spring:bind>
 			</td>
 		</tr>	

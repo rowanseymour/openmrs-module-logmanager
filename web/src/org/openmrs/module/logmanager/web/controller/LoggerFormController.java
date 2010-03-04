@@ -102,8 +102,6 @@ public class LoggerFormController extends SimpleFormController {
 		
 		map.put("appenders", svc.getAppenders(true));
 		map.put("appRelations", appRelations);
-		map.put("existing", proxy.isExisting());
-		map.put("root", proxy.isRoot());
 		
 		return map;
 	}

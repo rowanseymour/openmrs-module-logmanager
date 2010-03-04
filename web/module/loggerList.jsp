@@ -13,7 +13,7 @@
 	<spring:message code="${moduleId}.loggers.rootLogger" />
 </b>
 <form method="post" class="box" name="rootLoggerForm">
-	<table cellpadding="2" cellspacing="0" width="100%">
+	<table cellpadding="2" cellspacing="2" width="100%">
 		<tr>
 			<th width="200"><spring:message code="${moduleId}.loggers.level"/></th>
 			<td>

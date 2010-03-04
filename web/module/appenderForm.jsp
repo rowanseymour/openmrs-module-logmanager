@@ -12,16 +12,20 @@
 
 <script type="text/javascript">
 function onChangeAttachTo(value) {
-	document.getElementById("attachToOther").style.display = (value == "") ? "inline" : "none";
+	document.getElementById("attachToOther").style.display = (value == "") ? "" : "none";
 }
 function onChangeLayoutType(value) {
-	document.getElementById("layoutPattern").style.display = (value == <%= LayoutType.PATTERN.ordinal() %>) ? "inline" : "none";
+	var showPattern = (value == <%= LayoutType.PATTERN.ordinal() %>);
+	var showUseLocation = (value == <%= LayoutType.HTML.ordinal() %> || value == <%= LayoutType.XML.ordinal() %>);
+	
+	document.getElementById("layoutPattern").style.display = showPattern ? "" : "none";
+	document.getElementById("useLocationSpan").style.display = showUseLocation ? "" : "none";
 }
 </script>
 
 <b class="boxHeader">
 	<c:choose>
-		<c:when test="${existing}">
+		<c:when test="${appender.existing}">
 			<spring:message code="${moduleId}.appenders.editAppender" />
 		</c:when>
 		<c:otherwise>
@@ -30,34 +34,45 @@ function onChangeLayoutType(value) {
 	</c:choose>
 </b>
 <form:form commandName="appender" cssClass="box">
-	<input type="hidden" name="id" value="${id}" />
-	<table cellpadding="2" cellspacing="0" width="100%">
+	<table cellpadding="2" cellspacing="2" width="100%">
 		<tr>
 			<th width="200"><spring:message code="${moduleId}.appenders.name"/></th>
 			<td>
-				<form:input path="name" />
+				<form:input path="name" cssStyle="width: 300px" />
 				<form:errors path="name" cssClass="error" />
 			</td>
 		</tr>
 		<tr>
 			<th><spring:message code="${moduleId}.appenders.type"/></th>
 			<td>
-				<c:out value="${type}" />
+				<c:out value="${appender.type}" />
 			</td>
 		</tr>
-		<c:if test="${type.ordinal == 1 || type.ordinal == 2}">
+		<c:if test="${appender.requiresLayout}">
 			<tr>
 				<th><spring:message code="${moduleId}.appenders.layout"/></th>
 				<td>
-					<spring:bind path="layoutType">
-						<logmgr_tag:layoutTypeList name="${status.expression}" value="${status.value}" showUnknown="${existing}" onchange="onChangeLayoutType(this.value)" />
-					</spring:bind>
-					<form:input path="layoutPattern" cssStyle="width: 300px; display: ${initLayoutType.ordinal == 2 ? 'inline' : 'none' }" />
-					<form:errors path="layoutPattern" cssClass="error" />
+					<c:choose>
+						<c:when test="${appender.layoutType.ordinal > 0}">
+							<spring:bind path="layoutType">
+								<logmgr_tag:layoutTypeList name="${status.expression}" value="${status.value}" showUnknown="false" onchange="onChangeLayoutType(this.value)" />
+							</spring:bind>
+							<form:input path="layoutPattern" cssStyle="width: 300px; display: ${appender.layoutType.ordinal == 3 ? '' : 'none' }" />
+							<form:errors path="layoutPattern" cssClass="error" />
+							
+							<span id="useLocationSpan" style="display: ${(appender.layoutType.ordinal == 4 || appender.layoutType.ordinal == 5) ? '' : 'none' }">
+								<form:checkbox path="layoutUsesLocation" />
+								<spring:message code="${moduleId}.appenders.useLocationInformation"/>
+							</span>
+						</c:when>
+						<c:otherwise>
+							${appender.layout.class.simpleName}
+						</c:otherwise>
+					</c:choose>
 				</td>		
 			</tr>
 		</c:if>
-		<c:if test="${type.ordinal == 2}">
+		<c:if test="${appender.type.ordinal == 2}">
 			<tr>
 				<th><spring:message code="${moduleId}.appenders.bufferSize"/></th>
 				<td>
@@ -66,7 +81,7 @@ function onChangeLayoutType(value) {
 				</td>		
 			</tr>
 		</c:if>
-		<c:if test="${type.ordinal == 3}">
+		<c:if test="${appender.type.ordinal == 3}">
 			<tr>
 				<th><spring:message code="${moduleId}.appenders.host"/></th>
 				<td>
@@ -76,7 +91,7 @@ function onChangeLayoutType(value) {
 				</td>
 			</tr>
 		</c:if>
-		<c:if test="${!existing}">
+		<c:if test="${not appender.existing}">
 			<tr>
 				<th><spring:message code="${moduleId}.appenders.attachTo"/></th>
 				<td>
