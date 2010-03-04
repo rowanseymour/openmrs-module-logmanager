@@ -14,7 +14,7 @@
 </b>
 <table class="box" cellpadding="2" cellspacing="0" width="100%">
 	<tr>
-		<td>
+		<td width="150">
 			<form method="post" name="clearForm">
 				<input type="hidden" name="clear" value="1" /> 
 				<input type="submit" value="<spring:message code="${moduleId}.config.clear" />" />
@@ -40,22 +40,30 @@
 </b>
 <table class="box" cellpadding="2" cellspacing="0" width="100%">
 	<tr>
-		<td>
-			<form method="post" name="hibernateSQLStartForm">
-				<input type="hidden" name="startSQL" value="1" /> 
-				<input type="submit" value="<spring:message code="${moduleId}.config.start" />" />
+		<td width="150">
+			<form method="post">
+				<c:choose>
+					<c:when test="${sqlLoggerStarted}">
+						<input type="hidden" name="stopSQL" value="1" /> 
+						<input type="submit" value="<spring:message code="${moduleId}.config.stop" />" />
+					</c:when>
+					<c:otherwise>
+						<input type="hidden" name="startSQL" value="1" /> 
+						<input type="submit" value="<spring:message code="${moduleId}.config.start" />" />
+					</c:otherwise>
+				</c:choose>
 			</form>
 		</td>
-		<td><spring:message code="${moduleId}.config.startMsg" /></td>
-	</tr>
-	<tr>
 		<td>
-			<form method="post" name="hibernateSQLStopForm">
-				<input type="hidden" name="stopSQL" value="1" /> 
-				<input type="submit" value="<spring:message code="${moduleId}.config.stop" />" />
-			</form>
+			<c:choose>
+				<c:when test="${sqlLoggerStarted}">
+					<spring:message code="${moduleId}.config.stopMsg" arguments="${sqlLoggerName}" />
+				</c:when>
+				<c:otherwise>
+					<spring:message code="${moduleId}.config.startMsg" arguments="${sqlLoggerName}" />
+				</c:otherwise>
+			</c:choose>		
 		</td>
-		<td><spring:message code="${moduleId}.config.stopMsg" /></td>
 	</tr>
 </table>
 

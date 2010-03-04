@@ -22,7 +22,7 @@
 <form:form commandName="logger" cssClass="box">
 	<table cellpadding="2" cellspacing="2" width="100%">
 		<tr>
-			<th width="200"><spring:message code="${moduleId}.loggers.name"/></th>
+			<th width="150"><spring:message code="${moduleId}.loggers.name"/></th>
 			<td>
 				<c:choose>
 					<c:when test="${logger.root}">
