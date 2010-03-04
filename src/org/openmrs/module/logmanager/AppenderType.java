@@ -41,11 +41,11 @@ public enum AppenderType {
 	public String toString() {
 		switch (this) {
 		case CONSOLE:
-			return "ConsoleAppender";
+			return "Console";
 		case MEMORY:
-			return "MemoryAppender";
+			return "Memory";
 		case SOCKET:
-			return "SocketAppender";
+			return "Socket";
 		}
 		return "Unknown";
 	}

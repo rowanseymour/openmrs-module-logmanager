@@ -4,11 +4,15 @@ import java.util.Collection;
 
 import org.apache.commons.collections.buffer.CircularFifoBuffer;
 import org.apache.log4j.Appender;
+import org.apache.log4j.HTMLLayout;
+import org.apache.log4j.Layout;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.SimpleLayout;
+import org.apache.log4j.TTCCLayout;
 import org.apache.log4j.net.SocketAppender;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.OptionHandler;
+import org.apache.log4j.xml.XMLLayout;
 import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.openmrs.util.MemoryAppender;
 
@@ -20,12 +24,16 @@ public class AppenderProxy {
 	protected Appender target = null;
 	protected boolean existing = true;
 	
+	// Proxied properties
 	protected String name;
 	protected LayoutType layoutType;
-	protected String layoutPattern;
 	protected int bufferSize;
 	protected String remoteHost;
 	protected int port;
+	
+	// Proxied properties of the layout
+	protected String layoutPattern;
+	protected boolean layoutUsesLocation;
 	
 	/**
 	 * Creates an appender proxy based on the given appender
@@ -37,10 +45,14 @@ public class AppenderProxy {
 		this.existing = existing;
 		
 		this.name = target.getName();
+		
 		if (target.getLayout() != null) {
-			this.layoutType = LayoutType.fromLayout(target.getLayout());
-			if (target.getLayout() instanceof PatternLayout)
-				this.layoutPattern = ((PatternLayout)target.getLayout()).getConversionPattern();
+			Layout layout = target.getLayout();
+			this.layoutType = LayoutType.fromLayout(layout);
+			if (layout instanceof PatternLayout)
+				this.layoutPattern = ((PatternLayout)layout).getConversionPattern();
+			if (layout instanceof HTMLLayout)
+				this.layoutUsesLocation = ((HTMLLayout)layout).getLocationInfo();
 		}
 		
 		if (target instanceof MemoryAppender)
@@ -51,18 +63,34 @@ public class AppenderProxy {
 		}
 	}
 	
+	/**
+	 * Updates the actual appender referenced by this proxy object
+	 */
 	public void updateTarget() {
 		target.setName(name);
 		
 		if (target.requiresLayout()) {
+			Layout layout = null;
 			switch (layoutType) {
 			case SIMPLE:
-				target.setLayout(new SimpleLayout());
+				layout = new SimpleLayout();
+				break;
+			case TTCC:
+				layout = new TTCCLayout();
 				break;
 			case PATTERN:
-				target.setLayout(new PatternLayout(layoutPattern));
+				layout = new PatternLayout(layoutPattern);
+				break;
+			case HTML:
+				layout = new HTMLLayout();
+				((HTMLLayout)layout).setLocationInfo(layoutUsesLocation);
+				break;
+			case XML:
+				layout = new XMLLayout();
+				((XMLLayout)layout).setLocationInfo(layoutUsesLocation);
 				break;
 			}
+			target.setLayout(layout);
 		}
 		
 		if (target instanceof MemoryAppender)
@@ -101,6 +129,10 @@ public class AppenderProxy {
 		return (name != null && !name.isEmpty()) ? name : ("Anonymous " + target.getClass().getSimpleName());
 	}
 	
+	public boolean getRequiresLayout() {
+		return target.requiresLayout();
+	}
+	
 	/**
 	 * @return the layoutType
 	 */
@@ -128,6 +160,14 @@ public class AppenderProxy {
 	public void setLayoutPattern(String layoutPattern) {
 		this.layoutPattern = layoutPattern;
 	}
+	
+	public boolean getLayoutUsesLocation() {
+		return layoutUsesLocation;
+	}
+	
+	public void setLayoutUsesLocation(boolean layoutUsesLocation) {
+		this.layoutUsesLocation = layoutUsesLocation;
+	}
 
 	public boolean isRestartOnUpdateRequired() {
 		return this.target instanceof OptionHandler;
@@ -135,10 +175,16 @@ public class AppenderProxy {
 	
 	public String getLayoutStr() {
 		if (target.requiresLayout()) {
-			Class<?> layoutClazz = target.getLayout().getClass();
-			return layoutClazz.isAssignableFrom(PatternLayout.class)
-				? ((PatternLayout)target.getLayout()).getConversionPattern()
-				: layoutClazz.getSimpleName();
+			Layout layout = target.getLayout();
+			LayoutType layoutType = LayoutType.fromLayout(layout);
+			
+			if (layout instanceof PatternLayout)
+				return ((PatternLayout)layout).getConversionPattern();
+			else if (layoutType != LayoutType.UNKNOWN) {
+				return layoutType.toString();
+			}
+			else
+				return layout.getClass().getSimpleName();
 		}
 		return "";
 	}

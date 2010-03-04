@@ -118,15 +118,10 @@ public class AppenderFormController extends SimpleFormController {
 	protected Map<String, Object> referenceData(HttpServletRequest request, Object command,
 			Errors errors) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		AppenderProxy appender = (AppenderProxy)command;
 		
 		LogManagerService svc = Context.getService(LogManagerService.class);
 		List<LoggerProxy> loggers = svc.getLoggers(false, null);
 		
-		map.put("id", appender.getId());
-		map.put("type", appender.getType());
-		map.put("initLayoutType", appender.getLayoutType());
-		map.put("existing", appender.isExisting());
 		map.put("loggers", loggers);
 		return map;
 	}
