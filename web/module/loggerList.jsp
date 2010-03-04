@@ -51,7 +51,7 @@
 			<td>
 				<input type="text" name="newLoggerName" style="width: 400px" value="${param.newLoggerName}" />
 				<c:if test="${newLoggerNameError != null}">
-					<span class="error"><spring:message code="${moduleId}.error.invalidLoggerName"/></span>
+					<span class="error"><spring:message code="${moduleId}.error.name"/></span>
 				</c:if>
 			</td>
 			<td rowspan="2" align="right" valign="top">

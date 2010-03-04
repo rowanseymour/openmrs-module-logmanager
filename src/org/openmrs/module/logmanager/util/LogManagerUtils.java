@@ -21,6 +21,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.logmanager.AppenderType;
 import org.openmrs.module.logmanager.QueryField;
+import org.openmrs.web.WebConstants;
+import org.springframework.context.support.MessageSourceAccessor;
 
 /**
  * Various utility methods
@@ -90,5 +92,27 @@ public class LogManagerUtils {
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * Sets the OpenMRS info message value which is displayed at the top of the page
+	 * @param request the request object
+	 * @param msgs the message source
+	 * @param code the message code
+	 */
+	public static void setInfoMessage(HttpServletRequest request, MessageSourceAccessor msgs, String code) {
+		String msg = msgs.getMessage(code);
+		request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, msg);
+	}
+	
+	/**
+	 * Sets the OpenMRS error message value which is displayed at the top of the page
+	 * @param request the request object
+	 * @param msgs the message source
+	 * @param code the message code
+	 */
+	public static void setErrorMessage(HttpServletRequest request, MessageSourceAccessor msgs, String code) {
+		String msg = msgs.getMessage(code);
+		request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, msg);
 	}
 }
