@@ -94,7 +94,7 @@ public class ViewerController extends ParameterizableViewController {
 			// Try default appender from Constants
 			Appender target = Logger.getRootLogger().getAppender(Constants.DEF_APPENDER);
 			if (target != null)
-				appender = new AppenderProxy(target, true);
+				appender = new AppenderProxy(target);
 			// Resort to first viewable appender
 			else if (appenders.size() > 0)
 				appender = appenders.get(0);

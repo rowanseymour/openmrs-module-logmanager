@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.apache.commons.collections.buffer.CircularFifoBuffer;
 import org.apache.log4j.Appender;
+import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.HTMLLayout;
 import org.apache.log4j.Layout;
 import org.apache.log4j.PatternLayout;
@@ -22,7 +23,7 @@ import org.openmrs.util.MemoryAppender;
  */
 public class AppenderProxy {
 	protected Appender target = null;
-	protected boolean existing = true;
+	protected AppenderType type;
 	
 	// Proxied properties
 	protected String name;
@@ -35,14 +36,18 @@ public class AppenderProxy {
 	protected String layoutPattern;
 	protected boolean layoutUsesLocation;
 	
+	public AppenderProxy(AppenderType type, String name) {
+		this.type = type;
+		this.name = name;
+	}
+	
 	/**
 	 * Creates an appender proxy based on the given appender
 	 * @param target the appender
-	 * @param existing true if appender exists in the log4j system
 	 */
-	public AppenderProxy(Appender target, boolean existing) {
+	public AppenderProxy(Appender target) {
 		this.target = target;
-		this.existing = existing;
+		this.type = AppenderType.fromAppender(target);
 		
 		this.name = target.getName();
 		
@@ -67,9 +72,25 @@ public class AppenderProxy {
 	 * Updates the actual appender referenced by this proxy object
 	 */
 	public void updateTarget() {
+		// Create target if it doesn't exist
+		if (target == null) {
+			switch (type) {
+			case CONSOLE:
+				target = new ConsoleAppender();
+				break;
+			case MEMORY: 
+				target = new MemoryAppender();
+				((MemoryAppender)target).setBufferSize(bufferSize);
+				break;
+			case SOCKET:		
+				target = new SocketAppender(remoteHost, port);
+				break;
+			}
+		}
+		
 		target.setName(name);
 		
-		if (target.requiresLayout()) {
+		if (getRequiresLayout()) {
 			Layout layout = null;
 			switch (layoutType) {
 			case SIMPLE:
@@ -92,35 +113,52 @@ public class AppenderProxy {
 			}
 			target.setLayout(layout);
 		}
-		
-		if (target instanceof MemoryAppender)
-			((MemoryAppender)target).setBufferSize(bufferSize);
-		else if (target instanceof SocketAppender) {
-			((SocketAppender)target).setRemoteHost(remoteHost);
-			((SocketAppender)target).setPort(port);
-		}
 	}
 
+	/**
+	 * Gets the appender referenced by this proxy
+	 * @return the target appender
+	 */
 	public Appender getTarget() {
 		return target;
 	}
 	
+	/**
+	 * Gets whether this proxy references an actual appender
+	 * @return true if appender exists in log4j
+	 */
 	public boolean isExisting() {
-		return existing;
+		return (target != null);
 	}
 	
+	/**
+	 * Gets the id of this appender or zero if target appender doesn't exist
+	 * @return the appender id
+	 */
 	public int getId() {
-		return target.hashCode();
+		return (target != null) ? target.hashCode() : 0;
 	}
 	
+	/**
+	 * Gets the type of the appender
+	 * @return the type
+	 */
 	public AppenderType getType() {
-		return AppenderType.fromAppender(target);
+		return type;
 	}
 	
+	/**
+	 * Gets the name of the appender
+	 * @return the name
+	 */
 	public String getName() {
 		return name;
 	}
 	
+	/**
+	 * Sets the name of the appender
+	 * @param name the name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -130,7 +168,7 @@ public class AppenderProxy {
 	}
 	
 	public boolean getRequiresLayout() {
-		return target.requiresLayout();
+		return (type == AppenderType.CONSOLE);
 	}
 	
 	/**
@@ -174,17 +212,14 @@ public class AppenderProxy {
 	}
 	
 	public String getLayoutStr() {
-		if (target.requiresLayout()) {
-			Layout layout = target.getLayout();
-			LayoutType layoutType = LayoutType.fromLayout(layout);
-			
-			if (layout instanceof PatternLayout)
-				return ((PatternLayout)layout).getConversionPattern();
+		if (getRequiresLayout()) {
+			if (layoutType == LayoutType.PATTERN)
+				return layoutPattern;
 			else if (layoutType != LayoutType.UNKNOWN) {
 				return layoutType.toString();
 			}
-			else
-				return layout.getClass().getSimpleName();
+			else if (target != null)
+				return target.getLayout().getClass().getSimpleName();
 		}
 		return "";
 	}
@@ -204,22 +239,22 @@ public class AppenderProxy {
 		return buffer;
 	}
 	
+	public boolean isClearable() {
+		return target instanceof MemoryAppender;
+	}
+	
 	/**
 	 * Clears the events from this appender
 	 */
 	public void clear() {
 		if (!isClearable())
-			throw new RuntimeException("Attemped to clear a non-clearable appender");
+			throw new RuntimeException("Attemped to clear events on a non-clearable appender");
 		
 		// Buffer is a private field in the MemoryAppender class
 		CircularFifoBuffer buffer = (CircularFifoBuffer)LogManagerUtils.getPrivateField(target, "buffer");
 		
 		if (buffer != null)
 			buffer.clear();
-	}
-	
-	public boolean isClearable() {
-		return target instanceof MemoryAppender;
 	}
 
 	/**
@@ -278,6 +313,6 @@ public class AppenderProxy {
 	 */
 	@Override
 	public int hashCode() {
-		return target.hashCode();
+		return target != null ? target.hashCode() : super.hashCode();
 	}
 }

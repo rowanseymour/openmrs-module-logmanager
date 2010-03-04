@@ -57,7 +57,7 @@ public class LoggerProxy {
 		
 		Enumeration<Appender> appEnum = target.getAllAppenders();
 		while (appEnum.hasMoreElements())
-			this.appenders.add(new AppenderProxy(appEnum.nextElement(), true));
+			this.appenders.add(new AppenderProxy(appEnum.nextElement()));
 	}
 	
 	/**
@@ -79,6 +79,7 @@ public class LoggerProxy {
 	/**
 	 * Updates the actual logger referenced by this proxy object
 	 */
+	@SuppressWarnings("unchecked")
 	public void updateTarget() {
 		// Create target if it doesn't exist already
 		if (target == null)
@@ -86,7 +87,12 @@ public class LoggerProxy {
 		
 		target.setLevel(level);
 		
-		target.removeAllAppenders();
+		// For some unknown reason... calling removeAllAppenders() on the
+		// the root logger breaks it, but this is fine
+		Enumeration<Appender> apps = target.getAllAppenders();
+		while (apps.hasMoreElements())
+			target.removeAppender(apps.nextElement());
+		
 		for (AppenderProxy appender : appenders)
 			target.addAppender(appender.getTarget());
 	}
@@ -132,7 +138,7 @@ public class LoggerProxy {
 	}
 
 	/**
-	 * Gets whether this logger exists in the log4j system yet
+	 * Gets whether this proxy references an actual logger
 	 * @return true if logger exists in log4j
 	 */
 	public boolean isExisting() {
@@ -161,14 +167,14 @@ public class LoggerProxy {
 			while ((cat = cat.getParent()) != null) {
 				Enumeration<Appender> appEnum = cat.getAllAppenders();
 				while (appEnum.hasMoreElements())
-					effAppenders.add(new AppenderProxy(appEnum.nextElement(), true));
+					effAppenders.add(new AppenderProxy(appEnum.nextElement()));
 			}
 		}
 		// Even non-existent loggers inherit from the root... in theory
 		else {
 			Enumeration<Appender> appEnum = LogManager.getRootLogger().getAllAppenders();
 			while (appEnum.hasMoreElements())
-				effAppenders.add(new AppenderProxy(appEnum.nextElement(), true));
+				effAppenders.add(new AppenderProxy(appEnum.nextElement()));
 		}
 		
 		return effAppenders;

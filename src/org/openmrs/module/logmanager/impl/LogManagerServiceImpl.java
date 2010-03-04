@@ -95,7 +95,7 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 		// Add appenders attached to the root logger
 		Enumeration<Appender> rootAppenders = LogManager.getRootLogger().getAllAppenders();
 		while (rootAppenders.hasMoreElements())
-			appenders.add(new AppenderProxy(rootAppenders.nextElement(), true));
+			appenders.add(new AppenderProxy(rootAppenders.nextElement()));
 		
 		// Search for appenders on all other loggers
 		Enumeration<Logger> loggersEnum = LogManager.getCurrentLoggers();
@@ -104,7 +104,7 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 			Enumeration<Appender> appendersEnum = logger.getAllAppenders();
 			
 			while (appendersEnum.hasMoreElements())
-				appenders.add(new AppenderProxy(appendersEnum.nextElement(), true));
+				appenders.add(new AppenderProxy(appendersEnum.nextElement()));
 		}
 		
 		// Optionally sort into a list
