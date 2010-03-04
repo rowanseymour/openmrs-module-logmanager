@@ -105,8 +105,8 @@ public class AppenderFormController extends SimpleFormController {
 				LogManager.getLogger(attachTo).addAppender(appender.getTarget());
 		}
 		
-		String msg = getMessageSourceAccessor().getMessage(Constants.MODULE_ID + ".appenders." + (appender.isExisting() ? "editSuccess" : "createSuccess"));
-		request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, msg);
+		LogManagerUtils.setInfoMessage(request, getMessageSourceAccessor(), 
+				Constants.MODULE_ID + ".appenders." + (appender.isExisting() ? "editSuccess" : "createSuccess"));
 		
 		return new ModelAndView(new RedirectView(getSuccessView()));
 	}

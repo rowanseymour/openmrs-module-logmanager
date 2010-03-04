@@ -36,7 +36,6 @@ import org.openmrs.module.logmanager.QueryField;
 import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.openmrs.module.logmanager.util.PagingInfo;
 import org.openmrs.module.logmanager.web.IconFactory;
-import org.openmrs.web.WebConstants;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
@@ -101,13 +100,19 @@ public class ViewerController extends ParameterizableViewController {
 				appender = appenders.get(0);
 		}
 		
-		if (appender != null && appender.isViewable())
-			model.put("events", svc.getAppenderEvents(appender, level, queryField, queryValue, paging));
-		else {
-			String msg = getMessageSourceAccessor().getMessage(Constants.MODULE_ID + ".error.invalidAppender");
-			request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, msg);
-			model.put("events", new ArrayList<LoggingEvent>());
+		if (appender != null) {
+			if (appender.isViewable())
+				model.put("events", svc.getAppenderEvents(appender, level, queryField, queryValue, paging));
+			else {
+				model.put("events", new ArrayList<LoggingEvent>());
+				LogManagerUtils.setErrorMessage(request, getMessageSourceAccessor(), Constants.MODULE_ID + ".error.invalidAppender");
+			}
 		}
+		else {
+			model.put("events", new ArrayList<LoggingEvent>());
+			LogManagerUtils.setErrorMessage(request, getMessageSourceAccessor(), Constants.MODULE_ID + ".error.noSuitableAppender");
+		}
+
 		
 		model.put("levelIcons", IconFactory.getLevelIconMap());
 		model.put("appender", appender);
