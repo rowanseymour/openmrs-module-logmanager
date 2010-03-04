@@ -30,4 +30,6 @@ public class Constants {
 	
 	public static final int RESULTS_PAGE_SIZE = 25;
 	public static final int VIEWER_PAGE_SIZE = 100;
+	
+	public static final String LOGGER_HIBERNATE_SQL = "org.hibernate.SQL";
 }

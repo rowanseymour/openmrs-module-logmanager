@@ -15,6 +15,8 @@ package org.openmrs.module.logmanager.web.controller;
 
 import java.net.URL;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,10 +24,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.LogLog;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.openmrs.module.Module;
 import org.openmrs.module.ModuleFactory;
+import org.openmrs.module.logmanager.Constants;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
@@ -51,7 +55,14 @@ public class ConfigController extends ParameterizableViewController {
 		else if (request.getParameter("stopSQL") != null)		
 			setHibernateSQLLogging(false);
 		
-		return new ModelAndView(getViewName());
+		Logger sqlLogger = LogManager.exists(Constants.LOGGER_HIBERNATE_SQL);
+		Level sqlLoggerLevel = (sqlLogger != null) ? sqlLogger.getLevel() : null;
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("sqlLoggerName", Constants.LOGGER_HIBERNATE_SQL);
+		model.put("sqlLoggerStarted", sqlLoggerLevel.toInt() <= Level.DEBUG.toInt());
+		
+		return new ModelAndView(getViewName(), model);
 	}
 	
 	/**

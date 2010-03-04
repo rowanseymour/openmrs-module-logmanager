@@ -80,16 +80,17 @@ public class AppenderProxy {
 				break;
 			case MEMORY: 
 				target = new MemoryAppender();
-				((MemoryAppender)target).setBufferSize(bufferSize);
 				break;
 			case SOCKET:		
-				target = new SocketAppender(remoteHost, port);
+				target = new SocketAppender();
 				break;
 			}
 		}
 		
+		// Update general properties
 		target.setName(name);
 		
+		// Update layout
 		if (getRequiresLayout()) {
 			Layout layout = null;
 			switch (layoutType) {
@@ -112,6 +113,14 @@ public class AppenderProxy {
 				break;
 			}
 			target.setLayout(layout);
+		}
+		
+		// Update subclass properties
+		if (target instanceof MemoryAppender)
+			((MemoryAppender)target).setBufferSize(bufferSize);
+		if (target instanceof SocketAppender) {
+			((SocketAppender)target).setRemoteHost(remoteHost);
+			((SocketAppender)target).setPort(port);
 		}
 	}
 

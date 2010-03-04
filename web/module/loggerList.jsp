@@ -15,7 +15,7 @@
 <form method="post" class="box" name="rootLoggerForm">
 	<table cellpadding="2" cellspacing="2" width="100%">
 		<tr>
-			<th width="200"><spring:message code="${moduleId}.loggers.level"/></th>
+			<th width="150"><spring:message code="${moduleId}.loggers.level"/></th>
 			<td>
 				<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/${levelIcons[rootLogger.level]}"
 						width="16" height="16" title="${levelLabels[rootLogger.level]}" />
@@ -53,7 +53,7 @@
 <form method="get" class="box" action="logger.form">
 	<table cellpadding="2" cellspacing="0" width="100%">
 		<tr>
-			<th width="200"><spring:message code="${moduleId}.loggers.name"/></th>
+			<th width="150"><spring:message code="${moduleId}.loggers.name"/></th>
 			<td>
 				<input type="text" name="logger" style="width: 400px" />
 			</td>

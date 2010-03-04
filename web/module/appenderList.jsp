@@ -24,7 +24,7 @@ function clearAppender(id) {
 <form method="get" class="box" name="newAppenderForm" action="appender.form">
 	<table cellpadding="2" cellspacing="2" width="100%">
 		<tr>
-			<th width="200"><spring:message code="${moduleId}.appenders.name"/></th>
+			<th width="150"><spring:message code="${moduleId}.appenders.name"/></th>
 			<td>
 				<input type="text" name="newName" style="width: 300px" />
 			</td>
