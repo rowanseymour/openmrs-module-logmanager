@@ -61,6 +61,22 @@ public class LoggerProxy {
 	}
 	
 	/**
+	 * Gets a proxy of the root logger
+	 * @return the proxy root logger
+	 */
+	public static LoggerProxy getRootLogger() {
+		return new LoggerProxy(LogManager.getRootLogger());
+	}
+	
+	/**
+	 * Returns true if proxy references the root logger
+	 * @return true if this logger is root
+	 */
+	public boolean isRoot() {
+		return target == LogManager.getRootLogger();
+	}
+	
+	/**
 	 * Updates the actual logger referenced by this proxy object
 	 */
 	public void updateTarget() {

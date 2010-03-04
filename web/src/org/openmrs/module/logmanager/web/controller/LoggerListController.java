@@ -21,12 +21,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.Level;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.LoggerProxy;
-import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.openmrs.module.logmanager.util.PagingInfo;
 import org.openmrs.module.logmanager.web.IconFactory;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -50,17 +48,6 @@ public class LoggerListController extends ParameterizableViewController {
 		Map<String, Object> model = new HashMap<String, Object>();
 		LogManagerService svc = Context.getService(LogManagerService.class);
 		
-		// Update root logger if specified
-		if (request.getParameter("rootLoggerLevel") != null) {
-			int rootLoggerLevel = ServletRequestUtils.getIntParameter(request, "rootLoggerLevel", Level.ALL_INT);
-			
-			LoggerProxy root = svc.getRootLogger();
-			root.setLevel(Level.toLevel(rootLoggerLevel));
-			root.updateTarget();	
-			
-			LogManagerUtils.setInfoMessage(request, getMessageSourceAccessor(), Constants.MODULE_ID + ".loggers.editRootSuccess");
-		}
-		
 		// Get paging info
 		int offset = ServletRequestUtils.getIntParameter(request, "offset", 0);
 		PagingInfo paging = new PagingInfo(offset, Constants.RESULTS_PAGE_SIZE);
@@ -68,8 +55,7 @@ public class LoggerListController extends ParameterizableViewController {
 		boolean incImplicit = request.getParameter("incImplicit") != null;
 		
 		model.put("loggers", svc.getLoggers(incImplicit, paging));
-		model.put("rootLogger", svc.getRootLogger());
-		model.put("rootLoggerLevel", svc.getRootLogger().getLevel().toInt());
+		model.put("rootLogger", LoggerProxy.getRootLogger());
 		model.put("paging", paging);
 		model.put("incImplicit", incImplicit);
 		model.put("levelLabels", IconFactory.getLevelLabelMap());
