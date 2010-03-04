@@ -69,8 +69,15 @@ public class LoggerFormController extends SimpleFormController {
 		// Update real logger object
 		logger.updateTarget();
 		
-		LogManagerUtils.setInfoMessage(request, getMessageSourceAccessor(), 
-				Constants.MODULE_ID + ".loggers." + (logger.isExisting() ? "editSuccess" : "addSuccess"));
+		String msg = "";
+		if (logger.isRoot())
+			msg = "editRootSuccess";
+		else if (logger.isExisting())
+			msg = "editSuccess";
+		else
+			msg = "addSuccess";
+		
+		LogManagerUtils.setInfoMessage(request, getMessageSourceAccessor(), Constants.MODULE_ID + ".loggers." + msg);
 		
 		return new ModelAndView(new RedirectView(getSuccessView()));
 	}
@@ -96,6 +103,7 @@ public class LoggerFormController extends SimpleFormController {
 		map.put("appenders", svc.getAppenders(true));
 		map.put("appRelations", appRelations);
 		map.put("existing", proxy.isExisting());
+		map.put("root", proxy.isRoot());
 		
 		return map;
 	}
@@ -114,7 +122,11 @@ public class LoggerFormController extends SimpleFormController {
 			if (logger != null)
 				return new LoggerProxy(logger);
 		}
+		// Else if root is specified get it
+		else if (request.getParameter("root") != null)
+			return LoggerProxy.getRootLogger();
 	
+		// Else create new logger
 		return new LoggerProxy(name, Level.INFO);
 	}
 

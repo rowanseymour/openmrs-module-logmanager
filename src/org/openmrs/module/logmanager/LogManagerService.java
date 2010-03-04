@@ -30,13 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface LogManagerService extends OpenmrsService {
 	
 	/**
-	 * Gets the root logger
-	 * @return the root logger
-	 * @throws APIException
-	 */
-	public LoggerProxy getRootLogger() throws APIException;
-	
-	/**
 	 * Gets all loggers currently being used by log4j
 	 * @param incImplicit true to include loggers with only inherited levels and appenders
 	 * @param paging the paging values (may be null)

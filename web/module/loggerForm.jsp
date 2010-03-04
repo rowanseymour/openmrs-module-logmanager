@@ -19,14 +19,17 @@
 		</c:otherwise>
 	</c:choose>
 </b>
-<form:form commandName="params" cssClass="box">
+<form:form commandName="logger" cssClass="box">
 	<table cellpadding="2" cellspacing="0" width="100%">
 		<tr>
 			<th width="200"><spring:message code="${moduleId}.loggers.name"/></th>
 			<td>
 				<c:choose>
+					<c:when test="${root}">
+						&lt;ROOT&gt;
+					</c:when>
 					<c:when test="${existing}">
-						<form:input path="name" cssStyle="width: 400px" disabled="true" />
+						${logger.name}
 					</c:when>
 					<c:otherwise>
 						<form:input path="name" cssStyle="width: 400px" />
@@ -38,8 +41,8 @@
 		<tr>
 			<th><spring:message code="${moduleId}.loggers.level"/></th>
 			<td>
-				<spring:bind path="params.level">
-					<logmgr_tag:levelList name="${status.expression}" value="${status.value}" showALL="true" showOFF="true" showInherit="true" />
+				<spring:bind path="logger.level">
+					<logmgr_tag:levelList name="${status.expression}" value="${status.value}" showALL="true" showOFF="true" showInherit="${not root}" />
 				</spring:bind>
 			</td>
 		</tr>	

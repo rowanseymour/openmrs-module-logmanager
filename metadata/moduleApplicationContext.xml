@@ -41,7 +41,7 @@
 	</bean>
 	
 	<bean id="logMgrLoggerFormController" class="@MODULE_PACKAGE@.web.controller.LoggerFormController">
-		<property name="commandName"><value>params</value></property>
+		<property name="commandName"><value>logger</value></property>
 		<property name="formView"><value>module/@MODULE_ID@/loggerForm</value></property>
 		<property name="successView"><value>logger.list</value></property>
 		<property name="validator">

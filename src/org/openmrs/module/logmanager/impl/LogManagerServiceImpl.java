@@ -46,13 +46,6 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	protected static final Log log = LogFactory.getLog(LogManagerServiceImpl.class);
 	
 	/**
-	 * @see org.openmrs.module.logmanager.LogManagerService#getRootLogger()
-	 */
-	public LoggerProxy getRootLogger() {
-		return new LoggerProxy(LogManager.getRootLogger());
-	}
-	
-	/**
 	 * @see org.openmrs.module.logmanager.LogManagerService#getLoggers(boolean, PagingInfo)
 	 */
 	@SuppressWarnings("unchecked")

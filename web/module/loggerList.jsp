@@ -16,9 +16,15 @@
 	<table cellpadding="2" cellspacing="0" width="100%">
 		<tr>
 			<th width="200"><spring:message code="${moduleId}.loggers.level"/></th>
-			<td><logmgr_tag:levelList name="rootLoggerLevel" value="${rootLoggerLevel}" showALL="true" showOFF="true" /></td>
+			<td>
+				<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/${levelIcons[rootLogger.level]}"
+						width="16" height="16" title="${levelLabels[rootLogger.level]}" />
+						
+						${levelLabels[rootLogger.level]}
+			</td>
 			<td rowspan="2" align="right" valign="top">
-				<input type="submit" value="<spring:message code="general.save"/>" />
+				<input type="button" value="<spring:message code="general.edit"/>" 
+					onclick="location.href='logger.form?root'" />
 			</td>
 		</tr>
 		<tr>
