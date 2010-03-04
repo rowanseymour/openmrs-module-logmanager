@@ -1,5 +1,6 @@
 package org.openmrs.module.logmanager.web.controller;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,10 +54,9 @@ public class LoggerFormController extends SimpleFormController {
 		LogManagerService svc = Context.getService(LogManagerService.class);
 		LoggerProxy logger = (LoggerProxy)command;
 		
-		// Remove all appenders
 		logger.removeAllAppenders();
 		
-		// Add those specified on form
+		// Add those appenders specified on form
 		String[] appIds = request.getParameterValues("appenders");
 		if (appIds != null) {
 			for (String appIdStr : appIds) {
@@ -66,6 +66,7 @@ public class LoggerFormController extends SimpleFormController {
 			}
 		}
 		
+		// Update real logger object
 		logger.updateTarget();
 		
 		LogManagerUtils.setInfoMessage(request, getMessageSourceAccessor(), 
@@ -114,7 +115,7 @@ public class LoggerFormController extends SimpleFormController {
 				return new LoggerProxy(logger);
 		}
 	
-		return new LoggerProxy();
+		return new LoggerProxy(name, Level.INFO);
 	}
 
 }
