@@ -60,7 +60,7 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 		Enumeration<Logger> loggersEnum = (Enumeration<Logger>)LogManager.getCurrentLoggers();
 		
 		// Convert enum to a list
-		List<Logger> loggers = incImplicit ? Collections.list(loggersEnum) : getNonDynamicLoggersFromEnum(loggersEnum);
+		List<Logger> loggers = incImplicit ? Collections.list(loggersEnum) : getExplicitLoggersFromEnum(loggersEnum);
 		
 		// Sort list by logger name
 		Collections.sort(loggers, new Comparator<Logger>() {
@@ -170,16 +170,16 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	}
 
 	/**
-	 * Gets all non-dynamic loggers from an enumeration of loggers
+	 * Gets all loggers with explicit level or appenders from an enumeration of loggers
 	 * @param loggersEnum the enumeration of loggers
-	 * @return a list of non-dynamic loggers
+	 * @return the list of loggers
 	 */
-	private static List<Logger> getNonDynamicLoggersFromEnum(Enumeration<Logger> loggersEnum) {
+	private static List<Logger> getExplicitLoggersFromEnum(Enumeration<Logger> loggersEnum) {
 		List<Logger> loggers = new ArrayList<Logger>();
 		
 		while (loggersEnum.hasMoreElements()) {
 			Logger logger = loggersEnum.nextElement();
-			if (logger.getLevel() != null)
+			if (logger.getLevel() != null || logger.getAllAppenders().hasMoreElements())
 				loggers.add(logger);
 		}
 		

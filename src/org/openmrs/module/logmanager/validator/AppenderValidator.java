@@ -21,7 +21,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 /**
- * Validator for Appender objects
+ * Validator for appender objects
  */
 public class AppenderValidator implements Validator {
 

@@ -22,7 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
@@ -40,7 +39,7 @@ import org.springframework.web.servlet.mvc.ParameterizableViewController;
 public class LoggerListController extends ParameterizableViewController {
 	
 	protected static final Log log = LogFactory.getLog(LoggerListController.class);
-
+	
 	/**
 	 * @see org.springframework.web.servlet.mvc.ParameterizableViewController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
@@ -62,34 +61,19 @@ public class LoggerListController extends ParameterizableViewController {
 			LogManagerUtils.setInfoMessage(request, getMessageSourceAccessor(), Constants.MODULE_ID + ".loggers.editRootSuccess");
 		}
 		
-		// Add new logger if specified
-		String newLoggerName = request.getParameter("newLoggerName");
-		if (newLoggerName != null) {
-			newLoggerName = newLoggerName.trim();
-			
-			if (newLoggerName.matches("[\\w\\.]+")) {		
-				Logger newLogger = Logger.getLogger(newLoggerName);
-				int newLoggerLevel = ServletRequestUtils.getIntParameter(request, "newLoggerLevel", 0);
-				newLogger.setLevel(Level.toLevel(newLoggerLevel));
-				
-				LogManagerUtils.setInfoMessage(request, getMessageSourceAccessor(), Constants.MODULE_ID + ".loggers.addSuccess");
-			}
-			else {
-				model.put("newLoggerNameError", true);
-			}
-		}
-		
 		// Get paging info
 		int offset = ServletRequestUtils.getIntParameter(request, "offset", 0);
 		PagingInfo paging = new PagingInfo(offset, Constants.RESULTS_PAGE_SIZE);
 		
-		boolean incHierarchical = request.getParameter("incHierarchical") != null;
+		boolean incImplicit = request.getParameter("incImplicit") != null;
 		
-		model.put("loggers", svc.getLoggers(incHierarchical, paging));
+		model.put("loggers", svc.getLoggers(incImplicit, paging));
 		model.put("rootLogger", svc.getRootLogger());
 		model.put("rootLoggerLevel", svc.getRootLogger().getLevel().toInt());
 		model.put("paging", paging);
-		model.put("incHierarchical", incHierarchical);
+		model.put("incImplicit", incImplicit);
+		model.put("levelLabels", IconFactory.getLevelLabelMap());
+		model.put("levelNullLabel", "<i>&lt;Inherit&gt;</i>");
 		model.put("levelIcons", IconFactory.getLevelIconMap());
 		
 		return new ModelAndView(getViewName(), model);

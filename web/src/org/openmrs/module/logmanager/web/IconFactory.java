@@ -20,6 +20,7 @@ import org.apache.log4j.Level;
 
 public class IconFactory {
 	protected static Map<Level, String> levelIcons = new HashMap<Level, String>();
+	protected static Map<Level, String> levelLabels = new HashMap<Level, String>();
 	
 	static {
 		levelIcons.put(Level.ALL, "icon_all.png");
@@ -30,9 +31,22 @@ public class IconFactory {
 		levelIcons.put(Level.ERROR, "icon_error.png");
 		levelIcons.put(Level.FATAL, "icon_fatal.png");
 		levelIcons.put(Level.OFF, "icon_off.png");
+		
+		levelLabels.put(Level.ALL, "All");
+		levelLabels.put(Level.TRACE, "Trace");
+		levelLabels.put(Level.DEBUG, "Debug");
+		levelLabels.put(Level.INFO, "Info");
+		levelLabels.put(Level.WARN, "Warn");
+		levelLabels.put(Level.ERROR, "Error");
+		levelLabels.put(Level.FATAL, "Fatal");
+		levelLabels.put(Level.OFF, "Off");
 	}
 	
 	public static Map<Level, String> getLevelIconMap() {
 		return levelIcons;
+	}
+	
+	public static Map<Level, String> getLevelLabelMap() {
+		return levelLabels;
 	}
 }

@@ -38,7 +38,7 @@ public interface LogManagerService extends OpenmrsService {
 	
 	/**
 	 * Gets all loggers currently being used by log4j
-	 * @param incImplicit true to include loggers with inherited levels
+	 * @param incImplicit true to include loggers with only inherited levels and appenders
 	 * @param paging the paging values (may be null)
 	 * @return the list of loggers
 	 * @throws APIException

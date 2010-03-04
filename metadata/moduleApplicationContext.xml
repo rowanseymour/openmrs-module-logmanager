@@ -44,6 +44,9 @@
 		<property name="commandName"><value>params</value></property>
 		<property name="formView"><value>module/@MODULE_ID@/loggerForm</value></property>
 		<property name="successView"><value>logger.list</value></property>
+		<property name="validator">
+			<bean class="@MODULE_PACKAGE@.validator.LoggerValidator" />
+		</property>
 	</bean>
 	
 	<bean id="logMgrAppenderListController" class="@MODULE_PACKAGE@.web.controller.AppenderListController">

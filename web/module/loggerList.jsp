@@ -44,23 +44,16 @@
 <b class="boxHeader">
 	<spring:message code="${moduleId}.loggers.addLogger" />
 </b>
-<form method="post" class="box" name="newLoggerForm">
+<form method="get" class="box" action="logger.form">
 	<table cellpadding="2" cellspacing="0" width="100%">
 		<tr>
 			<th width="200"><spring:message code="${moduleId}.loggers.name"/></th>
 			<td>
-				<input type="text" name="newLoggerName" style="width: 400px" value="${param.newLoggerName}" />
-				<c:if test="${newLoggerNameError != null}">
-					<span class="error"><spring:message code="${moduleId}.error.name"/></span>
-				</c:if>
+				<input type="text" name="logger" style="width: 400px" />
 			</td>
-			<td rowspan="2" align="right" valign="top">
+			<td align="right" valign="top">
 				<input type="submit" value="<spring:message code="general.add"/>" />
 			</td>
-		</tr>
-		<tr>
-			<th width="200"><spring:message code="${moduleId}.loggers.level"/></th>
-			<td><logmgr_tag:levelList name="newLoggerLevel" showOFF="true" showALL="true" /></td>
 		</tr>
 	</table>
 </form>
@@ -74,9 +67,9 @@
 	<table cellpadding="2" cellspacing="0" width="100%">
 		<tr>
 			<td>	
-				<spring:message code="${moduleId}.loggers.includeHierarchical" />
+				<spring:message code="${moduleId}.loggers.includeImplicit" />
 				
-				<input type="checkbox" name="incHierarchical" value="1" ${incHierarchical ? 'checked="checked"' : ''} />
+				<input type="checkbox" name="incImplicit" value="1" ${incImplicit ? 'checked="checked"' : ''} />
 			</td>
 			
 			<td align="right">
@@ -97,20 +90,15 @@
 			<tr class="<c:choose><c:when test="${rowStatus.index % 2 == 0}">evenRow</c:when><c:otherwise>oddRow</c:otherwise></c:choose>">
 				<td valign="top" width="16">
 					<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/${levelIcons[logger.effectiveLevel]}"
-						width="16" height="16" title="${logger.effectiveLevel}" />
+						width="16" height="16" title="${levelLabels[logger.effectiveLevel]}" />
 				</td>
 				<td>
 					<a href="logger.form?logger=${logger.name}">
-						<c:choose>
-							<c:when test="${logger.level == null}">
-								<i>${logger.name}</i>
-							</c:when>
-							<c:otherwise>${logger.name}</c:otherwise>
-						</c:choose>
+						${logger.name}
 					</a>
 				</td>
 				<td>
-					${logger.level}
+					${logger.level != null ? levelLabels[logger.level] : levelNullLabel}
 				<td>
 					<c:forEach var="appender" items="${logger.appenders}" varStatus="status">					
 						<c:choose>
