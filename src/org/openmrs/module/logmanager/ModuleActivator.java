@@ -15,7 +15,9 @@ package org.openmrs.module.logmanager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.LogManager;
 import org.openmrs.module.Activator;
+import org.openmrs.util.MemoryAppender;
 
 /**
  * This class contains the logic that is run every time this module is either
@@ -31,13 +33,16 @@ public class ModuleActivator implements Activator {
 	public void startup() {
 		log.info("Starting log manager module");
 		
-		// Testing
-		/*log.trace("This is a TRACE event");
-		log.debug("This is a DEBUG event");
-		log.info("This is a INFO event");
-		log.warn("This is a WARN event");
-		log.error("This is a ERROR event");
-		log.fatal("This is a FATAL event");*/
+		// Check for OpenMRS's default memory appender which sometimes get's
+		// nuked by misbehaving modules, and recreate it if it doesn't exist
+		if (LogManager.getRootLogger().getAppender(Constants.DEF_APPENDER) == null) {
+			MemoryAppender memApp = new MemoryAppender();
+			memApp.setName(Constants.DEF_APPENDER);
+			memApp.activateOptions();
+			LogManager.getRootLogger().addAppender(memApp);
+			
+			log.warn("Default OpenMRS memory appender had to be recreated. This is likely due to a module modifying the root logger.");
+		}
 	}
 	
 
