@@ -13,9 +13,12 @@
  */
 package org.openmrs.module.logmanager;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Appender;
@@ -89,9 +92,9 @@ public class LoggerProxy {
 		
 		// For some unknown reason... calling removeAllAppenders() on the
 		// the root logger breaks it, but this is fine
-		Enumeration<Appender> apps = target.getAllAppenders();
-		while (apps.hasMoreElements())
-			target.removeAppender(apps.nextElement());
+		List<Appender> apps = Collections.list(target.getAllAppenders());
+		for (Appender appender : apps)
+			target.removeAppender(appender);
 		
 		for (AppenderProxy appender : appenders)
 			target.addAppender(appender.getTarget());
