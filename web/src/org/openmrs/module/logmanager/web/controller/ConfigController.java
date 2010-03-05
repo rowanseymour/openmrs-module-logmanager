@@ -56,11 +56,11 @@ public class ConfigController extends ParameterizableViewController {
 			setHibernateSQLLogging(false);
 		
 		Logger sqlLogger = LogManager.exists(Constants.LOGGER_HIBERNATE_SQL);
-		Level sqlLoggerLevel = (sqlLogger != null) ? sqlLogger.getLevel() : null;
+		Level sqlLoggerLevel = (sqlLogger != null) ? sqlLogger.getEffectiveLevel() : null;
 		
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("sqlLoggerName", Constants.LOGGER_HIBERNATE_SQL);
-		model.put("sqlLoggerStarted", sqlLoggerLevel.toInt() <= Level.DEBUG.toInt());
+		model.put("sqlLoggerStarted", (sqlLoggerLevel != null) ? (sqlLoggerLevel.toInt() <= Level.DEBUG.toInt()) : false);
 		
 		return new ModelAndView(getViewName(), model);
 	}
