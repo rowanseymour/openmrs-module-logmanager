@@ -38,6 +38,7 @@ import org.openmrs.module.logmanager.util.PagingInfo;
 import org.openmrs.module.logmanager.web.IconFactory;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
 /**
@@ -46,6 +47,8 @@ import org.springframework.web.servlet.mvc.ParameterizableViewController;
 public class ViewerController extends ParameterizableViewController {
 	
 	protected static final Log log = LogFactory.getLog(ViewerController.class);
+	
+	protected View exportView;
 	
 	/**
 	 * @see org.springframework.web.servlet.mvc.ParameterizableViewController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
@@ -112,14 +115,28 @@ public class ViewerController extends ParameterizableViewController {
 			model.put("events", new ArrayList<LoggingEvent>());
 			LogManagerUtils.setErrorMessage(request, getMessageSourceAccessor(), Constants.MODULE_ID + ".error.noSuitableAppender");
 		}
-
 		
-		model.put("levelIcons", IconFactory.getLevelIconMap());
 		model.put("appender", appender);
 		model.put("appenders", appenders);
+
+		if (request.getParameter("xml") != null)
+			return new ModelAndView(getExportView(), model);
 		
+		model.put("levelIcons", IconFactory.getLevelIconMap());	
 		return new ModelAndView(getViewName(), model);
 	}
-	
-	
+
+	/**
+	 * @return the exportView
+	 */
+	public View getExportView() {
+		return exportView;
+	}
+
+	/**
+	 * @param exportView the exportView to set
+	 */
+	public void setExportView(View exportView) {
+		this.exportView = exportView;
+	}	
 }
