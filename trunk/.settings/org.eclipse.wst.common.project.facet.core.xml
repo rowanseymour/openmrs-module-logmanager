@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faceted-project>
+  <runtime name="java-6-sun-1.6.0.14"/>
+  <installed facet="jst.java" version="5.0"/>
+  <installed facet="openmrs.module" version="1.0"/>
+</faceted-project>
