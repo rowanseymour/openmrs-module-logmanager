@@ -21,13 +21,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.LoggerProxy;
-import org.openmrs.module.logmanager.util.PagingInfo;
 import org.openmrs.module.logmanager.web.IconFactory;
-import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
@@ -48,16 +47,20 @@ public class LoggerListController extends ParameterizableViewController {
 		Map<String, Object> model = new HashMap<String, Object>();
 		LogManagerService svc = Context.getService(LogManagerService.class);
 		
-		// Get paging info
-		int offset = ServletRequestUtils.getIntParameter(request, "offset", 0);
-		PagingInfo paging = new PagingInfo(offset, Constants.RESULTS_PAGE_SIZE);
+		// There is no mechanism for removing loggers in log4j 1.2
+		// so instead we nullify its level and remove its appenders
+		// so that it will be effectively ignored
+		String delLogger = request.getParameter("delete");
+		if (delLogger != null) {
+			Logger logToRemove = LogManager.exists(delLogger);
+			if (logToRemove != null) {
+				logToRemove.setLevel(null);
+				logToRemove.removeAllAppenders();
+			}
+		}
 		
-		boolean incImplicit = request.getParameter("incImplicit") != null;
-		
-		model.put("loggers", svc.getLoggers(incImplicit, paging));
+		model.put("loggers", svc.getLoggers(false, null));
 		model.put("rootLogger", LoggerProxy.getRootLogger());
-		model.put("paging", paging);
-		model.put("incImplicit", incImplicit);
 		model.put("levelLabels", IconFactory.getLevelLabelMap());
 		model.put("levelNullLabel", "<i>&lt;Inherit&gt;</i>");
 		model.put("levelIcons", IconFactory.getLevelIconMap());

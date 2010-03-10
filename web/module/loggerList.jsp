@@ -69,27 +69,14 @@
 <b class="boxHeader">
 	<spring:message code="${moduleId}.loggers.existingLoggers" />
 </b>
-<form method="get" class="box" name="loggersForm">
-	<table cellpadding="2" cellspacing="0" width="100%">
-		<tr>
-			<td>	
-				<spring:message code="${moduleId}.loggers.includeImplicit" />
-				
-				<input type="checkbox" name="incImplicit" value="1" ${incImplicit ? 'checked="checked"' : ''} />
-			</td>
-			
-			<td align="right">
-				<input type="submit" value="<spring:message code="general.refresh"/>" />
-			</td>
-		</tr>
-	</table>
-
+<form method="post" class="box" name="loggersForm">
 	<table cellpadding="3" cellspacing="0" width="100%">
 		<tr>
 			<th>&nbsp;</th>
 			<th><spring:message code="${moduleId}.loggers.name"/></th>
 			<th><spring:message code="${moduleId}.loggers.level"/></th>
 			<th><spring:message code="${moduleId}.loggers.appenders"/></th>
+			<th>&nbsp;</th>
 		</tr>
 	
 		<c:forEach var="logger" items="${loggers}" varStatus="rowStatus">
@@ -117,13 +104,15 @@
 						</c:choose>
 					</c:forEach>
 				</td>
+				<td align="right">
+					<input type="image" src="${pageContext.request.contextPath}/images/trash.gif"
+						onclick="return confirm('<spring:message code="${moduleId}.loggers.confirmDelete"/>');"
+						name="delete" value="${logger.name}"
+						title="<spring:message code="general.delete"/>" /></a>
+				</td>
 			</tr>
 		</c:forEach>
 	</table>
-	
-	<c:if test="${!empty loggers}">
-		<logmgr_tag:pager pagingInfo="${paging}" />
-	</c:if>
 </form>
 
 <%@ include file="/WEB-INF/template/footer.jsp"%>
