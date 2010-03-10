@@ -36,6 +36,7 @@ import org.openmrs.module.logmanager.AppenderProxy;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.LoggerProxy;
 import org.openmrs.module.logmanager.QueryField;
+import org.openmrs.module.logmanager.db.LogManagerDAO;
 import org.openmrs.module.logmanager.util.PagingInfo;
 
 /**
@@ -44,6 +45,16 @@ import org.openmrs.module.logmanager.util.PagingInfo;
 public class LogManagerServiceImpl extends BaseOpenmrsService implements LogManagerService {
 
 	protected static final Log log = LogFactory.getLog(LogManagerServiceImpl.class);
+	
+	protected LogManagerDAO dao;
+	
+	/**
+	 * Sets the database access object for this service
+	 * @param dao the database access object
+	 */
+	public void setLogManagerDAO(LogManagerDAO dao) {
+		this.dao = dao;
+	}
 	
 	/**
 	 * @see org.openmrs.module.logmanager.LogManagerService#getLoggers(boolean, PagingInfo)
@@ -196,5 +207,12 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 		paging.setResultsTotal(list.size());
 		
 		return selection;
+	}
+
+	/**
+	 * @see LogManagerService#getMySQLVersion()
+	 */
+	public String getMySQLVersion() throws APIException {
+		return dao.getMySQLVersion();
 	}
 }

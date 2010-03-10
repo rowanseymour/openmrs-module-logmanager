@@ -30,6 +30,7 @@ import org.apache.log4j.xml.XMLLayout;
 import org.openmrs.ImplementationId;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.logmanager.LogManagerService;
 import org.springframework.web.servlet.view.AbstractView;
 
 public class XMLEventsView extends AbstractView {
@@ -80,6 +81,7 @@ public class XMLEventsView extends AbstractView {
 	 */
 	private LoggingEvent createSysInfoEvent() {
 		AdministrationService admSvc = Context.getAdministrationService();
+		LogManagerService logSvc = Context.getService(LogManagerService.class);
 		SortedMap<String, String> sysVars = admSvc.getSystemVariables();
 		ImplementationId implId = admSvc.getImplementationId();
 		StringBuilder sb = new StringBuilder();
@@ -89,6 +91,7 @@ public class XMLEventsView extends AbstractView {
 		sb.append("OpenMRS version: " + sysVars.get("OPENMRS_VERSION") + "\n");
 		sb.append("Java: " + System.getProperty("java.vendor") + " " + System.getProperty("java.version") + "\n");
 		sb.append("Server: " + getServletContext().getServerInfo() + "\n");
+		sb.append("MySQL: " + logSvc.getMySQLVersion() + "\n");
 		sb.append("OS: " + System.getProperty("os.name") + " " + System.getProperty("os.arch") + " " + System.getProperty("os.version") + "\n");
 		sb.append("Hostname: " + sysVars.get("OPENMRS_HOSTNAME") + "\n");
 		
