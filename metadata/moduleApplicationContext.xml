@@ -97,7 +97,15 @@
 						<ref bean="transactionManager" />
 					</property> <!-- more req stuff -->
 					<property name="target">
-						<bean class="@MODULE_PACKAGE@.impl.LogManagerServiceImpl" />
+						<bean class="@MODULE_PACKAGE@.impl.LogManagerServiceImpl">
+							<property name="logManagerDAO">
+								<bean class="@MODULE_PACKAGE@.db.hibernate.HibernateLogManagerDAO">
+									<property name="sessionFactory">
+										<ref bean="sessionFactory" />
+									</property>
+								</bean>
+							</property>
+						</bean>
 					</property>
 					<property name="preInterceptors">
 						<list>

@@ -13,7 +13,6 @@
 	<classpathentry kind="lib" path="lib-common/spring-webmvc.jar"/>
 	<classpathentry kind="lib" path="lib-common/junit-4.4.jar"/>
 	<classpathentry kind="lib" path="lib-common/jcommon-1.0.0.jar"/>
-	<classpathentry kind="lib" path="lib-common/jfreechart-1.0.1.jar"/>
 	<classpathentry kind="lib" path="lib-common/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="lib-common/commons-collections-3.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
