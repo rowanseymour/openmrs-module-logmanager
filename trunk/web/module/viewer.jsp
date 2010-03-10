@@ -64,7 +64,8 @@ function showThrowable(index, show) {
 			</td>
 			
 			<td align="right">
-				<input type="submit" value="<spring:message code="general.refresh"/>" />
+				<input type="submit" value="<spring:message code="general.refresh"/>"
+				 	onclick="this.form.xml.value = 0; return true;" />
 				<input type="hidden" name="xml" value="" />
 				<input type="submit" value="<spring:message code="${moduleId}.viewer.exportXML"/>"
 					onclick="this.form.xml.value = 1; return true;" />
