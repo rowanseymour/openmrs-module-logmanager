@@ -36,6 +36,7 @@ public interface LogManagerService extends OpenmrsService {
 	 * @return the list of loggers
 	 * @throws APIException
 	 */
+	@Transactional(readOnly=true)
 	public List<LoggerProxy> getLoggers(boolean incImplicit, PagingInfo paging) throws APIException;
 	
 	/**
@@ -44,6 +45,7 @@ public interface LogManagerService extends OpenmrsService {
 	 * @return the appender
 	 * @throws APIException
 	 */
+	@Transactional(readOnly=true)
 	public AppenderProxy getAppender(int id) throws APIException;
 	
 	/**
@@ -51,6 +53,7 @@ public interface LogManagerService extends OpenmrsService {
 	 * @param sorted true if method should return a sorted list, otherwise returns a set
 	 * @return the set of appenders
 	 */
+	@Transactional(readOnly=true)
 	public Collection<AppenderProxy> getAppenders(boolean sorted) throws APIException;
 	
 	/**
@@ -63,5 +66,14 @@ public interface LogManagerService extends OpenmrsService {
 	 * @return the list of logging events
 	 * @throws APIException
 	 */
+	@Transactional(readOnly=true)
 	public List<LoggingEvent> getAppenderEvents(AppenderProxy appender, Level level, QueryField queryField, String queryValue, PagingInfo paging) throws APIException;
+
+	/**
+	 * Gets the version of MySQL being used by OpenMRS
+	 * @return the version string
+	 * @throws APIException
+	 */
+	@Transactional(readOnly=true)
+	public String getMySQLVersion() throws APIException;
 }

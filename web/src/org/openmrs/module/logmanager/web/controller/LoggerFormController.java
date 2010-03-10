@@ -1,6 +1,5 @@
 package org.openmrs.module.logmanager.web.controller;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
