@@ -25,5 +25,9 @@
 		<lang>en</lang>
 		<file>messages.properties</file>
 	</messages>
+	
+	<mappingFiles>
+		Preset.hbm.xml
+	</mappingFiles>
 </module>
 
