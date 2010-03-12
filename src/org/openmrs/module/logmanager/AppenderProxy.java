@@ -1,3 +1,16 @@
+/**
+ * The contents of this file are subject to the OpenMRS Public License
+ * Version 1.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://license.openmrs.org
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+ * License for the specific language governing rights and limitations
+ * under the License.
+ *
+ * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ */
 package org.openmrs.module.logmanager;
 
 import java.util.Collection;
@@ -36,6 +49,11 @@ public class AppenderProxy {
 	protected String layoutPattern;
 	protected boolean layoutUsesLocation;
 	
+	/**
+	 * Creates a proxy for a new appender
+	 * @param type the type
+	 * @param name the name
+	 */
 	public AppenderProxy(AppenderType type, String name) {
 		this.type = type;
 		this.name = name;
@@ -172,50 +190,71 @@ public class AppenderProxy {
 		this.name = name;
 	}
 	
-	public String getDisplayName() {
-		return (name != null && !name.isEmpty()) ? name : ("Anonymous " + target.getClass().getSimpleName());
-	}
-	
+	/**
+	 * Gets whether this appender requires a layout, based on its type
+	 * @return true if it requires a layout
+	 */
 	public boolean getRequiresLayout() {
 		return (type == AppenderType.CONSOLE);
 	}
 	
 	/**
-	 * @return the layoutType
+	 * Gets the layout type
+	 * @return the layout type
 	 */
 	public LayoutType getLayoutType() {
 		return layoutType;
 	}
 
 	/**
-	 * @param layoutType the layoutType to set
+	 * Sets the layout type
+	 * @param layoutType the layout type
 	 */
 	public void setLayoutType(LayoutType layoutType) {
 		this.layoutType = layoutType;
 	}
 
 	/**
-	 * @return the layoutPattern
+	 * Gets the layout pattern
+	 * Applies to the PATTERN layout type
+	 * @return the layout pattern
 	 */
 	public String getLayoutPattern() {
 		return layoutPattern;
 	}
 
 	/**
-	 * @param layoutPattern the layoutPattern to set
+	 * Sets the layout pattern
+	 * Applies to the PATTERN layout type
+	 * @param layoutPattern the layout pattern
 	 */
 	public void setLayoutPattern(String layoutPattern) {
 		this.layoutPattern = layoutPattern;
 	}
 	
+	/**
+	 * Gets whether the layout uses location information information
+	 * Applies to XML and HTML layout types
+	 * @return true if layout should use location information
+	 */
 	public boolean getLayoutUsesLocation() {
 		return layoutUsesLocation;
 	}
 	
+	/**
+	 * Sets whether the layout uses location information information
+	 * Applies to XML and HTML layout types
+	 * @param layoutUsesLocation true if layout should use location information
+	 */
 	public void setLayoutUsesLocation(boolean layoutUsesLocation) {
 		this.layoutUsesLocation = layoutUsesLocation;
 	}
 
+	/**
+	 * Gets whether appender must be closed and restarted after changing
+	 * its properties
+	 * @return true if appender must be restarted
+	 */
 	public boolean isRestartOnUpdateRequired() {
 		return this.target instanceof OptionHandler;
 	}

@@ -70,7 +70,7 @@ function clearAppender(id) {
 							${appender.name}
 						</c:when>
 						<c:otherwise>
-							<i>${appender.displayName}</i>
+							<i><spring:message code="${moduleId}.anonymous"/></i>
 						</c:otherwise>
 					</c:choose></a>
 				</td>
