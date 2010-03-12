@@ -237,7 +237,7 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 		
 		// Add root logger to map
 		LoggerProxy rootLogger = LoggerProxy.getRootLogger();
-		loggerMap.put("", rootLogger.getLevelInt());
+		loggerMap.put("ROOT", rootLogger.getLevelInt());
 		
 		// Add all other loggers
 		List<LoggerProxy> loggers = getLoggers(false);
