@@ -21,8 +21,8 @@
 			  `name` varchar(50) NOT NULL,
 			  PRIMARY KEY (`preset_id`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-			
-			CREATE TABLE  `logmanager_preset_logger` (
+
+			CREATE TABLE `logmanager_preset_logger` (
 			  `preset_id` int(10) unsigned NOT NULL,
 			  `logger` varchar(255) NOT NULL,
 			  `level` int(10) unsigned DEFAULT NULL,
@@ -30,6 +30,36 @@
 			  KEY `FK_logmanager_logger_preset` (`preset_id`),
 			  CONSTRAINT `FK_logmanager_logger_preset` FOREIGN KEY (`preset_id`) REFERENCES `logmanager_preset` (`preset_id`) ON DELETE CASCADE
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+			INSERT INTO `logmanager_preset` VALUES(NULL, 'Production');
+			SELECT @proId := preset_id FROM `logmanager_preset` WHERE `name` = 'Production';
+			INSERT INTO `logmanager_preset` VALUES(NULL, 'Development');
+			SELECT @devId := preset_id FROM `logmanager_preset` WHERE `name` = 'Development';
+
+			SELECT @error := 40000;
+			SELECT @warn := 30000;
+			SELECT @info := 20000;
+			SELECT @debug := 10000;
+			SELECT @trace := 5000;
+			
+			INSERT INTO `logmanager_preset_logger` VALUES
+				(@proId, 'net.sf.ehcache', @error),
+				(@proId, 'org.apache', @warn),
+				(@proId, 'org.apache.fop', @error),
+				(@proId, 'org.hibernate', @error),
+				(@proId, 'org.openmrs', @warn),
+				(@proId, 'org.openmrs.api', @info),
+				(@proId, 'org.springframework', @warn),
+				(@proId, 'org.springframework.context.support.ResourceBundleMessageSource', @error);
+			INSERT INTO `logmanager_preset_logger` VALUES
+				(@devId, 'net.sf.ehcache', @warn),
+				(@devId, 'org.apache', @warn),
+				(@devId, 'org.apache.fop', @warn),
+				(@devId, 'org.hibernate', @warn),
+				(@devId, 'org.openmrs', @info),
+				(@devId, 'org.openmrs.api', @info),
+				(@devId, 'org.springframework', @warn),
+				(@devId, 'org.springframework.context.support.ResourceBundleMessageSource', @error);
 		</sql>
 	</diff>
 </sqldiff>
