@@ -119,8 +119,10 @@ public class ViewerController extends ParameterizableViewController {
 		model.put("appender", appender);
 		model.put("appenders", appenders);
 
-		if (request.getParameter("xml") != null)
+		if (request.getParameter("xml") != null) {
+			model.put("modules", LogManagerUtils.createModuleVersionMap());
 			return new ModelAndView(getExportView(), model);
+		}
 		
 		model.put("levelIcons", IconFactory.getLevelIconMap());	
 		return new ModelAndView(getViewName(), model);
@@ -138,5 +140,5 @@ public class ViewerController extends ParameterizableViewController {
 	 */
 	public void setExportView(View exportView) {
 		this.exportView = exportView;
-	}	
+	}
 }

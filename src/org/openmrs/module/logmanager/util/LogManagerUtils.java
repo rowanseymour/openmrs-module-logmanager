@@ -14,11 +14,16 @@
 package org.openmrs.module.logmanager.util;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.module.Module;
+import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.logmanager.AppenderType;
 import org.openmrs.module.logmanager.QueryField;
 import org.openmrs.web.WebConstants;
@@ -114,5 +119,17 @@ public class LogManagerUtils {
 	public static void setErrorMessage(HttpServletRequest request, MessageSourceAccessor msgs, String code) {
 		String msg = msgs.getMessage(code);
 		request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, msg);
+	}
+	
+	/**
+	 * Creates an alphabetically sorted map of module names and versions
+	 * @return the map
+	 */
+	public static Map<String, String> createModuleVersionMap() {
+		Map<String, String> modMap = new TreeMap<String, String>();
+		Collection<Module> modules = ModuleFactory.getStartedModules();
+		for (Module module : modules)
+			modMap.put(module.getName(), module.getVersion());
+		return modMap;
 	}
 }
