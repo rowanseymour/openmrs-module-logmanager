@@ -219,14 +219,17 @@ public class LoggerProxy {
 	/**
 	 * There is no mechanism for removing loggers in log4j 1.2
 	 * so instead we nullify its level and remove its appenders 
+	 * @param removeAppenders true if appenders should be removed
 	 */
-	public void nullify() {
+	public void nullify(boolean removeAppenders) {
 		level = null;
-		appenders.clear();
+		if (removeAppenders)
+			appenders.clear();
 		
 		if (target != null) {
 			target.setLevel(null);
-			target.removeAllAppenders();
+			if (removeAppenders)
+				target.removeAllAppenders();
 		}
 	}
 }
