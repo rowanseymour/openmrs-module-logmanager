@@ -32,9 +32,9 @@
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 			INSERT INTO `logmanager_preset` VALUES(NULL, 'Production');
-			SELECT @proId := preset_id FROM `logmanager_preset` WHERE `name` = 'Production';
+			SELECT @proId := `preset_id` FROM `logmanager_preset` WHERE `name` = 'Production';
 			INSERT INTO `logmanager_preset` VALUES(NULL, 'Development');
-			SELECT @devId := preset_id FROM `logmanager_preset` WHERE `name` = 'Development';
+			SELECT @devId := `preset_id` FROM `logmanager_preset` WHERE `name` = 'Development';
 
 			SELECT @error := 40000;
 			SELECT @warn := 30000;
@@ -43,6 +43,7 @@
 			SELECT @trace := 5000;
 			
 			INSERT INTO `logmanager_preset_logger` VALUES
+				(@proId, 'ROOT', @warn),
 				(@proId, 'net.sf.ehcache', @error),
 				(@proId, 'org.apache', @warn),
 				(@proId, 'org.apache.fop', @error),
@@ -52,6 +53,7 @@
 				(@proId, 'org.springframework', @warn),
 				(@proId, 'org.springframework.context.support.ResourceBundleMessageSource', @error);
 			INSERT INTO `logmanager_preset_logger` VALUES
+				(@devId, 'ROOT', @info),
 				(@devId, 'net.sf.ehcache', @warn),
 				(@devId, 'org.apache', @warn),
 				(@devId, 'org.apache.fop', @warn),

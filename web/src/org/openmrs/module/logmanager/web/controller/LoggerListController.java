@@ -134,7 +134,7 @@ public class LoggerListController extends ParameterizableViewController {
 			Level level = Level.toLevel(entry.getValue());
 			
 			// Check for root logger
-			if (name.equals("")) {
+			if (name.equals("ROOT")) {
 				LoggerProxy rootLogger = LoggerProxy.getRootLogger();
 				rootLogger.setLevel(level);
 				rootLogger.updateTarget();
