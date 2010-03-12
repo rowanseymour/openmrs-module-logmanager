@@ -32,6 +32,11 @@ function onChangeAddLoggerName(value) {
 	var addBtn = document.addForm.addLogger;
 	addBtn.disabled = (value.length == 0);
 }
+
+function onSavePreset() {
+	var presetLst = document.presetForm.preset;
+	return (presetLst.value > 0) ? confirm('<spring:message code="${moduleId}.loggers.confirmUpdatePreset"/>') : true;
+}
 </script>
 
 <b class="boxHeader">
@@ -55,9 +60,19 @@ function onChangeAddLoggerName(value) {
 				</c:if>
 			</td>
 			<td align="right" valign="top">
-				<input type="submit" name="savePreset" value="<spring:message code="general.save"/>" />
-				<input type="submit" name="loadPreset" value="<spring:message code="${moduleId}.load"/>" ${activePreset == null ? 'disabled="disabled"' : ''} />
-				<input type="submit" name="deletePreset" value="<spring:message code="general.delete"/>" ${activePreset == null ? 'disabled="disabled"' : ''} />
+				<input type="submit" name="savePreset"
+					value="<spring:message code="general.save"/>"
+					onclick="return onSavePreset();"
+				/>
+				<input type="submit" name="loadPreset"
+					value="<spring:message code="${moduleId}.load"/>"
+					${activePreset == null ? 'disabled="disabled"' : ''}
+				/>
+				<input type="submit" name="deletePreset"
+					value="<spring:message code="general.delete"/>"
+					${activePreset == null ? 'disabled="disabled"' : ''} 
+					onclick="return confirm('<spring:message code="${moduleId}.loggers.confirmDeletePreset"/>');"
+				/>
 			</td>
 		</tr>
 	</table>
@@ -92,7 +107,7 @@ function onChangeAddLoggerName(value) {
 							<a href="appender.form?editId=${appender.id}">${appender.name}</a>${!status.last ? ", " : ""}
 						</c:when>
 						<c:otherwise>
-							<a href="appender.form?editId=${appender.id}"><i>${appender.displayName}</i></a>${!status.last ? ", " : ""}
+							<a href="appender.form?editId=${appender.id}"><i><spring:message code="${moduleId}.anonymous"/></i></a>${!status.last ? ", " : ""}
 						</c:otherwise>
 					</c:choose>	
 				</c:forEach>
@@ -152,17 +167,17 @@ function onChangeAddLoggerName(value) {
 					<c:forEach var="appender" items="${logger.appenders}" varStatus="status">					
 						<c:choose>
 							<c:when test="${!empty appender.name}">
-								${appender.name}${!status.last ? ", " : ""}
+								<a href="appender.form?editId=${appender.id}">${appender.name}</a>${!status.last ? ", " : ""}
 							</c:when>
 							<c:otherwise>
-								<i>${appender.displayName}</i>${!status.last ? ", " : ""}
+								<a href="appender.form?editId=${appender.id}"><i><spring:message code="${moduleId}.anonymous"/></i></a>${!status.last ? ", " : ""}
 							</c:otherwise>
 						</c:choose>
 					</c:forEach>
 				</td>
 				<td align="right">
 					<input type="image" src="${pageContext.request.contextPath}/images/trash.gif"
-						onclick="return confirm('<spring:message code="${moduleId}.loggers.confirmDelete"/>');"
+						onclick="return confirm('<spring:message code="${moduleId}.loggers.confirmDeleteLogger"/>');"
 						name="deleteLogger" value="${logger.name}"
 						title="<spring:message code="general.delete"/>" /></a>
 				</td>
