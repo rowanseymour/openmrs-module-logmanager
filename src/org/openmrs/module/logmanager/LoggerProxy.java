@@ -63,6 +63,16 @@ public class LoggerProxy {
 	}
 	
 	/**
+	 * Gets a proxy of the specified logger
+	 * @param name the logger name
+	 * @return the proxy logger or null if logger doesn't exist
+	 */
+	public static LoggerProxy getLogger(String name) {
+		Logger target = LogManager.exists(name);	
+		return (target != null) ? new LoggerProxy(target) : null;
+	}
+	
+	/**
 	 * Gets a proxy of the root logger
 	 * @return the proxy root logger
 	 */
@@ -121,6 +131,15 @@ public class LoggerProxy {
 	 */
 	public Level getLevel() {
 		return level;
+	}
+	
+	/**
+	 * Gets the level of the logger as an integer or null if
+	 * level is undefined
+	 * @return the level as an integer
+	 */
+	public Integer getLevelInt() {
+		return (level != null) ? level.toInt() : null;
 	}
 	
 	/**
@@ -195,5 +214,19 @@ public class LoggerProxy {
 	 */
 	public void removeAllAppenders() {
 		appenders.clear();
+	}
+	
+	/**
+	 * There is no mechanism for removing loggers in log4j 1.2
+	 * so instead we nullify its level and remove its appenders 
+	 */
+	public void nullify() {
+		level = null;
+		appenders.clear();
+		
+		if (target != null) {
+			target.setLevel(null);
+			target.removeAllAppenders();
+		}
 	}
 }

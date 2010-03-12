@@ -12,59 +12,51 @@
 <b class="boxHeader">
 	<spring:message code="${moduleId}.config.log4jConfiguration" />
 </b>
-<table class="box" cellpadding="2" cellspacing="0" width="100%">
-	<tr>
-		<td width="150">
-			<form method="post" name="clearForm">
-				<input type="hidden" name="clear" value="1" /> 
-				<input type="submit" value="<spring:message code="${moduleId}.config.clear" />" />
-			</form>
-		</td>
-		<td><spring:message code="${moduleId}.config.clearMsg" /></td>
-	</tr>
-	<tr>
-		<td>
-			<form method="post" name="reloadForm">
-				<input type="hidden" name="reload" value="1" /> 
-				<input type="submit" value="<spring:message code="${moduleId}.config.reload" />" />
-			</form>
-		</td>
-		<td><spring:message code="${moduleId}.config.reloadMsg" /></td>
-	</tr>
-</table>
+<form method="post" class="box" name="configForm">
+	<table cellpadding="2" cellspacing="0" width="100%">
+		<tr>
+			<td width="150">			
+				<input type="submit" name="clear" value="<spring:message code="${moduleId}.config.clear" />" />
+			</td>
+			<td><spring:message code="${moduleId}.config.clearMsg" /></td>
+		</tr>
+		<tr>
+			<td>
+				<input type="submit" name="reload" value="<spring:message code="${moduleId}.config.reload" />" />
+			</td>
+			<td><spring:message code="${moduleId}.config.reloadMsg" /></td>
+		</tr>
+	</table>
+</form>
 
 <br/>
 
 <b class="boxHeader">
 	<spring:message code="${moduleId}.config.hibernateSQLLogging" />
 </b>
-<table class="box" cellpadding="2" cellspacing="0" width="100%">
-	<tr>
-		<td width="150">
-			<form method="post">
-				<c:choose>
-					<c:when test="${sqlLoggerStarted}">
-						<input type="hidden" name="stopSQL" value="1" /> 
-						<input type="submit" value="<spring:message code="${moduleId}.config.stop" />" />
-					</c:when>
-					<c:otherwise>
-						<input type="hidden" name="startSQL" value="1" /> 
-						<input type="submit" value="<spring:message code="${moduleId}.config.start" />" />
-					</c:otherwise>
-				</c:choose>
-			</form>
-		</td>
-		<td>
+<form method="post" class="box" name="hibernateForm">
+	<table cellpadding="2" cellspacing="0" width="100%">
+		<tr>
 			<c:choose>
 				<c:when test="${sqlLoggerStarted}">
-					<spring:message code="${moduleId}.config.stopMsg" arguments="${sqlLoggerName}" />
+					<td width="150">
+						<input type="submit" name="stopSQL" value="<spring:message code="${moduleId}.config.stop" />" />
+					</td>
+					<td>
+						<spring:message code="${moduleId}.config.stopMsg" arguments="${sqlLoggerName}" />
+					</td>
 				</c:when>
 				<c:otherwise>
-					<spring:message code="${moduleId}.config.startMsg" arguments="${sqlLoggerName}" />
+					<td width="150">
+						<input type="submit" name="startSQL" value="<spring:message code="${moduleId}.config.start" />" />
+					</td>
+					<td>
+						<spring:message code="${moduleId}.config.startMsg" arguments="${sqlLoggerName}" />
+					</td>
 				</c:otherwise>
-			</c:choose>		
-		</td>
-	</tr>
-</table>
+			</c:choose>
+		</tr>
+	</table>
+</form>
 
 <%@ include file="/WEB-INF/template/footer.jsp"%>

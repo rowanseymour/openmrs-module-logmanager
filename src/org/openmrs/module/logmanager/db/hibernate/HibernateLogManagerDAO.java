@@ -13,12 +13,15 @@
  */
 package org.openmrs.module.logmanager.db.hibernate;
 
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.openmrs.api.db.DAOException;
+import org.openmrs.module.logmanager.Preset;
 import org.openmrs.module.logmanager.db.LogManagerDAO;
 
 public class HibernateLogManagerDAO implements LogManagerDAO {
@@ -42,5 +45,38 @@ public class HibernateLogManagerDAO implements LogManagerDAO {
 		Session session = sessionFactory.getCurrentSession();
 		SQLQuery query = session.createSQLQuery("SELECT VERSION();");
 		return query.uniqueResult().toString();
+	}
+
+	/**
+	 * @see LogManagerDAO#getPreset(int)
+	 */
+	public Preset getPreset(int presetId) throws DAOException {
+		Session session = sessionFactory.getCurrentSession();
+		return (Preset)session.load(Preset.class, presetId);
+	}
+
+	/**
+	 * @see LogManagerDAO#getPresets()
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Preset> getPresets() throws DAOException {
+		Session session = sessionFactory.getCurrentSession();
+		return session.createCriteria(Preset.class).list();
+	}
+
+	/**
+	 * @see LogManagerDAO#savePreset(Preset)
+	 */
+	public void savePreset(Preset preset) throws DAOException {
+		Session session = sessionFactory.getCurrentSession();	
+		session.saveOrUpdate(preset);
+	}
+
+	/**
+	 * @see LogManagerDAO#deletePreset(Preset)
+	 */
+	public void deletePreset(Preset preset) throws DAOException {
+		Session session = sessionFactory.getCurrentSession();	
+		session.delete(preset);
 	}
 }

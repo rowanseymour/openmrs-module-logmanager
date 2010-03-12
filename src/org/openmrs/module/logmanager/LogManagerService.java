@@ -31,13 +31,12 @@ public interface LogManagerService extends OpenmrsService {
 	
 	/**
 	 * Gets all loggers currently being used by log4j
-	 * @param incImplicit true to include loggers with only inherited levels and appenders
-	 * @param paging the paging values (may be null)
+	 * @param incImplicit true to include loggers with inherited levels and appenders
 	 * @return the list of loggers
 	 * @throws APIException
 	 */
 	@Transactional(readOnly=true)
-	public List<LoggerProxy> getLoggers(boolean incImplicit, PagingInfo paging) throws APIException;
+	public List<LoggerProxy> getLoggers(boolean incImplicit) throws APIException;
 	
 	/**
 	 * Gets the appender with the given id
@@ -76,4 +75,35 @@ public interface LogManagerService extends OpenmrsService {
 	 */
 	@Transactional(readOnly=true)
 	public String getMySQLVersion() throws APIException;
+	
+	/**
+	 * Gets the preset with the given id
+	 * @param presetId the preset id
+	 * @return the presets
+	 * @throws APIException
+	 */
+	@Transactional(readOnly=true)
+	public Preset getPreset(int presetId) throws APIException;
+	
+	/**
+	 * Gets all presets
+	 * @return the list of presets
+	 * @throws APIException
+	 */
+	@Transactional(readOnly=true)
+	public List<Preset> getPresets() throws APIException;
+	
+	/**
+	 * Saves the current logger configuration as the specified preset
+	 * @param preset the preset to save
+	 * @throws APIException
+	 */
+	public void saveCurrentLoggersAsPreset(Preset preset) throws APIException;
+	
+	/**
+	 * Deletes the specified preset
+	 * @param preset the preset to delete
+	 * @throws APIException
+	 */
+	public void deletePreset(Preset preset) throws APIException;
 }

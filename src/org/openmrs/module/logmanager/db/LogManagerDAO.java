@@ -13,7 +13,10 @@
  */
 package org.openmrs.module.logmanager.db;
 
+import java.util.List;
+
 import org.openmrs.api.db.DAOException;
+import org.openmrs.module.logmanager.Preset;
 
 public interface LogManagerDAO {
 
@@ -23,4 +26,33 @@ public interface LogManagerDAO {
 	 * @throws DAOException
 	 */
 	public String getMySQLVersion() throws DAOException;
+	
+	/**
+	 * Gets the preset with the given id
+	 * @param presetId the preset id
+	 * @return the preset
+	 * @throws DAOException
+	 */
+	public Preset getPreset(int presetId) throws DAOException;
+	
+	/**
+	 * Gets all presets
+	 * @return the list of presets
+	 * @throws DAOException
+	 */
+	public List<Preset> getPresets() throws DAOException;
+	
+	/**
+	 * Updates the given preset in the database
+	 * @param preset the preset to save
+	 * @throws DAOException
+	 */
+	public void savePreset(Preset preset) throws DAOException;
+
+	/**
+	 * Deletes the given preset from the database
+	 * @param preset the preset to delete
+	 * @throws DAOException
+	 */
+	public void deletePreset(Preset preset) throws DAOException;
 }
