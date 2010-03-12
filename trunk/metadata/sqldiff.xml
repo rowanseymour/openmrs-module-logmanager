@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqldiff PUBLIC "-//OpenMRS//DTD OpenMRS SQL Diff Config 1.0//EN" "http://resources.openmrs.org/doctype/sqldiff-1.0.dtd">
+<sqldiff version="1.0">
+	<help>
+		USE:
+			The diffs are ordered by datamodel version number.
+			The script can be run in a top down fashion and is
+			expected to not fail or overwrite old data		
+	</help>
+		
+	<diff>
+		<version>1.0</version>
+		<author>Rowan Seymour</author>
+		<date>Mar 11th 2010</date>
+		<description>
+			Adding logmanager_preset,logmanager_logger tables
+		</description>
+		<sql>
+			CREATE TABLE `logmanager_preset` (
+			  `preset_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+			  `name` varchar(50) NOT NULL,
+			  PRIMARY KEY (`preset_id`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+			
+			CREATE TABLE  `logmanager_preset_logger` (
+			  `preset_id` int(10) unsigned NOT NULL,
+			  `logger` varchar(255) NOT NULL,
+			  `level` int(10) unsigned DEFAULT NULL,
+			  PRIMARY KEY (`preset_id`,`logger`) USING BTREE,
+			  KEY `FK_logmanager_logger_preset` (`preset_id`),
+			  CONSTRAINT `FK_logmanager_logger_preset` FOREIGN KEY (`preset_id`) REFERENCES `logmanager_preset` (`preset_id`) ON DELETE CASCADE
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+		</sql>
+	</diff>
+</sqldiff>

@@ -119,7 +119,7 @@ public class ViewerController extends ParameterizableViewController {
 		model.put("appender", appender);
 		model.put("appenders", appenders);
 
-		if (request.getParameter("xml") != null && request.getParameter("xml").equals("1"))
+		if (request.getParameter("xml") != null)
 			return new ModelAndView(getExportView(), model);
 		
 		model.put("levelIcons", IconFactory.getLevelIconMap());	

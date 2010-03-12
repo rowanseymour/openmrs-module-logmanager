@@ -21,6 +21,7 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -35,6 +36,7 @@ import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.logmanager.AppenderProxy;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.LoggerProxy;
+import org.openmrs.module.logmanager.Preset;
 import org.openmrs.module.logmanager.QueryField;
 import org.openmrs.module.logmanager.db.LogManagerDAO;
 import org.openmrs.module.logmanager.util.PagingInfo;
@@ -57,10 +59,10 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	}
 	
 	/**
-	 * @see org.openmrs.module.logmanager.LogManagerService#getLoggers(boolean, PagingInfo)
+	 * @see org.openmrs.module.logmanager.LogManagerService#getLoggers(boolean)
 	 */
 	@SuppressWarnings("unchecked")
-	public List<LoggerProxy> getLoggers(boolean incImplicit, PagingInfo paging) {
+	public List<LoggerProxy> getLoggers(boolean incImplicit) {
 		Enumeration<Logger> loggersEnum = (Enumeration<Logger>)LogManager.getCurrentLoggers();
 		
 		// Convert enum to a list
@@ -72,10 +74,6 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 				return log1.getName().compareTo(log2.getName());
 			}
 		});
-		
-		if (paging != null)
-			// Select only the loggers for this page
-			loggers = selectListPage(loggers, paging);
 		
 		// Convert to proxy objects
 		List<LoggerProxy> proxies = new ArrayList<LoggerProxy>();
@@ -214,5 +212,45 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	 */
 	public String getMySQLVersion() throws APIException {
 		return dao.getMySQLVersion();
+	}
+	
+	/**
+	 * @see LogManagerService#getPreset(int)
+	 */
+	public Preset getPreset(int presetId) throws APIException {
+		return dao.getPreset(presetId);
+	}
+
+	/**
+	 * @see LogManagerService#getPresets()
+	 */
+	public List<Preset> getPresets() throws APIException {
+		return dao.getPresets();
+	}
+
+	/**
+	 * @see LogManagerService#savePreset(Preset)
+	 */
+	public void saveCurrentLoggersAsPreset(Preset preset) throws APIException {	
+		Map<String, Integer> loggerMap = preset.getLoggerMap();
+		loggerMap.clear();
+		
+		// Add root logger to map
+		LoggerProxy rootLogger = LoggerProxy.getRootLogger();
+		loggerMap.put("", rootLogger.getLevelInt());
+		
+		// Add all other loggers
+		List<LoggerProxy> loggers = getLoggers(false);
+		for (LoggerProxy logger : loggers)
+			loggerMap.put(logger.getName(), logger.getLevelInt());
+		
+		dao.savePreset(preset);
+	}
+
+	/**
+	 * @see LogManagerService#deletePreset(Preset)
+	 */
+	public void deletePreset(Preset preset) throws APIException {
+		dao.deletePreset(preset);
 	}
 }

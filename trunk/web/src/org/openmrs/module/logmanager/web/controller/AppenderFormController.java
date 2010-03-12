@@ -116,7 +116,7 @@ public class AppenderFormController extends SimpleFormController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		LogManagerService svc = Context.getService(LogManagerService.class);
-		List<LoggerProxy> loggers = svc.getLoggers(false, null);
+		List<LoggerProxy> loggers = svc.getLoggers(false);
 		
 		map.put("loggers", loggers);
 		return map;
