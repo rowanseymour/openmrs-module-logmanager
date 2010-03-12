@@ -33,6 +33,9 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.springframework.web.servlet.view.AbstractView;
 
+/**
+ * XML export view of logging events
+ */
 public class XMLEventsView extends AbstractView {
 	
 	protected static final SimpleDateFormat dfFilename = new SimpleDateFormat("yyyyMMdd-HHmm");
@@ -69,6 +72,9 @@ public class XMLEventsView extends AbstractView {
 		// Create dummy event for system information
 		LoggingEvent infoEvent = createSysInfoEvent();
 		out.print(layout.format(infoEvent));
+		
+		LoggingEvent modsEvent = createModInfoEvent(model);
+		out.print(layout.format(modsEvent));
 	
 		// Write each logging event using the XML layout
 		for(LoggingEvent event : (List<LoggingEvent>)model.get("events"))
@@ -95,6 +101,21 @@ public class XMLEventsView extends AbstractView {
 		sb.append("OS: " + System.getProperty("os.name") + " " + System.getProperty("os.arch") + " " + System.getProperty("os.version") + "\n");
 		sb.append("Hostname: " + sysVars.get("OPENMRS_HOSTNAME") + "\n");
 		
-		return new LoggingEvent("SYSTEM INFO", LogManager.getRootLogger(), Level.INFO, sb.toString(), null);	
+		return new LoggingEvent("", LogManager.getRootLogger(), Level.INFO, sb.toString(), null);	
+	}
+	
+	@SuppressWarnings("unchecked")
+	private LoggingEvent createModInfoEvent(Map<String, Object> model) {
+		Map<String, String> modMap = (Map<String, String>)model.get("modules");
+		StringBuilder sb = new StringBuilder();
+		
+		for (Map.Entry<String, String> entry : modMap.entrySet()) {
+			String name = entry.getKey();
+			String version = entry.getValue();
+			
+			sb.append(name + " (" + version + ")\n");
+		}
+		
+		return new LoggingEvent("", LogManager.getRootLogger(), Level.INFO, sb.toString(), null);
 	}
 }
