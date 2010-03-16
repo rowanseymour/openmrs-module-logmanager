@@ -39,6 +39,9 @@ function clearAppender(id) {
 					<option value="<%= AppenderType.CONSOLE.getOrdinal() %>"><%= AppenderType.CONSOLE %></option>
 					<option value="<%= AppenderType.MEMORY.getOrdinal() %>"><%= AppenderType.MEMORY %></option>
 					<option value="<%= AppenderType.SOCKET.getOrdinal() %>"><%= AppenderType.SOCKET %></option>
+					<c:if test="${isWindows}">
+						<option value="<%= AppenderType.NT_EVENT_LOG.getOrdinal() %>"><%= AppenderType.NT_EVENT_LOG %></option>
+					</c:if>
 				</select>
 			</td>
 		</tr>
@@ -88,7 +91,7 @@ function clearAppender(id) {
 				<td align="right">
 					<input type="image" src="${pageContext.request.contextPath}/images/trash.gif"
 						onclick="return confirm('<spring:message code="${moduleId}.appenders.confirmDeleteAppender"/>');"
-						name="deleteAppender" value="${appender.id}"
+						name="deleteId" value="${appender.id}"
 						title="<spring:message code="general.delete"/>" /></a>
 				</td>
 			</tr>

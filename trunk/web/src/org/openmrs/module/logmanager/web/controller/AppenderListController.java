@@ -26,7 +26,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.AppenderProxy;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
-import org.openmrs.web.WebConstants;
+import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
@@ -44,35 +44,46 @@ public class AppenderListController extends ParameterizableViewController {
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		
 		LogManagerService svc = Context.getService(LogManagerService.class);
 		
-		int deleteId = ServletRequestUtils.getIntParameter(request, "deleteAppender", 0);
-		if (deleteId != 0) {
-			AppenderProxy appToRemove = svc.getAppender(deleteId);
-			if (appToRemove != null)
-				svc.deleteAppender(appToRemove);
-		}
+		// Delete appender if specified
+		int deleteId = ServletRequestUtils.getIntParameter(request, "deleteId", 0);
+		if (deleteId != 0)
+			deleteAppender(deleteId, request);
 		
 		// Clear appender if specified
 		int clearId = ServletRequestUtils.getIntParameter(request, "clearId", 0);
-		if (clearId != 0) {
-			AppenderProxy appender = svc.getAppender(clearId);
-			if (appender.isClearable())
-				appender.clear();
-			
-			String msg = getMessageSourceAccessor().getMessage(Constants.MODULE_ID + ".appenders.clearSuccess");
-			request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, msg);
-		}
+		if (clearId != 0)
+			clearAppender(clearId, request);
 		
 		Map<String, Object> model = new HashMap<String, Object>();
 		
 		// Get sorted list of existing appenders
 		Collection<AppenderProxy> appenders = svc.getAppenders(true);	
+		
 		model.put("appenders", appenders);
+		model.put("isWindows", LogManagerUtils.isWindowsServer());
 		
 		return new ModelAndView(getViewName(), model);
 	}
 	
+	private void deleteAppender(int appenderId, HttpServletRequest request) {
+		LogManagerService svc = Context.getService(LogManagerService.class);
+		
+		AppenderProxy appToRemove = svc.getAppender(appenderId);
+		if (appToRemove != null)
+			svc.deleteAppender(appToRemove);
+		
+		LogManagerUtils.setInfoMessage(request, getMessageSourceAccessor(), Constants.MODULE_ID + ".appenders.deleteSuccess");
+	}
 	
+	private void clearAppender(int appenderId, HttpServletRequest request) {
+		LogManagerService svc = Context.getService(LogManagerService.class);
+		
+		AppenderProxy appender = svc.getAppender(appenderId);
+		if (appender.isClearable())
+			appender.clear();
+		
+		LogManagerUtils.setInfoMessage(request, getMessageSourceAccessor(), Constants.MODULE_ID + ".appenders.clearSuccess");
+	}
 }

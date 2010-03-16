@@ -24,6 +24,7 @@ import org.apache.log4j.PatternLayout;
 import org.apache.log4j.SimpleLayout;
 import org.apache.log4j.TTCCLayout;
 import org.apache.log4j.net.SocketAppender;
+import org.apache.log4j.nt.NTEventLogAppender;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.OptionHandler;
 import org.apache.log4j.xml.XMLLayout;
@@ -44,6 +45,7 @@ public class AppenderProxy {
 	protected int bufferSize;
 	protected String remoteHost;
 	protected int port;
+	protected String source;
 	
 	// Proxied properties of the layout
 	protected String layoutPattern;
@@ -102,6 +104,8 @@ public class AppenderProxy {
 			case SOCKET:		
 				target = new SocketAppender();
 				break;
+			case NT_EVENT_LOG:
+				target = new NTEventLogAppender();
 			}
 		}
 		
@@ -136,10 +140,12 @@ public class AppenderProxy {
 		// Update subclass properties
 		if (target instanceof MemoryAppender)
 			((MemoryAppender)target).setBufferSize(bufferSize);
-		if (target instanceof SocketAppender) {
+		else if (target instanceof SocketAppender) {
 			((SocketAppender)target).setRemoteHost(remoteHost);
 			((SocketAppender)target).setPort(port);
 		}
+		else if (target instanceof NTEventLogAppender)
+			((NTEventLogAppender)target).setSource(source);
 	}
 
 	/**
@@ -195,7 +201,7 @@ public class AppenderProxy {
 	 * @return true if it requires a layout
 	 */
 	public boolean getRequiresLayout() {
-		return (type == AppenderType.CONSOLE);
+		return (type == AppenderType.CONSOLE || type == AppenderType.NT_EVENT_LOG);
 	}
 	
 	/**
@@ -345,6 +351,22 @@ public class AppenderProxy {
 	 */
 	public void setPort(int port) {
 		this.port = port;
+	}
+
+	/**
+	 * Gets the source used by NT event log appenders
+	 * @return the source
+	 */
+	public String getSource() {
+		return source;
+	}
+
+	/**
+	 * Sets the source used by NT event log appenders
+	 * @param source the source
+	 */
+	public void setSource(String source) {
+		this.source = source;
 	}
 
 	/**
