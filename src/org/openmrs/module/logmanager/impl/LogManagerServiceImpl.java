@@ -34,6 +34,7 @@ import org.apache.log4j.spi.LoggingEvent;
 import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.logmanager.AppenderProxy;
+import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.LoggerProxy;
 import org.openmrs.module.logmanager.Preset;
@@ -151,21 +152,21 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	}
 	
 	/**
-	 * @see org.openmrs.module.logmanager.LogManagerService#getAppenderEvents(Appender, Level, QueryField, String, Paging)
+	 * @see org.openmrs.module.logmanager.LogManagerService#getAppenderEvents(Appender, Level, int, QueryField, String, Paging)
 	 */
-	public List<LoggingEvent> getAppenderEvents(AppenderProxy appender, Level level, QueryField queryField, String queryValue, PagingInfo paging) throws APIException {
+	public List<LoggingEvent> getAppenderEvents(AppenderProxy appender, Level level, int levelOp, QueryField queryField, String queryValue, PagingInfo paging) throws APIException {
 
 		Collection<LoggingEvent> eventsAll = appender.getLoggingEvents();
 		List<LoggingEvent> events = new LinkedList<LoggingEvent>();
 		
 		for (LoggingEvent event : eventsAll) {			
-			if (level != null && level.toInt() != Level.ALL_INT && level.toInt() != event.getLevel().toInt())
-				continue;
+			if (level != null && !testLevel(event.getLevel(), levelOp, level))
+				continue;		
 			
 			if (queryValue != null) {
 				switch (queryField) {
 				case LOGGER_NAME:
-					if (!event.getLoggerName().startsWith(queryValue))
+					if (!event.getLoggerName().contains(queryValue))
 						continue;
 					break;
 				case CLASS_NAME:
@@ -187,42 +188,6 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 			return selectListPage(events, paging);
 		
 		return events;
-	}
-
-	/**
-	 * Gets all loggers with explicit level or appenders from an enumeration of loggers
-	 * @param loggersEnum the enumeration of loggers
-	 * @return the list of loggers
-	 */
-	private static List<Logger> getExplicitLoggersFromEnum(Enumeration<Logger> loggersEnum) {
-		List<Logger> loggers = new ArrayList<Logger>();
-		
-		while (loggersEnum.hasMoreElements()) {
-			Logger logger = loggersEnum.nextElement();
-			if (logger.getLevel() != null || logger.getAllAppenders().hasMoreElements())
-				loggers.add(logger);
-		}
-		
-		return loggers;
-	}
-	
-	/**
-	 * Selects a range of elements from a list
-	 * @param <T> the type of each list element
-	 * @param list the list to select from
-	 * @return a new list containing only those list elements in the current page
-	 */
-	private static <T> List<T> selectListPage(List<T> list, PagingInfo paging) {
-		List<T> selection = new ArrayList<T>();
-		
-		int lStart = Math.max(0, Math.min(paging.getPageOffset(), list.size()));
-		int lEnd = Math.max(0, Math.min(paging.getPageOffset() + paging.getPageSize(), list.size()));
-		for (int l = lStart; l < lEnd; l++)
-			selection.add(list.get(l));
-		
-		paging.setResultsTotal(list.size());
-		
-		return selection;
 	}
 
 	/**
@@ -270,5 +235,62 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	 */
 	public void deletePreset(Preset preset) throws APIException {
 		dao.deletePreset(preset);
+	}
+	
+	/**
+	 * Gets all loggers with explicit level or appenders from an enumeration of loggers
+	 * @param loggersEnum the enumeration of loggers
+	 * @return the list of loggers
+	 */
+	private static List<Logger> getExplicitLoggersFromEnum(Enumeration<Logger> loggersEnum) {
+		List<Logger> loggers = new ArrayList<Logger>();
+		
+		while (loggersEnum.hasMoreElements()) {
+			Logger logger = loggersEnum.nextElement();
+			if (logger.getLevel() != null || logger.getAllAppenders().hasMoreElements())
+				loggers.add(logger);
+		}
+		
+		return loggers;
+	}
+	
+	/**
+	 * Selects a range of elements from a list
+	 * @param <T> the type of each list element
+	 * @param list the list to select from
+	 * @return a new list containing only those list elements in the current page
+	 */
+	private static <T> List<T> selectListPage(List<T> list, PagingInfo paging) {
+		List<T> selection = new ArrayList<T>();
+		
+		int lStart = Math.max(0, Math.min(paging.getPageOffset(), list.size()));
+		int lEnd = Math.max(0, Math.min(paging.getPageOffset() + paging.getPageSize(), list.size()));
+		for (int l = lStart; l < lEnd; l++)
+			selection.add(list.get(l));
+		
+		paging.setResultsTotal(list.size());
+		
+		return selection;
+	}
+	
+	/**
+	 * Compares two level values with a given boolean operator 
+	 * @param level1 the first level value
+	 * @param levelOp the boolean operator (-1: LE, 0: EQ, 1: GE)
+	 * @param level2 the second level value
+	 * @return value of the comparison
+	 */
+	private boolean testLevel(Level level1, int levelOp, Level level2) {
+		if (level1 == Level.ALL || level2 == Level.ALL)
+			return true;
+		
+		switch (levelOp) {
+		case Constants.BOOL_OP_LE:
+			return (level1.toInt() <= level2.toInt());
+		case Constants.BOOL_OP_GE:
+			return (level1.toInt() >= level2.toInt());
+		default:
+			return (level1.toInt() == level2.toInt());
+		}
 	}
 }
