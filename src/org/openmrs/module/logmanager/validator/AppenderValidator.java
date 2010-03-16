@@ -14,7 +14,6 @@
 package org.openmrs.module.logmanager.validator;
 
 import org.openmrs.module.logmanager.AppenderProxy;
-import org.openmrs.module.logmanager.AppenderType;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LayoutType;
 import org.springframework.validation.Errors;
@@ -46,10 +45,17 @@ public class AppenderValidator implements Validator {
 			errors.rejectValue("layout", Constants.MODULE_ID + ".error.layout");
 		
 		// Subclass validation
-		if (appender.getType() == AppenderType.MEMORY)
+		switch (appender.getType()) {
+		case MEMORY:
 			validateMemoryAppender(appender, errors);
-		else if (appender.getType() == AppenderType.SOCKET)
+			break;
+		case SOCKET:
 			validateSocketAppender(appender, errors);
+			break;
+		case NT_EVENT_LOG:
+			validateNTEventLogAppender(appender, errors);
+			break;
+		}		
 	}
 	
 	/**
@@ -72,5 +78,15 @@ public class AppenderValidator implements Validator {
 			errors.rejectValue("host", Constants.MODULE_ID + ".error.host");
 		if (appender.getPort() < 0 || appender.getPort() > 65535)
 			errors.rejectValue("port", Constants.MODULE_ID + ".error.port");
+	}
+	
+	/**
+	 * Validation specific to NT event log appenders
+	 * @param appender the appender to validate
+	 * @param errors the errors
+	 */
+	private void validateNTEventLogAppender(AppenderProxy appender, Errors errors) {
+		if (appender.getSource().isEmpty())
+			errors.rejectValue("source", Constants.MODULE_ID + ".error.source");
 	}
 }
