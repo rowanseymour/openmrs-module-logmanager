@@ -48,6 +48,12 @@ function showThrowable(index, show) {
 				
 				<spring:message code="${moduleId}.viewer.atLevel" />
 				
+				<select name="levelOp">
+					<option value="-1" ${levelOp == -1 ? 'selected="selected"' : ''}>&le;</option>
+					<option value="0"  ${levelOp == 0  ? 'selected="selected"' : ''}>=</option>
+					<option value="1"  ${levelOp == 1  ? 'selected="selected"' : ''}>&ge;</option>
+				</select>
+				
 				<logmgr_tag:levelList name="level" value="${level}" showAny="true" />
 				
 				<spring:message code="${moduleId}.viewer.where" />

@@ -61,6 +61,8 @@ public class ViewerController extends ParameterizableViewController {
 		LogManagerService svc = Context.getService(LogManagerService.class);
 		
 		// Get viewing filters
+		int levelOp = ServletRequestUtils.getIntParameter(request, "levelOp", 0);
+		model.put("levelOp", levelOp);
 		Level level = Level.toLevel(ServletRequestUtils.getIntParameter(request, "level", Level.ALL_INT));
 		model.put("level", level.toInt());
 		
@@ -105,7 +107,7 @@ public class ViewerController extends ParameterizableViewController {
 		
 		if (appender != null) {
 			if (appender.isViewable())
-				model.put("events", svc.getAppenderEvents(appender, level, queryField, queryValue, paging));
+				model.put("events", svc.getAppenderEvents(appender, level, levelOp, queryField, queryValue, paging));
 			else {
 				model.put("events", new ArrayList<LoggingEvent>());
 				LogManagerUtils.setErrorMessage(request, getMessageSourceAccessor(), Constants.MODULE_ID + ".error.invalidAppender");

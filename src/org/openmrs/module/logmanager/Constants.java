@@ -32,4 +32,9 @@ public class Constants {
 	public static final int VIEWER_PAGE_SIZE = 100;
 	
 	public static final String LOGGER_HIBERNATE_SQL = "org.hibernate.SQL";
+	
+	// Because Java enums are a pain to use with request parameters..
+	public static final int BOOL_OP_LE = -1;
+	public static final int BOOL_OP_EQ = 0;
+	public static final int BOOL_OP_GE = 1;
 }
