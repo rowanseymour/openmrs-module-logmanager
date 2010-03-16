@@ -66,6 +66,7 @@ public interface LogManagerService extends OpenmrsService {
 	 * Gets logging events from a suitable appender
 	 * @param appender the appender which must be a MemoryAppender
 	 * @param level the level of events to return (may be null)
+	 * @param levelOp the boolean operation to use with level
 	 * @param queryField the query search field 
 	 * @param queryValue the query search value (may be null)
 	 * @param paging the paging values (may be null)
@@ -73,7 +74,7 @@ public interface LogManagerService extends OpenmrsService {
 	 * @throws APIException
 	 */
 	@Transactional(readOnly=true)
-	public List<LoggingEvent> getAppenderEvents(AppenderProxy appender, Level level, QueryField queryField, String queryValue, PagingInfo paging) throws APIException;
+	public List<LoggingEvent> getAppenderEvents(AppenderProxy appender, Level level, int levelOp, QueryField queryField, String queryValue, PagingInfo paging) throws APIException;
 
 	/**
 	 * Gets the version of MySQL being used by OpenMRS
