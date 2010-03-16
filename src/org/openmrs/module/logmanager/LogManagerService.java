@@ -56,6 +56,13 @@ public interface LogManagerService extends OpenmrsService {
 	public Collection<AppenderProxy> getAppenders(boolean sorted) throws APIException;
 	
 	/**
+	 * Deletes the specified appender from the logging system
+	 * @param appender the appender
+	 * @throws APIException
+	 */
+	public void deleteAppender(AppenderProxy appender) throws APIException;
+	
+	/**
 	 * Gets logging events from a suitable appender
 	 * @param appender the appender which must be a MemoryAppender
 	 * @param level the level of events to return (may be null)

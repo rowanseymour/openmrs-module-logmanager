@@ -47,6 +47,13 @@ public class AppenderListController extends ParameterizableViewController {
 		
 		LogManagerService svc = Context.getService(LogManagerService.class);
 		
+		int deleteId = ServletRequestUtils.getIntParameter(request, "deleteAppender", 0);
+		if (deleteId != 0) {
+			AppenderProxy appToRemove = svc.getAppender(deleteId);
+			if (appToRemove != null)
+				svc.deleteAppender(appToRemove);
+		}
+		
 		// Clear appender if specified
 		int clearId = ServletRequestUtils.getIntParameter(request, "clearId", 0);
 		if (clearId != 0) {

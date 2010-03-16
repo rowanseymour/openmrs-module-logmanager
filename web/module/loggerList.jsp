@@ -183,6 +183,14 @@ function onSavePreset() {
 				</td>
 			</tr>
 		</c:forEach>
+		
+		<c:if test="${empty loggers}">
+			<tr>
+				<td colspan="4" style="padding: 10px; font-style: italic; text-align: center">
+					<spring:message code="${moduleId}.loggers.noLoggers"/>
+				</td>
+			</tr>
+		</c:if>
 	</table>
 </form>
 
