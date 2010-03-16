@@ -66,7 +66,7 @@ public class ViewerController extends ParameterizableViewController {
 		Level level = Level.toLevel(ServletRequestUtils.getIntParameter(request, "level", Level.ALL_INT));
 		model.put("level", level.toInt());
 		
-		QueryField queryField = LogManagerUtils.getQueryFieldParameter(request, "queryField", QueryField.LOGGER_NAME);
+		QueryField queryField = LogManagerUtils.getQueryFieldParameter(request, "queryField", QueryField.CLASS_NAME);
 		String queryValue = request.getParameter("queryValue");
 		if (queryValue != null) {
 			queryValue = queryValue.trim();
