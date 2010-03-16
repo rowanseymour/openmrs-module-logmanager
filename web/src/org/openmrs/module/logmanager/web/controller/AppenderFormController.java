@@ -144,9 +144,13 @@ public class AppenderFormController extends SimpleFormController {
 		switch (type) {
 		case MEMORY:
 			appender.setBufferSize(100);
+			break;
 		case SOCKET:		
 			appender.setRemoteHost(request.getRemoteAddr());
 			appender.setPort(Constants.DEF_PORT);
+			break;
+		case NT_EVENT_LOG:
+			appender.setSource(Constants.DEF_SOURCE);
 			break;
 		}
 		

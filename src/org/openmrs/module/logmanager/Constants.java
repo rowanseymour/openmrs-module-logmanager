@@ -27,6 +27,7 @@ public class Constants {
 	public static final String DEF_APPENDER = "MEMORY_APPENDER";
 	public static final String DEF_LAYOUT = "%p - %C{1}.%M(%L) |%d{ISO8601}| %m%n";
 	public static final int DEF_PORT = 4560;
+	public static final String DEF_SOURCE = "OpenMRS";
 	
 	public static final int RESULTS_PAGE_SIZE = 25;
 	public static final int VIEWER_PAGE_SIZE = 100;

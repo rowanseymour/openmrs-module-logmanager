@@ -43,14 +43,20 @@ function onChangeLayoutType(value) {
 			</td>
 		</tr>
 		<tr>
-			<th><spring:message code="${moduleId}.appenders.type"/></th>
+			<th valign="top"><spring:message code="${moduleId}.appenders.type"/></th>
 			<td>
 				<c:out value="${appender.type}" />
+				<c:if test="${appender.type.ordinal == 4}">
+					<p>
+						<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/icon_warn.png" />
+						<spring:message code="${moduleId}.appenders.ntEventLogWarning"/>
+					</p>
+				</c:if>
 			</td>
 		</tr>
 		<c:if test="${appender.requiresLayout}">
 			<tr>
-				<th><spring:message code="${moduleId}.appenders.layout"/></th>
+				<th valign="top"><spring:message code="${moduleId}.appenders.layout"/></th>
 				<td>
 					<c:choose>
 						<c:when test="${appender.layoutType.ordinal > 0}">
@@ -89,6 +95,15 @@ function onChangeLayoutType(value) {
 					<spring:message code="${moduleId}.appenders.port"/>
 					<form:input path="port" size="5" />
 				</td>
+			</tr>
+		</c:if>
+		<c:if test="${appender.type.ordinal == 4}">
+			<tr>
+				<th><spring:message code="${moduleId}.appenders.source"/></th>
+				<td>
+					<form:input path="source" />
+					<form:errors path="source" cssClass="error" />
+				</td>		
 			</tr>
 		</c:if>
 		<c:if test="${not appender.existing}">

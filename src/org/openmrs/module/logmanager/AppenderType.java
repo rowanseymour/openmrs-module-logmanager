@@ -16,6 +16,7 @@ package org.openmrs.module.logmanager;
 import org.apache.log4j.Appender;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.net.SocketAppender;
+import org.apache.log4j.nt.NTEventLogAppender;
 import org.openmrs.util.MemoryAppender;
 
 /**
@@ -25,7 +26,8 @@ public enum AppenderType {
 	UNKNOWN,
 	CONSOLE,
 	MEMORY,
-	SOCKET;
+	SOCKET,
+	NT_EVENT_LOG;
 	
 	/**
 	 * Bean-property wrapper for the ordinal method so it can be used in EL
@@ -46,6 +48,8 @@ public enum AppenderType {
 			return "Memory";
 		case SOCKET:
 			return "Socket";
+		case NT_EVENT_LOG:
+			return "NT Event Log";
 		}
 		return "Unknown";
 	}
@@ -62,6 +66,8 @@ public enum AppenderType {
 			return MEMORY;
 		else if (appender instanceof SocketAppender)
 			return SOCKET;
+		else if (appender instanceof NTEventLogAppender)
+			return NT_EVENT_LOG;
 		else
 			return UNKNOWN;
 	}

@@ -122,6 +122,14 @@ public class LogManagerUtils {
 	}
 	
 	/**
+	 * Gets whether the server is running any version of Microsoft Windows
+	 * @return true if server is Windows
+	 */
+	public static boolean isWindowsServer() {
+		return System.getProperty("os.name").contains("Windows");
+	}
+	
+	/**
 	 * Creates an alphabetically sorted map of module names and versions
 	 * @return the map
 	 */
