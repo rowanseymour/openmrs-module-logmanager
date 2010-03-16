@@ -133,6 +133,24 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	}
 	
 	/**
+	 * @see org.openmrs.module.logmanager.LogManagerService#deleteAppender(AppenderProxy)
+	 */
+	@SuppressWarnings("unchecked")
+	public void deleteAppender(AppenderProxy appender) throws APIException {
+		// Get all loggers
+		Enumeration<Logger> loggersEnum = (Enumeration<Logger>)LogManager.getCurrentLoggers();
+		
+		// Remove from root logger
+		LogManager.getRootLogger().removeAppender(appender.getTarget());
+		
+		// Remove appender from all other loggers
+		while (loggersEnum.hasMoreElements()) {
+			Logger logger = loggersEnum.nextElement();
+			logger.removeAppender(appender.getTarget());
+		}
+	}
+	
+	/**
 	 * @see org.openmrs.module.logmanager.LogManagerService#getAppenderEvents(Appender, Level, QueryField, String, Paging)
 	 */
 	public List<LoggingEvent> getAppenderEvents(AppenderProxy appender, Level level, QueryField queryField, String queryValue, PagingInfo paging) throws APIException {
