@@ -59,6 +59,7 @@ function clearAppender(id) {
 			<th><spring:message code="${moduleId}.appenders.type"/></th>
 			<th><spring:message code="${moduleId}.appenders.layout"/></th>
 			<th><spring:message code="${moduleId}.appenders.messages"/></th>
+			<th>&nbsp;</th>
 		</tr>
 			
 		<c:forEach var="appender" items="${appenders}" varStatus="rowStatus">
@@ -83,6 +84,12 @@ function clearAppender(id) {
 					<c:if test="${appender.clearable}">
 						<a href="javascript:clearAppender(${appender.id})"><spring:message code="general.clear"/></a>
 					</c:if>
+				</td>
+				<td align="right">
+					<input type="image" src="${pageContext.request.contextPath}/images/trash.gif"
+						onclick="return confirm('<spring:message code="${moduleId}.appenders.confirmDeleteAppender"/>');"
+						name="deleteAppender" value="${appender.id}"
+						title="<spring:message code="general.delete"/>" /></a>
 				</td>
 			</tr>
 		</c:forEach>
