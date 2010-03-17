@@ -47,7 +47,7 @@ function onChangeLayoutType(value) {
 			<td>
 				<c:out value="${appender.type}" />
 				<c:if test="${appender.type.ordinal == 4}">
-					<p>
+					<p style="font-style: italic">
 						<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/icon_warn.png" />
 						<spring:message code="${moduleId}.appenders.ntEventLogWarning"/>
 					</p>
