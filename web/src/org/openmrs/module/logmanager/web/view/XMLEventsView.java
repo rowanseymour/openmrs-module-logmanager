@@ -90,7 +90,7 @@ public class XMLEventsView extends AbstractView {
 		LogManagerService logSvc = Context.getService(LogManagerService.class);
 		SortedMap<String, String> sysVars = admSvc.getSystemVariables();
 		ImplementationId implId = admSvc.getImplementationId();
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder("SYSTEM INFO\n");
 		
 		if (implId != null)
 			sb.append("Implementation: " + implId.getName() + " (" + implId.getImplementationId() + ")\n");
@@ -107,7 +107,7 @@ public class XMLEventsView extends AbstractView {
 	@SuppressWarnings("unchecked")
 	private LoggingEvent createModInfoEvent(Map<String, Object> model) {
 		Map<String, String> modMap = (Map<String, String>)model.get("modules");
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder("MODULE INFO\n");
 		
 		for (Map.Entry<String, String> entry : modMap.entrySet()) {
 			String name = entry.getKey();
