@@ -77,6 +77,15 @@ public interface LogManagerService extends OpenmrsService {
 	public List<LoggingEvent> getAppenderEvents(AppenderProxy appender, Level level, int levelOp, QueryField queryField, String queryValue, PagingInfo paging) throws APIException;
 
 	/**
+	 * Gets the logging event with the specified id
+	 * @param appender the appender to search
+	 * @param id the id of the logging event
+	 * @return the logging event
+	 */
+	@Transactional(readOnly=true)
+	public LoggingEvent getAppenderEvent(AppenderProxy appender, int id);
+	
+	/**
 	 * Gets the version of MySQL being used by OpenMRS
 	 * @return the version string
 	 * @throws APIException

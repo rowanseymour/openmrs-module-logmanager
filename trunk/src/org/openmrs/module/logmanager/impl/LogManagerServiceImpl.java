@@ -189,6 +189,18 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 		
 		return events;
 	}
+	
+	/**
+	 * @see LogManagerService#getAppenderEvent(org.openmrs.module.logmanager.AppenderProxy, int)
+	 */
+	public LoggingEvent getAppenderEvent(AppenderProxy appender, int id) {
+		List<LoggingEvent> events = getAppenderEvents(appender, null, 0, null, null, null);
+		for (LoggingEvent e : events) {
+			if (e.hashCode() == id)
+				return e;
+		}
+		return null;
+	}
 
 	/**
 	 * @see LogManagerService#getMySQLVersion()

@@ -82,7 +82,7 @@ function clearAppender(id) {
 				<td>${appender.layoutStr}</td>
 				<td>
 					<c:if test="${appender.viewable}">
-						<a href="viewer.htm?id=${appender.id}"><spring:message code="general.view"/></a>
+						<a href="viewer.htm?appId=${appender.id}"><spring:message code="general.view"/></a>
 					</c:if>
 					<c:if test="${appender.clearable}">
 						<a href="javascript:clearAppender(${appender.id})"><spring:message code="general.clear"/></a>

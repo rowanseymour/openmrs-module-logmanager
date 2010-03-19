@@ -16,6 +16,7 @@ package org.openmrs.module.logmanager.web.taglib;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.spi.LocationInfo;
 
 /**
@@ -55,5 +56,23 @@ public class ELFunctions {
 	 */
 	public static String formatMessage(String msg) {
 		return msg.replace("\n", "<br/>");
+	}
+	
+	/**
+	 * Converts a log4j level to an integer value
+	 * @param level the log4j level
+	 * @return the integer value
+	 */
+	public static Integer levelToInt(Level level) {
+		return level.toInt();
+	}
+	
+	/**
+	 * Gets the hash code of the specified object
+	 * @param obj the object
+	 * @return the hash code
+	 */
+	public static Integer hashCode(Object obj) {
+		return obj.hashCode();
 	}
 }
