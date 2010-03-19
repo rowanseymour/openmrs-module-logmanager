@@ -1,4 +1,4 @@
-<%@ include file="/WEB-INF/template/include.jsp"%>
+<%@ include file="/WEB-INF/template/include.jsp" %>
 <%@ include file="template/localInclude.jsp"%>
 
 <logmgr_tag:modulePage />
@@ -8,6 +8,8 @@
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="/WEB-INF/view/admin/maintenance/localHeader.jsp"%>
 <%@ include file="template/localHeader.jsp"%>
+
+<c:set var="level_ERROR" value="<%= org.apache.log4j.Level.ERROR_INT %>" />
 
 <style type="text/css">
 .throwable {
@@ -21,6 +23,9 @@
 }
 .throwable a img {
 	border: 0;
+}
+.errorLevel {
+	background-color: #FFEAE0;
 }
 </style>
 
@@ -85,14 +90,14 @@ function showThrowable(index, show) {
 		</tr>
 	
 		<c:forEach var="event" items="${events}" varStatus="rowStatus">
-			<tr class="<c:choose><c:when test="${rowStatus.index % 2 == 0}">evenRow</c:when><c:otherwise>oddRow</c:otherwise></c:choose>">
+			<tr class="<c:choose><c:when test="${logmgr:levelToInt(event.level) >= level_ERROR}">errorLevel</c:when><c:when test="${rowStatus.index % 2 == 0}">evenRow</c:when><c:otherwise>oddRow</c:otherwise></c:choose>">
 				<td valign="top" width="16">
 					<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/${levelIcons[event.level]}"
-						title="${event.level}"
+						title="${levelLabels[event.level]}"
 						width="16" height="16" />
 				</td>
 				<td nowrap="nowrap" style="font-size: 10px" valign="top">
-					${logmgr:formatTimestamp(event.timeStamp)}
+					<a href="event.htm?appId=${appender.id}&amp;eventId=${logmgr:hashCode(event)}">${logmgr:formatTimestamp(event.timeStamp)}</a>
 				</td>
 				<td style="font-size: 10px" valign="top">
 					<span title="${event.locationInformation.className}">

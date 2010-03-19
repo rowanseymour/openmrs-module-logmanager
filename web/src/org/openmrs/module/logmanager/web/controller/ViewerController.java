@@ -91,10 +91,10 @@ public class ViewerController extends ParameterizableViewController {
 		}
 		
 		// Get specific appender or default to MEMORY_APPENDER
-		int viewId = ServletRequestUtils.getIntParameter(request, "viewId", 0);
+		int appId = ServletRequestUtils.getIntParameter(request, "appId", 0);
 		AppenderProxy appender = null;
-		if (viewId != 0)
-			appender = svc.getAppender(viewId);
+		if (appId != 0)
+			appender = svc.getAppender(appId);
 		else {
 			// Try default appender from Constants
 			Appender target = Logger.getRootLogger().getAppender(Constants.DEF_APPENDER);
@@ -127,6 +127,7 @@ public class ViewerController extends ParameterizableViewController {
 		}
 		
 		model.put("levelIcons", IconFactory.getLevelIconMap());	
+		model.put("levelLabels", IconFactory.getLevelLabelMap());	
 		return new ModelAndView(getViewName(), model);
 	}
 

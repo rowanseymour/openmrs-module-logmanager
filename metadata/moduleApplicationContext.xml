@@ -27,6 +27,7 @@
 				<prop key="module/@MODULE_ID@/appender.list">logMgrAppenderListController</prop>
 				<prop key="module/@MODULE_ID@/appender.form">logMgrAppenderFormController</prop>
 				<prop key="module/@MODULE_ID@/viewer.htm">logMgrViewerController</prop>
+				<prop key="module/@MODULE_ID@/event.htm">logMgrEventController</prop>
 				<prop key="module/@MODULE_ID@/config.htm">logMgrConfigController</prop>
 				
 				<prop key="admin/maintenance/serverLog.form">logMgrViewerController</prop>
@@ -76,6 +77,12 @@
 		</property>
 		<property name="exportView">
 			<ref bean="logMgrXMLEventsView" />
+		</property>
+	</bean>
+	
+	<bean id="logMgrEventController" class="@MODULE_PACKAGE@.web.controller.EventController">
+		<property name="viewName">
+			<value>module/@MODULE_ID@/event</value>
 		</property>
 	</bean>
 	

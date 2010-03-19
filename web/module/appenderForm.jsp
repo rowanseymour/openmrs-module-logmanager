@@ -4,7 +4,7 @@
 
 <logmgr_tag:modulePage />
 
-<openmrs:require privilege="Manage Server Log" otherwise="/login.htm" redirect="/module/logmanager/appender.form" />
+<openmrs:require privilege="Manage Server Log" otherwise="/login.htm" redirect="/module/logmanager/appender.list" />
 
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="/WEB-INF/view/admin/maintenance/localHeader.jsp"%>
