@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE module PUBLIC "-//OpenMRS//DTD OpenMRS Config 1.0//EN" "./config-1.0.dtd">
+<!DOCTYPE module PUBLIC "-//OpenMRS//DTD OpenMRS Config 1.2//EN" "./config-1.2.dtd">
 <module configVersion="1.0">
 	<id>logmanager</id>
 	<name>Log Manager</name>
@@ -9,17 +9,32 @@
 	<description>Management of logging for developers</description>
 	<activator>@MODULE_PACKAGE@.ModuleActivator</activator>
 	<updateURL>https://dev.openmrs.org/modules/download/@MODULE_ID@/update.rdf</updateURL>
-	<require_version>1.4.3</require_version>
+	<require_version>1.5.0</require_version>
+	
+	<extension>
+		<point>org.openmrs.uncaughtException</point>
+		<class>@MODULE_PACKAGE@.web.extension.UncaughtExceptionExtension</class>
+	</extension>
 	
 	<extension>
 		<point>org.openmrs.admin.maintenance.localHeader</point>
-		<class>@MODULE_PACKAGE@.extension.html.MaintenanceLinksExt</class>
+		<class>@MODULE_PACKAGE@.web.extension.MaintenanceLinksExtension</class>
 	</extension>
 	
 	<privilege>
 		<name>Manage Server Log</name>
 		<description>Able to manage and configure server logging</description>
 	</privilege>
+	
+	<filter>
+		<filter-name>logMgrRequestFilter</filter-name>
+		<filter-class>@MODULE_PACKAGE@.web.filter.RequestProviderFilter</filter-class>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>logMgrRequestFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 	
 	<messages>
 		<lang>en</lang>

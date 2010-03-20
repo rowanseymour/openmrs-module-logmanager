@@ -37,7 +37,9 @@
 	
 	<!-- ========================= Views ========================= -->
 
-	<bean id="logMgrXMLEventsView" class="@MODULE_PACKAGE@.web.view.XMLEventsView" />
+	<bean id="logMgrEventsExportView" class="@MODULE_PACKAGE@.web.view.EventsExportView" />
+	
+	<bean id="logMgrEventReportView" class="@MODULE_PACKAGE@.web.view.EventReportView" />
 
 	<!-- ========================= Controllers ========================= -->
 	
@@ -76,13 +78,16 @@
 			<value>module/@MODULE_ID@/viewer</value>
 		</property>
 		<property name="exportView">
-			<ref bean="logMgrXMLEventsView" />
+			<ref bean="logMgrEventsExportView" />
 		</property>
 	</bean>
 	
 	<bean id="logMgrEventController" class="@MODULE_PACKAGE@.web.controller.EventController">
 		<property name="viewName">
 			<value>module/@MODULE_ID@/event</value>
+		</property>
+		<property name="reportView">
+			<ref bean="logMgrEventReportView" />
 		</property>
 	</bean>
 	
@@ -127,5 +132,9 @@
 			</list>
 		</property>
 	</bean>
+	
+	<!-- ========================= Other beans ========================= -->
+	
+	<bean class="@MODULE_PACKAGE@.web.util.ContextProvider" />
 	
 </beans>
