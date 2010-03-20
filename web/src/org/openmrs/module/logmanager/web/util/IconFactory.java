@@ -11,7 +11,7 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.module.logmanager.web;
+package org.openmrs.module.logmanager.web.util;
 
 import java.util.HashMap;
 import java.util.Map;

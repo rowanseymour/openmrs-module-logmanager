@@ -28,8 +28,9 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.AppenderProxy;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
-import org.openmrs.module.logmanager.util.LogManagerUtils;
-import org.openmrs.module.logmanager.web.IconFactory;
+import org.openmrs.module.logmanager.web.util.IconFactory;
+import org.openmrs.module.logmanager.web.util.WebUtils;
+import org.openmrs.module.logmanager.web.view.EventReportView;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
@@ -40,6 +41,8 @@ import org.springframework.web.servlet.mvc.ParameterizableViewController;
 public class EventController extends ParameterizableViewController {
 	
 	protected static final Log log = LogFactory.getLog(EventController.class);
+	
+	protected EventReportView reportView;
 	
 	/**
 	 * @see org.springframework.web.servlet.mvc.ParameterizableViewController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
@@ -68,11 +71,23 @@ public class EventController extends ParameterizableViewController {
 		LoggingEvent event = svc.getAppenderEvent(appender, eventId);
 		
 		if (event == null)
-			LogManagerUtils.setErrorMessage(request, getMessageSourceAccessor(), Constants.MODULE_ID + ".error.invalidEvent");
+			WebUtils.setErrorMessage(request, Constants.MODULE_ID + ".error.invalidEvent", null);
 		
 		model.put("event", event);	
 		model.put("levelIcons", IconFactory.getLevelIconMap());	
-		model.put("levelLabels", IconFactory.getLevelLabelMap());	
-		return new ModelAndView(getViewName(), model);
+		model.put("levelLabels", IconFactory.getLevelLabelMap());
+		
+		if (request.getParameter("report") != null)
+			return new ModelAndView(reportView, model);
+		else
+			return new ModelAndView(getViewName(), model);
 	}
+
+	/**
+	 * Sets the event report view
+	 * @param reportView the event report view
+	 */
+	public void setReportView(EventReportView reportView) {
+		this.reportView = reportView;
+	}	
 }

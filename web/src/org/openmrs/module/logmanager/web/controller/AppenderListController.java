@@ -27,6 +27,8 @@ import org.openmrs.module.logmanager.AppenderProxy;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.util.LogManagerUtils;
+import org.openmrs.module.logmanager.web.util.ContextProvider;
+import org.openmrs.module.logmanager.web.util.WebUtils;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
@@ -67,16 +69,30 @@ public class AppenderListController extends ParameterizableViewController {
 		return new ModelAndView(getViewName(), model);
 	}
 	
+	/**
+	 * Deletes the specified appender
+	 * @param appenderId the id of the appender
+	 * @param request the http request
+	 */
 	private void deleteAppender(int appenderId, HttpServletRequest request) {
 		LogManagerService svc = Context.getService(LogManagerService.class);
 		
-		AppenderProxy appToRemove = svc.getAppender(appenderId);
-		if (appToRemove != null)
-			svc.deleteAppender(appToRemove);
+		AppenderProxy appender = svc.getAppender(appenderId);
+		if (appender != null)
+			svc.deleteAppender(appender);
 		
-		LogManagerUtils.setInfoMessage(request, getMessageSourceAccessor(), Constants.MODULE_ID + ".appenders.deleteSuccess");
+		String name = appender.getName();
+		if (name == null || name.isEmpty())
+			name = ContextProvider.getMessage(Constants.MODULE_ID + ".anonymous");
+		WebUtils.setInfoMessage(request, 
+				Constants.MODULE_ID + ".appenders.deleteSuccess", new Object[] { name });
 	}
 	
+	/**
+	 * Clears the specified appender
+	 * @param appenderId the appender id
+	 * @param request the http request
+	 */
 	private void clearAppender(int appenderId, HttpServletRequest request) {
 		LogManagerService svc = Context.getService(LogManagerService.class);
 		
@@ -84,6 +100,10 @@ public class AppenderListController extends ParameterizableViewController {
 		if (appender.isClearable())
 			appender.clear();
 		
-		LogManagerUtils.setInfoMessage(request, getMessageSourceAccessor(), Constants.MODULE_ID + ".appenders.clearSuccess");
+		String name = appender.getName();
+		if (name == null || name.isEmpty())
+			name = ContextProvider.getMessage(Constants.MODULE_ID + ".anonymous");
+		WebUtils.setInfoMessage(request, 
+				Constants.MODULE_ID + ".appenders.clearSuccess", new Object[] { name });
 	}
 }
