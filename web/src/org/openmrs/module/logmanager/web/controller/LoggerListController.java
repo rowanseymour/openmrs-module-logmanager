@@ -27,8 +27,8 @@ import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.LoggerProxy;
 import org.openmrs.module.logmanager.Preset;
-import org.openmrs.module.logmanager.util.LogManagerUtils;
-import org.openmrs.module.logmanager.web.IconFactory;
+import org.openmrs.module.logmanager.web.util.IconFactory;
+import org.openmrs.module.logmanager.web.util.WebUtils;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
@@ -93,8 +93,7 @@ public class LoggerListController extends ParameterizableViewController {
 			String name = request.getParameter("newPresetName");
 			if (name != null && name.matches("[\\w\\.\\- ]+")) {
 				preset = new Preset(name);
-				LogManagerUtils.setInfoMessage(request, getMessageSourceAccessor(), 
-						Constants.MODULE_ID + ".loggers.presetCreated");
+				WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".loggers.presetCreated", null);
 			}
 			else {
 				model.put("newPresetName", name);
@@ -104,8 +103,7 @@ public class LoggerListController extends ParameterizableViewController {
 		}
 		else {
 			preset = svc.getPreset(presetId);
-			LogManagerUtils.setInfoMessage(request, getMessageSourceAccessor(), 
-					Constants.MODULE_ID + ".loggers.presetUpdated");
+			WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".loggers.presetUpdated", null);
 		}
 		
 		svc.saveCurrentLoggersAsPreset(preset);
@@ -146,8 +144,7 @@ public class LoggerListController extends ParameterizableViewController {
 		
 		model.put("activePreset", presetId);
 		
-		LogManagerUtils.setInfoMessage(request, getMessageSourceAccessor(), 
-				Constants.MODULE_ID + ".loggers.presetLoaded");
+		WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".loggers.presetLoaded", null);
 	}
 	
 	/**
@@ -162,7 +159,6 @@ public class LoggerListController extends ParameterizableViewController {
 		Preset preset = svc.getPreset(presetId);
 		svc.deletePreset(preset);
 		
-		LogManagerUtils.setInfoMessage(request, getMessageSourceAccessor(), 
-				Constants.MODULE_ID + ".loggers.presetDeleted");
+		WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".loggers.presetDeleted", null);
 	}
 }

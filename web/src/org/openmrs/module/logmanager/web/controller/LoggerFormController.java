@@ -17,7 +17,7 @@ import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.LoggerProxy;
 import org.openmrs.module.logmanager.propertyeditor.LevelEditor;
-import org.openmrs.module.logmanager.util.LogManagerUtils;
+import org.openmrs.module.logmanager.web.util.WebUtils;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.ServletRequestDataBinder;
@@ -76,7 +76,7 @@ public class LoggerFormController extends SimpleFormController {
 		else
 			msg = "addSuccess";
 		
-		LogManagerUtils.setInfoMessage(request, getMessageSourceAccessor(), Constants.MODULE_ID + ".loggers." + msg);
+		WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".loggers." + msg, null);
 		
 		return new ModelAndView(new RedirectView(getSuccessView()));
 	}
