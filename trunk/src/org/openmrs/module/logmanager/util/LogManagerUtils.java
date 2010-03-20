@@ -18,16 +18,10 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.Module;
 import org.openmrs.module.ModuleFactory;
-import org.openmrs.module.logmanager.AppenderType;
-import org.openmrs.module.logmanager.QueryField;
-import org.openmrs.web.WebConstants;
-import org.springframework.context.support.MessageSourceAccessor;
 
 /**
  * Various utility methods
@@ -35,46 +29,6 @@ import org.springframework.context.support.MessageSourceAccessor;
 public class LogManagerUtils {
 	
 	protected static final Log log = LogFactory.getLog(LogManagerUtils.class);
-	
-	/**
-	 * Utility method to get a parsed appender type parameter
-	 * @param request the HTTP request object
-	 * @param name the name of the parameter
-	 * @param def the default value if parameter doesn't exist or is invalid
-	 * @return the appender type value
-	 */
-	public static AppenderType getAppenderTypeParameter(HttpServletRequest request, String name, AppenderType def) {
-		String str = request.getParameter(name);
-		if (str != null) {
-			try {
-				int i = Integer.parseInt(str);
-				return AppenderType.values()[i];
-			} catch (Exception ex) {
-				log.warn("Invalid appender type value: " + str);
-			}
-		}
-		return def;
-	}
-	
-	/**
-	 * Utility method to get a parsed query field parameter
-	 * @param request the HTTP request object
-	 * @param name the name of the parameter
-	 * @param def the default value if parameter doesn't exist or is invalid
-	 * @return the query field value
-	 */
-	public static QueryField getQueryFieldParameter(HttpServletRequest request, String name, QueryField def) {
-		String str = request.getParameter(name);
-		if (str != null) {
-			try {
-				int i = Integer.parseInt(str);
-				return QueryField.values()[i];
-			} catch (Exception ex) {
-				log.warn("Invalid query field value: " + str);
-			}
-		}
-		return def;
-	}
 	
 	/**
 	 * Gets the value of a protected/private field of an object
@@ -97,28 +51,6 @@ public class LogManagerUtils {
 			}
 		}
 		return null;
-	}
-	
-	/**
-	 * Sets the OpenMRS info message value which is displayed at the top of the page
-	 * @param request the request object
-	 * @param msgs the message source
-	 * @param code the message code
-	 */
-	public static void setInfoMessage(HttpServletRequest request, MessageSourceAccessor msgs, String code) {
-		String msg = msgs.getMessage(code);
-		request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, msg);
-	}
-	
-	/**
-	 * Sets the OpenMRS error message value which is displayed at the top of the page
-	 * @param request the request object
-	 * @param msgs the message source
-	 * @param code the message code
-	 */
-	public static void setErrorMessage(HttpServletRequest request, MessageSourceAccessor msgs, String code) {
-		String msg = msgs.getMessage(code);
-		request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, msg);
 	}
 	
 	/**
