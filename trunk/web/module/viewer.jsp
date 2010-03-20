@@ -12,27 +12,40 @@
 <c:set var="level_ERROR" value="<%= org.apache.log4j.Level.ERROR_INT %>" />
 
 <style type="text/css">
-.throwable {
-	background-color: #FFDBDB;
-	padding: 2px;
-	margin-top: 3px;
+.rowLink {
+	cursor: hand;
+	cursor: pointer;
 }
-.throwable a {
-	text-decoration: none;
-	color: black;
+.rowLink td {
+	border-top: 1px solid #FFF;
+	border-bottom: 1px solid #FFF;
 }
-.throwable a img {
-	border: 0;
+.rowLink:hover {
+	/*background-color: #EAFFE0;*/
+}
+.rowLink:hover td {
+	/*background-color: #EAFFE0;*/
+	border-top: 1px solid #DDD;
+	border-bottom: 1px solid #DDD;
 }
 .errorLevel {
 	background-color: #FFEAE0;
 }
+.throwable {
+	background-color: #FFE0D0;
+	padding: 2px;
+	font-style: italic;
+}
+.formatLink {
+	font-style: bold;
+	text-decoration: none;
+}
 </style>
 
 <script type="text/javascript">
-function showThrowable(index, show) {
-	document.getElementById("throwable_show_" + index).style.display = show ? "none" : "block";
-	document.getElementById("throwable_message_" + index).style.display = show ? "block" : "none";
+function submitViewForm(format) {
+	document.logViewForm.format.value = format;
+	document.logViewForm.submit();
 }
 </script>
 
@@ -40,6 +53,7 @@ function showThrowable(index, show) {
 	<spring:message code="${moduleId}.viewer.viewLogMessages" />
 </b>
 <form method="get" class="box" name="logViewForm">
+	<input type="hidden" name="format" value="" />
 	<table cellpadding="2" cellspacing="0" width="100%">
 		<tr>
 			<td>	
@@ -75,8 +89,11 @@ function showThrowable(index, show) {
 			</td>
 			
 			<td align="right">
-				<input type="submit" value="<spring:message code="general.refresh"/>" />
-				<input type="submit" name="xml" value="<spring:message code="${moduleId}.viewer.exportXML"/>" />
+				<a class="formatLink" href="javascript:submitViewForm('txt')">TXT</a>
+				<a class="formatLink" href="javascript:submitViewForm('xml')">XML</a>
+				&nbsp;
+				&nbsp;
+				<input type="button" onclick="submitViewForm('')" value="<spring:message code="general.refresh"/>" />
 			</td>
 		</tr>
 	</table>
@@ -90,14 +107,17 @@ function showThrowable(index, show) {
 		</tr>
 	
 		<c:forEach var="event" items="${events}" varStatus="rowStatus">
-			<tr class="<c:choose><c:when test="${logmgr:levelToInt(event.level) >= level_ERROR}">errorLevel</c:when><c:when test="${rowStatus.index % 2 == 0}">evenRow</c:when><c:otherwise>oddRow</c:otherwise></c:choose>">
+			<tr
+				class="rowLink <c:choose><c:when test="${logmgr:levelToInt(event.level) >= level_ERROR}">errorLevel</c:when><c:when test="${rowStatus.index % 2 == 0}">evenRow</c:when><c:otherwise>oddRow</c:otherwise></c:choose>"
+				onclick="location.href='${pageContext.request.contextPath}/module/logmanager/event.htm?appId=${appender.id}&amp;eventId=${logmgr:hashCode(event)}'"
+			>
 				<td valign="top" width="16">
 					<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/${levelIcons[event.level]}"
 						title="${levelLabels[event.level]}"
 						width="16" height="16" />
 				</td>
 				<td nowrap="nowrap" style="font-size: 10px" valign="top">
-					<a href="event.htm?appId=${appender.id}&amp;eventId=${logmgr:hashCode(event)}">${logmgr:formatTimestamp(event.timeStamp)}</a>
+					${logmgr:formatTimestamp(event.timeStamp)}
 				</td>
 				<td style="font-size: 10px" valign="top">
 					<span title="${event.locationInformation.className}">
@@ -108,27 +128,8 @@ function showThrowable(index, show) {
 					${logmgr:formatMessage(event.message)}
 					
 					<c:if test="${event.throwableInformation != null}">
-						<div id="throwable_${rowStatus.index}" class="throwable">
-							<div id="throwable_show_${rowStatus.index}">
-								<a href="javascript:showThrowable(${rowStatus.index}, true)">
-									<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/expand.png" />
-									
-									${event.throwableStrRep[0]}
-								</a>
-							</div>
-							<div id="throwable_message_${rowStatus.index}" style="display: none">
-								<div id="throwable_hide_${rowStatus.index}" style="margin-bottom: 5px">
-									<a href="javascript:showThrowable(${rowStatus.index}, false)">
-										<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/collapse.png" />
-										
-										Hide
-									</a>
-								</div>
-								<c:forEach items="${event.throwableStrRep}" var="throwableMsg">
-									${throwableMsg}
-									<br/>
-								</c:forEach>
-							</div>
+						<div class="throwable">
+							<spring:message code="${moduleId}.viewer.throwableAttached"/>...
 						</div>
 					</c:if>
 				</td>

@@ -19,7 +19,7 @@ import org.openmrs.module.logmanager.LayoutType;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.LoggerProxy;
 import org.openmrs.module.logmanager.propertyeditor.LayoutTypeEditor;
-import org.openmrs.module.logmanager.util.LogManagerUtils;
+import org.openmrs.module.logmanager.web.util.WebUtils;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.ServletRequestDataBinder;
@@ -101,8 +101,9 @@ public class AppenderFormController extends SimpleFormController {
 				LogManager.getLogger(attachTo).addAppender(appender.getTarget());
 		}
 		
-		LogManagerUtils.setInfoMessage(request, getMessageSourceAccessor(), 
-				Constants.MODULE_ID + ".appenders." + (exists ? "editSuccess" : "createSuccess"));
+		WebUtils.setInfoMessage(request, 
+				Constants.MODULE_ID + ".appenders." + (exists ? "editSuccess" : "createSuccess"), 
+				new Object[] { appender.getName() });
 		
 		return new ModelAndView(new RedirectView(getSuccessView()));
 	}
@@ -137,7 +138,7 @@ public class AppenderFormController extends SimpleFormController {
 		
 		// Create new appender from parameters passed from appender list page
 		String name = request.getParameter("newName");
-		AppenderType type = LogManagerUtils.getAppenderTypeParameter(request, "newType", AppenderType.CONSOLE);
+		AppenderType type = WebUtils.getAppenderTypeParameter(request, "newType", AppenderType.CONSOLE);
 		
 		// Create the appender object based on the requested type
 		AppenderProxy appender = new AppenderProxy(type, name);

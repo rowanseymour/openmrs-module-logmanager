@@ -11,7 +11,7 @@
 			<spring:message code="logmanager.menu.appenders"/></a>
 	</li>
 	
-	<li <c:if test='<%= request.getRequestURI().contains("viewer") || request.getRequestURI().contains("serverLog.form") %>'>class="active"</c:if>>
+	<li <c:if test='<%= request.getRequestURI().contains("viewer") || request.getRequestURI().contains("event") || request.getRequestURI().contains("serverLog.form") %>'>class="active"</c:if>>
 		<a href="${pageContext.request.contextPath}/module/logmanager/viewer.htm">
 			<spring:message code="logmanager.menu.viewer"/></a>
 	</li>

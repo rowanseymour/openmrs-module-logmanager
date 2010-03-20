@@ -33,9 +33,9 @@ import org.openmrs.module.logmanager.AppenderProxy;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.QueryField;
-import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.openmrs.module.logmanager.util.PagingInfo;
-import org.openmrs.module.logmanager.web.IconFactory;
+import org.openmrs.module.logmanager.web.util.IconFactory;
+import org.openmrs.module.logmanager.web.util.WebUtils;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
@@ -66,7 +66,7 @@ public class ViewerController extends ParameterizableViewController {
 		Level level = Level.toLevel(ServletRequestUtils.getIntParameter(request, "level", Level.ALL_INT));
 		model.put("level", level.toInt());
 		
-		QueryField queryField = LogManagerUtils.getQueryFieldParameter(request, "queryField", QueryField.CLASS_NAME);
+		QueryField queryField = WebUtils.getQueryFieldParameter(request, "queryField", QueryField.CLASS_NAME);
 		String queryValue = request.getParameter("queryValue");
 		if (queryValue != null) {
 			queryValue = queryValue.trim();
@@ -110,19 +110,20 @@ public class ViewerController extends ParameterizableViewController {
 				model.put("events", svc.getAppenderEvents(appender, level, levelOp, queryField, queryValue, paging));
 			else {
 				model.put("events", new ArrayList<LoggingEvent>());
-				LogManagerUtils.setErrorMessage(request, getMessageSourceAccessor(), Constants.MODULE_ID + ".error.invalidAppender");
+				WebUtils.setErrorMessage(request, Constants.MODULE_ID + ".error.invalidAppender", null);
 			}
 		}
 		else {
 			model.put("events", new ArrayList<LoggingEvent>());
-			LogManagerUtils.setErrorMessage(request, getMessageSourceAccessor(), Constants.MODULE_ID + ".error.noSuitableAppender");
+			WebUtils.setErrorMessage(request, Constants.MODULE_ID + ".error.noSuitableAppender", null);
 		}
 		
 		model.put("appender", appender);
 		model.put("appenders", appenders);
 
-		if (request.getParameter("xml") != null) {
-			model.put("modules", LogManagerUtils.createModuleVersionMap());
+		String format = request.getParameter("format");
+		if (format != null && !format.isEmpty()) {
+			model.put("format", format);
 			return new ModelAndView(getExportView(), model);
 		}
 		
