@@ -17,10 +17,12 @@
     (globalProperty*),
     (dwr?),
     (servlet*),
+    (filter*),
+    (filter-mapping*),
     (messages*),
     (mappingFiles*)
 )>
-<!ATTLIST module configVersion CDATA #FIXED "1.0">
+<!ATTLIST module configVersion CDATA #FIXED "1.2">
 
 <!ELEMENT library EMPTY>
 <!ATTLIST library 
@@ -41,6 +43,12 @@
 
 <!ELEMENT servlet (servlet-name, servlet-class)>
 
+<!ELEMENT filter (filter-name, filter-class, (init-param*))>
+<!ELEMENT init-param (param-name, param-value)>
+
+<!ELEMENT filter-mapping (filter-name, url-pattern?, servlet-name?)>
+
 <!ELEMENT messages (lang, file)>
 
 <!ELEMENT require_modules (require_module*)>
+<!ATTLIST require_module version CDATA #IMPLIED >
