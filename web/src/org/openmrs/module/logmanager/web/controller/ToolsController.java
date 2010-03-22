@@ -14,55 +14,132 @@
 package org.openmrs.module.logmanager.web.controller;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.apache.log4j.helpers.LogLog;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.openmrs.module.Module;
 import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.logmanager.Constants;
+import org.openmrs.module.logmanager.web.util.WebUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Controller for tools page
  */
 public class ToolsController extends ParameterizableViewController {
 	
-	/* (non-Javadoc)
+	protected static final Log log = LogFactory.getLog(ToolsController.class);
+	
+	/**
 	 * @see org.springframework.web.servlet.mvc.ParameterizableViewController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		
+		Map<String, Object> model = new HashMap<String, Object>();
+		
 		// Reset log4j configuration
-		if (request.getParameter("clear") != null)		
+		if (request.getParameter("clear") != null) {		
 			clearConfiguration();
-		else if (request.getParameter("reload") != null)		
-			reloadConfiguration();
+			WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools.clearSuccess", null);
+		}
+		else if (request.getParameter("reload") != null) {
+			String[] configs = request.getParameterValues("configs");
+			reloadConfiguration(configs);
+			WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools.reloadSuccess", null);
+		}
 		else if (request.getParameter("startSQL") != null)		
 			setHibernateSQLLogging(true);
 		else if (request.getParameter("stopSQL") != null)		
 			setHibernateSQLLogging(false);
 		
+		List<Map<String, Object>> log4jConfigs = getLog4jConfigs();
+		model.put("log4jConfigs", log4jConfigs);
+		
 		Logger sqlLogger = LogManager.exists(Constants.LOGGER_HIBERNATE_SQL);
 		Level sqlLoggerLevel = (sqlLogger != null) ? sqlLogger.getEffectiveLevel() : null;
 		
-		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("sqlLoggerName", Constants.LOGGER_HIBERNATE_SQL);
 		model.put("sqlLoggerStarted", (sqlLoggerLevel != null) ? (sqlLoggerLevel.toInt() <= Level.DEBUG.toInt()) : false);
 		
 		return new ModelAndView(getViewName(), model);
+	}
+	
+	/**
+	 * Gets a list of log4j config sources
+	 * @return
+	 */
+	private List<Map<String, Object>> getLog4jConfigs() {
+		List<Map<String, Object>> log4jConfigs = new ArrayList<Map<String, Object>>();
+		
+		Map<String, Object> mainConfig = new HashMap<String, Object>();
+		mainConfig.put("display", "Main (log4j.xml)");
+		mainConfig.put("moduleId", "$");
+		log4jConfigs.add(mainConfig);
+		
+		// Load log4j config files from each module if they exist
+		Collection<Module> modules = ModuleFactory.getLoadedModules();
+		for (Module module : modules) {
+			if (module.getLog4j() != null) {
+				Map<String, Object> modConfig = new HashMap<String, Object>();
+				modConfig.put("display", "Module: " + module.getModuleId() + " (log4j.xml)");
+				modConfig.put("moduleId", module.getModuleId());
+				modConfig.put("usesRoot", isModuleModifyingRoot(module));
+				modConfig.put("outsideNS", isModuleModifyingLoggerOutsideNS(module));
+				log4jConfigs.add(modConfig);
+			}
+		}
+		
+		return log4jConfigs;
+	}
+	
+	/**
+	 * Checks to see if the given module is modifying log4j's root logger
+	 * @param module the module to check
+	 * @return true if root logger is being modified
+	 */
+	private boolean isModuleModifyingRoot(Module module) {
+		Element log4jDocElm = module.getLog4j().getDocumentElement();
+		NodeList roots = log4jDocElm.getElementsByTagName("root");
+		return roots.getLength() > 0;
+	}
+	
+	/**
+	 * Checks to see if the given module is modifying loggers outside of its namespace
+	 * @param module the module to check
+	 * @return true if loggers are being modified
+	 */
+	private boolean isModuleModifyingLoggerOutsideNS(Module module) {
+		String moduleNS = "org.openmrs.module." + module.getModuleId();
+		
+		Element log4jDocElm = module.getLog4j().getDocumentElement();
+		NodeList loggers = log4jDocElm.getElementsByTagName("logger");
+		for (int n = 0; n < loggers.getLength(); n++) {
+			NamedNodeMap attrs = loggers.item(n).getAttributes();
+			Node nameNode = attrs.getNamedItem("name");
+			if (!nameNode.getNodeValue().startsWith(moduleNS))
+				return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -74,25 +151,34 @@ public class ToolsController extends ParameterizableViewController {
 	
 	/**
 	 * Reloads the log4j configuration
+	 * @param the list of module ids ($ means the main OpenMRS config)
 	 */
-	private void reloadConfiguration() {
-		try {				
-			// Load main OpenMRS log4j.xml
-			URL url = ToolsController.class.getResource("/log4j.xml");
-			DOMConfigurator.configure(url);
-			
-			// Load log4j config files from each module if they exist
-			Collection<Module> modules = ModuleFactory.getStartedModules();
-			for (Module module : modules) {
-				if (module.getLog4j() != null)
-					DOMConfigurator.configure(module.getLog4j().getDocumentElement());
+	private void reloadConfiguration(String[] moduleIds) {
+		if (moduleIds == null)
+			return;
+		
+		for (String moduleId : moduleIds) {
+			if (moduleId.equals("$")) {
+				// Load main OpenMRS log4j.xml
+				URL url = ToolsController.class.getResource("/log4j.xml");
+				DOMConfigurator.configure(url);
 			}
-			
-		} catch (Exception e) {
-		  LogLog.error(e.getMessage());
-		}
+			else {
+				try {
+					Module module = ModuleFactory.getModuleById(moduleId);
+					if (module.getLog4j() != null)
+						DOMConfigurator.configure(module.getLog4j().getDocumentElement());
+				} catch (Exception e) {
+					log.error(e.getMessage());
+				}
+			}
+		}	
 	}
 	
+	/**
+	 * Toggles logging of SQL in Hibernate
+	 * @param on true to enable logging, else false
+	 */
 	private void setHibernateSQLLogging(boolean on) {
 		LogManager.getLogger("org.hibernate.SQL").setLevel(on ? Level.DEBUG : Level.OFF);
 	}
