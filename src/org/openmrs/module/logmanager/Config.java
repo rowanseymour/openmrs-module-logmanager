@@ -26,6 +26,7 @@ public class Config {
 	
 	protected String defaultAppenderName;
 	protected boolean recreateDefaultAppender;
+	protected boolean logUncaughtExceptions;
 	
 	/**
 	 * The default constructor
@@ -50,6 +51,7 @@ public class Config {
 	public void load() {
 		defaultAppenderName = loadStringOption(Constants.PROP_DEFAULT_APPENDER_NAME, Constants.DEF_DEFAULT_APPENDER_NAME); 
 		recreateDefaultAppender = loadBooleanOption(Constants.PROP_RECREATE_DEFAULT_APPENDER, Constants.DEF_RECREATE_DEFAULT_APPENDER);
+		recreateDefaultAppender = loadBooleanOption(Constants.PROP_LOG_UNCAUGHT_EXCEPTIONS, Constants.DEF_LOG_UNCAUGHT_EXCEPTIONS);
 	}
 	
 	/**
@@ -58,6 +60,7 @@ public class Config {
 	public void save() {
 		saveOption(Constants.PROP_DEFAULT_APPENDER_NAME, defaultAppenderName);
 		saveOption(Constants.PROP_RECREATE_DEFAULT_APPENDER, recreateDefaultAppender);
+		saveOption(Constants.PROP_LOG_UNCAUGHT_EXCEPTIONS, logUncaughtExceptions);
 	}
 
 	/**
@@ -90,6 +93,22 @@ public class Config {
 	 */
 	public void setRecreateDefaultAppender(boolean recreateDefaultAppender) {
 		this.recreateDefaultAppender = recreateDefaultAppender;
+	}
+
+	/**
+	 * Gets whether the module should log uncaught exceptions
+	 * @return true to enable logging of uncaught exceptions
+	 */
+	public boolean isLogUncaughtExceptions() {
+		return logUncaughtExceptions;
+	}
+
+	/**
+	 * Sets whether the module should log uncaught exceptions
+	 * @param logUncaughtExceptions true to enable logging of uncaught exceptions
+	 */
+	public void setLogUncaughtExceptions(boolean logUncaughtExceptions) {
+		this.logUncaughtExceptions = logUncaughtExceptions;
 	}
 
 	/**
