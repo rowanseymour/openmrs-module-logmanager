@@ -28,6 +28,7 @@
 				<prop key="module/@MODULE_ID@/appender.form">logMgrAppenderFormController</prop>
 				<prop key="module/@MODULE_ID@/viewer.htm">logMgrViewerController</prop>
 				<prop key="module/@MODULE_ID@/event.htm">logMgrEventController</prop>
+				<prop key="module/@MODULE_ID@/tools.htm">logMgrToolsController</prop>
 				<prop key="module/@MODULE_ID@/config.htm">logMgrConfigController</prop>
 				
 				<prop key="admin/maintenance/serverLog.form">logMgrViewerController</prop>
@@ -91,9 +92,24 @@
 		</property>
 	</bean>
 	
-	<bean id="logMgrConfigController" class="@MODULE_PACKAGE@.web.controller.ConfigController">
+	<bean id="logMgrToolsController" class="@MODULE_PACKAGE@.web.controller.ToolsController">
 		<property name="viewName">
+			<value>module/@MODULE_ID@/tools</value>
+		</property>
+	</bean>
+	
+	<bean id="logMgrConfigController" class="@MODULE_PACKAGE@.web.controller.ConfigController">
+		<property name="commandName">
+			<value>config</value>
+		</property>
+		<property name="formView">
 			<value>module/@MODULE_ID@/config</value>
+		</property>
+		<property name="successView">
+			<value>config.htm</value>
+		</property>
+		<property name="validator">
+			<bean class="@MODULE_PACKAGE@.validator.ConfigValidator" />
 		</property>
 	</bean>
 

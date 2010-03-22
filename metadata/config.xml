@@ -26,6 +26,18 @@
 		<description>Able to manage and configure server logging</description>
 	</privilege>
 	
+	<globalProperty>
+		<property>@MODULE_ID@.defaultAppenderName</property>
+		<defaultValue>MEMORY_APPENDER</defaultValue>
+		<description>The default appender to use for the log viewer</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>@MODULE_ID@.recreateDefaultAppender</property>
+		<defaultValue>true</defaultValue>
+		<description>Recreate default appender on module startup if missing</description>
+	</globalProperty>
+	
 	<filter>
 		<filter-name>logMgrRequestFilter</filter-name>
 		<filter-class>@MODULE_PACKAGE@.web.filter.RequestProviderFilter</filter-class>

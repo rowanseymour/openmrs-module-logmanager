@@ -13,87 +13,61 @@
  */
 package org.openmrs.module.logmanager.web.controller;
 
-import java.net.URL;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Level;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import org.apache.log4j.helpers.LogLog;
-import org.apache.log4j.xml.DOMConfigurator;
-import org.openmrs.module.Module;
-import org.openmrs.module.ModuleFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openmrs.module.logmanager.Config;
 import org.openmrs.module.logmanager.Constants;
+import org.openmrs.module.logmanager.web.util.WebUtils;
+import org.springframework.validation.BindException;
+import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.ParameterizableViewController;
+import org.springframework.web.servlet.mvc.SimpleFormController;
+import org.springframework.web.servlet.view.RedirectView;
 
 /**
- * Controller for reset page
+ * Controller for configuration page
  */
-public class ConfigController extends ParameterizableViewController {
+public class ConfigController extends SimpleFormController {
 	
-	/* (non-Javadoc)
-	 * @see org.springframework.web.servlet.mvc.ParameterizableViewController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	protected static final Log log = LogFactory.getLog(ConfigController.class);
+	
+	/**
+	 * @see org.springframework.web.servlet.mvc.SimpleFormController#onSubmit(javax.servlet.http.HttpServletRequest,
+	 *      javax.servlet.http.HttpServletResponse, java.lang.Object,
+	 *      org.springframework.validation.BindException)
 	 */
 	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response, Object command,
+            BindException errors) throws Exception {
+		Config config = (Config)command;
+		config.save();
 		
-		// Reset log4j configuration
-		if (request.getParameter("clear") != null)		
-			clearConfiguration();
-		else if (request.getParameter("reload") != null)		
-			reloadConfiguration();
-		else if (request.getParameter("startSQL") != null)		
-			setHibernateSQLLogging(true);
-		else if (request.getParameter("stopSQL") != null)		
-			setHibernateSQLLogging(false);
+		WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".config.saveSuccess", null);
 		
-		Logger sqlLogger = LogManager.exists(Constants.LOGGER_HIBERNATE_SQL);
-		Level sqlLoggerLevel = (sqlLogger != null) ? sqlLogger.getEffectiveLevel() : null;
-		
-		Map<String, Object> model = new HashMap<String, Object>();
-		model.put("sqlLoggerName", Constants.LOGGER_HIBERNATE_SQL);
-		model.put("sqlLoggerStarted", (sqlLoggerLevel != null) ? (sqlLoggerLevel.toInt() <= Level.DEBUG.toInt()) : false);
-		
-		return new ModelAndView(getViewName(), model);
+		return new ModelAndView(new RedirectView(getSuccessView()));
 	}
 	
 	/**
-	 * Clears the log4j configuration
+	 * @see org.springframework.web.servlet.mvc.SimpleFormController
 	 */
-	private void clearConfiguration() {
-		BasicConfigurator.resetConfiguration();
+	@Override
+	protected Object formBackingObject(HttpServletRequest request) throws Exception {
+		return Config.getInstance();
 	}
 	
 	/**
-	 * Reloads the log4j configuration
+	 * @see org.springframework.web.servlet.mvc.SimpleFormController
 	 */
-	private void reloadConfiguration() {
-		try {				
-			// Load main OpenMRS log4j.xml
-			URL url = ConfigController.class.getResource("/log4j.xml");
-			DOMConfigurator.configure(url);
-			
-			// Load log4j config files from each module if they exist
-			Collection<Module> modules = ModuleFactory.getStartedModules();
-			for (Module module : modules) {
-				if (module.getLog4j() != null)
-					DOMConfigurator.configure(module.getLog4j().getDocumentElement());
-			}
-			
-		} catch (Exception e) {
-		  LogLog.error(e.getMessage());
-		}
-	}
-	
-	private void setHibernateSQLLogging(boolean on) {
-		LogManager.getLogger("org.hibernate.SQL").setLevel(on ? Level.DEBUG : Level.OFF);
+	@Override
+	protected Map<String, Object> referenceData(HttpServletRequest request, Object command, Errors errors) throws Exception {		
+		Map<String, Object> model = new HashMap<String, Object>();	
+		
+		return model;
 	}
 }

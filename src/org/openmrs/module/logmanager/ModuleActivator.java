@@ -33,15 +33,19 @@ public class ModuleActivator implements Activator {
 	public void startup() {
 		log.info("Starting log manager module");
 		
+		Config config = Config.getInstance();
+		
 		// Check for OpenMRS's default memory appender which sometimes get's
 		// nuked by misbehaving modules, and recreate it if it doesn't exist
-		if (LogManager.getRootLogger().getAppender(Constants.DEF_APPENDER) == null) {
+		if (LogManager.getRootLogger().getAppender(config.getDefaultAppenderName()) == null
+				&& config.isRecreateDefaultAppender()) {
+			
 			MemoryAppender memApp = new MemoryAppender();
-			memApp.setName(Constants.DEF_APPENDER);
+			memApp.setName(config.getDefaultAppenderName());
 			memApp.activateOptions();
 			LogManager.getRootLogger().addAppender(memApp);
 			
-			log.warn("Default OpenMRS memory appender had to be recreated. This is likely due to a module modifying the root logger.");
+			log.warn("Default appender had to be recreated. This is likely due to a module modifying the root logger.");
 		}
 	}
 	
