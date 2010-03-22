@@ -38,6 +38,12 @@
 		<description>Recreate default appender on module startup if missing</description>
 	</globalProperty>
 	
+	<globalProperty>
+		<property>@MODULE_ID@.logUncaughtExceptions</property>
+		<defaultValue>true</defaultValue>
+		<description>Log uncaught exceptions</description>
+	</globalProperty>
+	
 	<filter>
 		<filter-name>logMgrRequestFilter</filter-name>
 		<filter-class>@MODULE_PACKAGE@.web.filter.RequestProviderFilter</filter-class>
