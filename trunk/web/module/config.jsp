@@ -31,6 +31,13 @@
 				<form:errors path="recreateDefaultAppender" cssClass="error" />
 			</td>
 		</tr>
+		<tr>
+			<td><spring:message code="${moduleId}.config.logUncaughtExceptions"/></td>
+			<td>
+				<form:checkbox path="logUncaughtExceptions" />
+				<form:errors path="logUncaughtExceptions" cssClass="error" />
+			</td>
+		</tr>
 	</table>
 </form:form>
 

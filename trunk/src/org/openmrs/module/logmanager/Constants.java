@@ -26,10 +26,12 @@ public class Constants {
 	// Property keys
 	public static final String PROP_DEFAULT_APPENDER_NAME = MODULE_ID + ".defaultAppenderName";
 	public static final String PROP_RECREATE_DEFAULT_APPENDER = MODULE_ID + ".recreateDefaultAppender";
+	public static final String PROP_LOG_UNCAUGHT_EXCEPTIONS = MODULE_ID + ".logUncaughtExceptions";
 	
 	// Property defaults
 	public static final String DEF_DEFAULT_APPENDER_NAME = "MEMORY_APPENDER";
 	public static final boolean DEF_RECREATE_DEFAULT_APPENDER = true;
+	public static final boolean DEF_LOG_UNCAUGHT_EXCEPTIONS = true;
 	
 	// Defaults
 	public static final String DEF_LAYOUT = "%p - %C{1}.%M(%L) |%d{ISO8601}| %m%n";
