@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -198,6 +199,26 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 		for (LoggingEvent e : events) {
 			if (e.hashCode() == id)
 				return e;
+		}
+		return null;
+	}
+	
+	/**
+	 * @see LogManagerService#getAppenderEvent(AppenderProxy, int, List, int)
+	 */
+	public LoggingEvent getAppenderEvent(AppenderProxy appender, int id, List<LoggingEvent> prevEvents, int prevCount) throws APIException {
+		List<LoggingEvent> events = getAppenderEvents(appender, null, 0, null, null, null);
+	
+		for (Iterator<LoggingEvent> iter = events.iterator(); iter.hasNext(); ) {
+			LoggingEvent e = iter.next();
+			
+			if (e.hashCode() == id) {
+				// Add previous events
+				for (; iter.hasNext() && prevEvents.size() <= prevCount; )
+					prevEvents.add(iter.next());
+				
+				return e;
+			}
 		}
 		return null;
 	}

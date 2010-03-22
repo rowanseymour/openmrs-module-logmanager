@@ -13,7 +13,9 @@
  */
 package org.openmrs.module.logmanager.web.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -66,14 +68,16 @@ public class EventController extends ParameterizableViewController {
 				appender = new AppenderProxy(target);
 		}
 		
-		// Find specific event
+		// Find specific event and also its previous N events
 		int eventId = ServletRequestUtils.getIntParameter(request, "eventId", 0);
-		LoggingEvent event = svc.getAppenderEvent(appender, eventId);
+		List<LoggingEvent> prevEvents = new ArrayList<LoggingEvent>();
+		LoggingEvent event = svc.getAppenderEvent(appender, eventId, prevEvents, Constants.EVENT_REPORT_PREV_EVENTS);
 		
 		if (event == null)
 			WebUtils.setErrorMessage(request, Constants.MODULE_ID + ".error.invalidEvent", null);
 		
-		model.put("event", event);	
+		model.put("event", event);
+		model.put("prevEvents", prevEvents);
 		model.put("levelIcons", IconFactory.getLevelIconMap());	
 		model.put("levelLabels", IconFactory.getLevelLabelMap());
 		

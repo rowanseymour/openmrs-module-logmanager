@@ -3,6 +3,7 @@ package org.openmrs.module.logmanager.web.view;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 
@@ -59,7 +60,7 @@ public class EventReportView extends AbstractView {
 		ImplementationId implId = admSvc.getImplementationId();
 		
 		// Output system info
-		out.println("================ SYSTEM INFO ================");
+		out.println("=================== SYSTEM INFO ===================");
 		if (implId != null)
 			out.println("Implementation: " + implId.getName() + " (" + implId.getImplementationId() + ")");
 		out.println("OpenMRS version: " + sysVars.get("OPENMRS_VERSION"));
@@ -70,7 +71,7 @@ public class EventReportView extends AbstractView {
 		/*out.println("Hostname: " + sysVars.get("OPENMRS_HOSTNAME"));*/
 		
 		// Output module info
-		out.println("================ MODULE INFO ================");
+		out.println("=================== MODULE INFO ===================");
 		Map<String, String> modMap = LogManagerUtils.createModuleVersionMap();
 		
 		for (Map.Entry<String, String> entry : modMap.entrySet()) {
@@ -80,10 +81,16 @@ public class EventReportView extends AbstractView {
 			out.println(name + " (" + version + ")");
 		}
 		
-		// Output event info
-		out.println("================ LOG EVENTS =================");
+		// Output event 
+		out.println("=================== LOG EVENT =====================");
 		LoggingEvent event = (LoggingEvent)model.get("event");
 		PatternLayout layout = new PatternLayout(Constants.DEF_LAYOUT);
 		out.println(layout.format(event));
+		
+		// Add finally the previous N events
+		out.println("================ PREVIOUS EVENTS ==================");
+		List<LoggingEvent> prevEvents = (List<LoggingEvent>)model.get("prevEvents");
+		for (LoggingEvent e : prevEvents)
+			out.println(layout.format(e));
 	}
 }
