@@ -61,7 +61,7 @@ public class EventController extends ParameterizableViewController {
 			appender = svc.getAppender(viewId);
 		else {
 			// Try default appender from Constants
-			Appender target = Logger.getRootLogger().getAppender(Constants.DEF_APPENDER);
+			Appender target = Logger.getRootLogger().getAppender(Constants.DEF_DEFAULT_APPENDER_NAME);
 			if (target != null)
 				appender = new AppenderProxy(target);
 		}

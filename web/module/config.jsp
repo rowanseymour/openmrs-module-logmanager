@@ -10,53 +10,28 @@
 <%@ include file="template/localHeader.jsp"%>
 
 <b class="boxHeader">
-	<spring:message code="${moduleId}.config.log4jConfiguration" />
+	<spring:message code="${moduleId}.config.options" />
 </b>
-<form method="post" class="box" name="configForm">
+<form:form commandName="config" cssClass="box" action="config.htm">
 	<table cellpadding="2" cellspacing="0" width="100%">
 		<tr>
-			<td width="150">			
-				<input type="submit" name="clear" value="<spring:message code="${moduleId}.config.clear" />" />
-			</td>
-			<td><spring:message code="${moduleId}.config.clearMsg" /></td>
-		</tr>
-		<tr>
+			<td><spring:message code="${moduleId}.config.defaultAppenderName"/></td>
 			<td>
-				<input type="submit" name="reload" value="<spring:message code="${moduleId}.config.reload" />" />
+				<form:input path="defaultAppenderName" size="32" />
+				<form:errors path="defaultAppenderName" cssClass="error" />
 			</td>
-			<td><spring:message code="${moduleId}.config.reloadMsg" /></td>
+			<td align="right" valign="top" rowspan="2">
+				<input type="submit" value="<spring:message code="general.save" />" />
+			</td>
 		</tr>
-	</table>
-</form>
-
-<br/>
-
-<b class="boxHeader">
-	<spring:message code="${moduleId}.config.hibernateSQLLogging" />
-</b>
-<form method="post" class="box" name="hibernateForm">
-	<table cellpadding="2" cellspacing="0" width="100%">
 		<tr>
-			<c:choose>
-				<c:when test="${sqlLoggerStarted}">
-					<td width="150">
-						<input type="submit" name="stopSQL" value="<spring:message code="${moduleId}.config.stop" />" />
-					</td>
-					<td>
-						<spring:message code="${moduleId}.config.stopMsg" arguments="${sqlLoggerName}" />
-					</td>
-				</c:when>
-				<c:otherwise>
-					<td width="150">
-						<input type="submit" name="startSQL" value="<spring:message code="${moduleId}.config.start" />" />
-					</td>
-					<td>
-						<spring:message code="${moduleId}.config.startMsg" arguments="${sqlLoggerName}" />
-					</td>
-				</c:otherwise>
-			</c:choose>
+			<td><spring:message code="${moduleId}.config.recreateDefaultAppender"/></td>
+			<td>
+				<form:checkbox path="recreateDefaultAppender" />
+				<form:errors path="recreateDefaultAppender" cssClass="error" />
+			</td>
 		</tr>
 	</table>
-</form>
+</form:form>
 
 <%@ include file="/WEB-INF/template/footer.jsp"%>
