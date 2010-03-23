@@ -35,17 +35,22 @@ function onClickConfig(state) {
 <form method="post" class="box" name="configForm">
 	<table cellpadding="2" cellspacing="0" width="100%">
 		<tr>
-			<td>&nbsp;</td>
-			<td align="right">
+			<td width="150">			
 				<input type="submit" name="clear"
-					value="<spring:message code="${moduleId}.tools.clear" />"
+					value="<spring:message code="${moduleId}.tools.clear" />" 
 					onclick="return confirm('<spring:message code="${moduleId}.tools.confirmClear" />')"
 				/>
+			</td>
+			<td><spring:message code="${moduleId}.tools.clearMsg" /></td>
+		</tr>
+		<tr>
+			<td>
 				<input type="submit" name="reload"
 					value="<spring:message code="${moduleId}.tools.reload" />" 
 					disabled="disabled"
 				/>
 			</td>
+			<td><spring:message code="${moduleId}.tools.reloadMsg" /></td>
 		</tr>
 	</table>
 	
