@@ -51,7 +51,7 @@ public class Config {
 	public void load() {
 		defaultAppenderName = loadStringOption(Constants.PROP_DEFAULT_APPENDER_NAME, Constants.DEF_DEFAULT_APPENDER_NAME); 
 		recreateDefaultAppender = loadBooleanOption(Constants.PROP_RECREATE_DEFAULT_APPENDER, Constants.DEF_RECREATE_DEFAULT_APPENDER);
-		recreateDefaultAppender = loadBooleanOption(Constants.PROP_LOG_UNCAUGHT_EXCEPTIONS, Constants.DEF_LOG_UNCAUGHT_EXCEPTIONS);
+		logUncaughtExceptions = loadBooleanOption(Constants.PROP_LOG_UNCAUGHT_EXCEPTIONS, Constants.DEF_LOG_UNCAUGHT_EXCEPTIONS);
 	}
 	
 	/**
