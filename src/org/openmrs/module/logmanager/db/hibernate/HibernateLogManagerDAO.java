@@ -24,6 +24,9 @@ import org.openmrs.api.db.DAOException;
 import org.openmrs.module.logmanager.Preset;
 import org.openmrs.module.logmanager.db.LogManagerDAO;
 
+/**
+ * Hibernate implementation of the module data access object interface
+ */
 public class HibernateLogManagerDAO implements LogManagerDAO {
 	
 	protected static final Log log = LogFactory.getLog(HibernateLogManagerDAO.class);

@@ -18,6 +18,9 @@ import java.util.List;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.module.logmanager.Preset;
 
+/**
+ * Module data access object
+ */
 public interface LogManagerDAO {
 
 	/**

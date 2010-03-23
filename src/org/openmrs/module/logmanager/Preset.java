@@ -16,6 +16,9 @@ package org.openmrs.module.logmanager;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class holds settings for loggers
+ */
 public class Preset {
 	protected int presetId;
 	protected String name;
