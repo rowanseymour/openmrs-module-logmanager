@@ -129,7 +129,8 @@ public class Config {
 	 * @param def the default value if global property is invalid
 	 * @return the integer value
 	 */
-	/*private static int loadIntOption(String name, int def) {
+	@SuppressWarnings("unused")
+	private static int loadIntOption(String name, int def) {
 		AdministrationService svc = Context.getAdministrationService();
 		String s = svc.getGlobalProperty(name);
 		try {
@@ -138,7 +139,7 @@ public class Config {
 		catch (NumberFormatException ex) {
 			return def;
 		}
-	}*/
+	}
 	
 	/**
 	 * Utility method to load an boolean option from global properties

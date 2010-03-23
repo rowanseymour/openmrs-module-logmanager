@@ -265,6 +265,10 @@ public class AppenderProxy {
 		return this.target instanceof OptionHandler;
 	}
 	
+	/**
+	 * Gets the string representation of the appenders layout
+	 * @return the layout string
+	 */
 	public String getLayoutStr() {
 		if (getRequiresLayout()) {
 			if (layoutType == LayoutType.PATTERN)
@@ -278,10 +282,18 @@ public class AppenderProxy {
 		return "";
 	}
 	
+	/**
+	 * Gets if this appender is viewable - i.e. is it a memory appender
+	 * @return true if appender is viewable
+	 */
 	public boolean isViewable() {
 		return target instanceof MemoryAppender;
 	}
 	
+	/**
+	 * Gets logging events from a memory appender
+	 * @return the list of logging events
+	 */
 	@SuppressWarnings("unchecked")
 	public Collection<LoggingEvent> getLoggingEvents() {
 		if (!isViewable())
@@ -293,6 +305,10 @@ public class AppenderProxy {
 		return buffer;
 	}
 	
+	/**
+	 * Gets whether this appender can be cleared, i.e. is it a memory appender
+	 * @return true if appender can be cleared
+	 */
 	public boolean isClearable() {
 		return target instanceof MemoryAppender;
 	}
@@ -312,13 +328,15 @@ public class AppenderProxy {
 	}
 
 	/**
-	 * @return the bufferSize
+	 * Gets the buffer size (applies to memory appenders)
+	 * @return the buffer size
 	 */
 	public int getBufferSize() {
 		return bufferSize;
 	}
 
 	/**
+	 * Sets the buffer size (applies to memory appenders)
 	 * @param bufferSize the bufferSize to set
 	 */
 	public void setBufferSize(int bufferSize) {
@@ -326,13 +344,15 @@ public class AppenderProxy {
 	}
 
 	/**
-	 * @return the remoteHost
+	 * Gets the remote host (applies to socket appenders)
+	 * @return the remote host
 	 */
 	public String getRemoteHost() {
 		return remoteHost;
 	}
 
 	/**
+	 * Sets the remote host (applies to socket appenders)
 	 * @param remoteHost the remoteHost to set
 	 */
 	public void setRemoteHost(String remoteHost) {
@@ -340,6 +360,7 @@ public class AppenderProxy {
 	}
 
 	/**
+	 * Gets the remote port (applies to socket appenders)
 	 * @return the port
 	 */
 	public int getPort() {
@@ -347,6 +368,7 @@ public class AppenderProxy {
 	}
 
 	/**
+	 * Sets the remote port (applies to socket appenders)
 	 * @param port the port to set
 	 */
 	public void setPort(int port) {
@@ -354,7 +376,7 @@ public class AppenderProxy {
 	}
 
 	/**
-	 * Gets the source used by NT event log appenders
+	 * Gets the source (applies to NT event log appenders)
 	 * @return the source
 	 */
 	public String getSource() {
@@ -362,7 +384,7 @@ public class AppenderProxy {
 	}
 
 	/**
-	 * Sets the source used by NT event log appenders
+	 * Sets the source (applies to NT event log appenders)
 	 * @param source the source
 	 */
 	public void setSource(String source) {
