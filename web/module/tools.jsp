@@ -58,7 +58,13 @@ function onClickConfig(state) {
 		<tr>
 			<th>Source</th>
 			<th>&nbsp;</th>
-			<th align="right"><input type="checkbox" onclick="onToggleSelectAll(this.checked)" /></th>
+			<th align="right">
+				<small>
+					<spring:message code="general.select" />:
+					<a href="javascript:onToggleSelectAll(true)"><spring:message code="${moduleId}.all" /></a>
+					<a href="javascript:onToggleSelectAll(false)"><spring:message code="general.none" /></a>
+				</small>
+			</th>
 		</tr>
 	
 		<c:forEach var="log4jConfig" items="${log4jConfigs}" varStatus="rowStatus">
