@@ -28,7 +28,7 @@ public class LayoutTypeEditor extends PropertyEditorSupport {
 	 */
 	@Override
 	public String getAsText() {
-		return "" + ((LayoutType)getValue()).ordinal();
+		return "" + (getValue() != null ? ((LayoutType)getValue()).ordinal() : "");
 	}
 
 	/**
@@ -36,8 +36,12 @@ public class LayoutTypeEditor extends PropertyEditorSupport {
 	 */
 	@Override
 	public void setAsText(String text) throws IllegalArgumentException {
-		int ordinal = Integer.parseInt(text);
-		setValue(LayoutType.values()[ordinal]);
+		if (!text.isEmpty()) {
+			int ordinal = Integer.parseInt(text);
+			setValue(LayoutType.values()[ordinal]);
+		}
+		else
+			setValue(null);
 	}
 	
 }
