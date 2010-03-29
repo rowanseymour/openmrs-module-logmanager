@@ -32,36 +32,29 @@
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 			INSERT INTO `logmanager_preset` VALUES(NULL, 'Production');
-			SELECT @proId := `preset_id` FROM `logmanager_preset` WHERE `name` = 'Production';
 			INSERT INTO `logmanager_preset` VALUES(NULL, 'Development');
-			SELECT @devId := `preset_id` FROM `logmanager_preset` WHERE `name` = 'Development';
-
-			SELECT @error := 40000;
-			SELECT @warn := 30000;
-			SELECT @info := 20000;
-			SELECT @debug := 10000;
-			SELECT @trace := 5000;
 			
 			INSERT INTO `logmanager_preset_logger` VALUES
-				(@proId, 'ROOT', @warn),
-				(@proId, 'net.sf.ehcache', @error),
-				(@proId, 'org.apache', @warn),
-				(@proId, 'org.apache.fop', @error),
-				(@proId, 'org.hibernate', @error),
-				(@proId, 'org.openmrs', @warn),
-				(@proId, 'org.openmrs.api', @info),
-				(@proId, 'org.springframework', @warn),
-				(@proId, 'org.springframework.context.support.ResourceBundleMessageSource', @error);
+				((SELECT `preset_id` FROM `logmanager_preset` WHERE `name` = 'Production'), 'ROOT', 30000),
+				((SELECT `preset_id` FROM `logmanager_preset` WHERE `name` = 'Production'), 'net.sf.ehcache', 40000),
+				((SELECT `preset_id` FROM `logmanager_preset` WHERE `name` = 'Production'), 'org.apache', 30000),
+				((SELECT `preset_id` FROM `logmanager_preset` WHERE `name` = 'Production'), 'org.apache.fop', 40000),
+				((SELECT `preset_id` FROM `logmanager_preset` WHERE `name` = 'Production'), 'org.hibernate', 40000),
+				((SELECT `preset_id` FROM `logmanager_preset` WHERE `name` = 'Production'), 'org.openmrs', 30000),
+				((SELECT `preset_id` FROM `logmanager_preset` WHERE `name` = 'Production'), 'org.openmrs.api', 20000),
+				((SELECT `preset_id` FROM `logmanager_preset` WHERE `name` = 'Production'), 'org.springframework', 30000),
+				((SELECT `preset_id` FROM `logmanager_preset` WHERE `name` = 'Production'), 'org.springframework.context.support.ResourceBundleMessageSource', 40000);
+			
 			INSERT INTO `logmanager_preset_logger` VALUES
-				(@devId, 'ROOT', @info),
-				(@devId, 'net.sf.ehcache', @warn),
-				(@devId, 'org.apache', @warn),
-				(@devId, 'org.apache.fop', @warn),
-				(@devId, 'org.hibernate', @warn),
-				(@devId, 'org.openmrs', @info),
-				(@devId, 'org.openmrs.api', @info),
-				(@devId, 'org.springframework', @warn),
-				(@devId, 'org.springframework.context.support.ResourceBundleMessageSource', @error);
+				((SELECT `preset_id` FROM `logmanager_preset` WHERE `name` = 'Development'), 'ROOT', 20000),
+				((SELECT `preset_id` FROM `logmanager_preset` WHERE `name` = 'Development'), 'net.sf.ehcache', 30000),
+				((SELECT `preset_id` FROM `logmanager_preset` WHERE `name` = 'Development'), 'org.apache', 30000),
+				((SELECT `preset_id` FROM `logmanager_preset` WHERE `name` = 'Development'), 'org.apache.fop', 30000),
+				((SELECT `preset_id` FROM `logmanager_preset` WHERE `name` = 'Development'), 'org.hibernate', 30000),
+				((SELECT `preset_id` FROM `logmanager_preset` WHERE `name` = 'Development'), 'org.openmrs', 20000),
+				((SELECT `preset_id` FROM `logmanager_preset` WHERE `name` = 'Development'), 'org.openmrs.api', 20000),
+				((SELECT `preset_id` FROM `logmanager_preset` WHERE `name` = 'Development'), 'org.springframework', 30000),
+				((SELECT `preset_id` FROM `logmanager_preset` WHERE `name` = 'Development'), 'org.springframework.context.support.ResourceBundleMessageSource', 40000);
 		</sql>
 	</diff>
 </sqldiff>
