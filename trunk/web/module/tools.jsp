@@ -91,27 +91,49 @@ function onClickConfig(state) {
 <br/>
 
 <b class="boxHeader">
+	<spring:message code="${moduleId}.tools.profiling" />
+</b>
+<form method="post" class="box" name="profilingForm">
+	<table cellpadding="2" cellspacing="0" width="100%">
+		<tr>
+			<c:choose>
+				<c:when test="${profilingStarted}">
+					<td width="150">
+						<input type="submit" name="stopProfiling" value="<spring:message code="${moduleId}.tools.stop" />" />
+					</td>
+					<td><spring:message code="${moduleId}.tools.stopProfilingMsg" arguments="${profilingLoggerName},WARN" /></td>
+				</c:when>
+				<c:otherwise>
+					<td width="150">
+						<input type="submit" name="startProfiling" value="<spring:message code="${moduleId}.tools.start" />" />
+					</td>
+					<td><spring:message code="${moduleId}.tools.startProfilingMsg" arguments="${profilingLoggerName},TRACE" /></td>
+				</c:otherwise>
+			</c:choose>
+		</tr>
+	</table>
+</form>
+
+<br/>
+
+<b class="boxHeader">
 	<spring:message code="${moduleId}.tools.hibernateSQLLogging" />
 </b>
 <form method="post" class="box" name="hibernateForm">
 	<table cellpadding="2" cellspacing="0" width="100%">
 		<tr>
 			<c:choose>
-				<c:when test="${sqlLoggerStarted}">
+				<c:when test="${sqlStarted}">
 					<td width="150">
-						<input type="submit" name="stopSQL" value="<spring:message code="${moduleId}.tools.stop" />" />
+						<input type="submit" name="stopHibernateSQL" value="<spring:message code="${moduleId}.tools.stop" />" />
 					</td>
-					<td>
-						<spring:message code="${moduleId}.tools.stopMsg" arguments="${sqlLoggerName}" />
-					</td>
+					<td><spring:message code="${moduleId}.tools.stopHibernateSQLMsg" arguments="${sqlLoggerName},DEBUG" /></td>
 				</c:when>
 				<c:otherwise>
 					<td width="150">
-						<input type="submit" name="startSQL" value="<spring:message code="${moduleId}.tools.start" />" />
+						<input type="submit" name="startHibernateSQL" value="<spring:message code="${moduleId}.tools.start" />" />
 					</td>
-					<td>
-						<spring:message code="${moduleId}.tools.startMsg" arguments="${sqlLoggerName}" />
-					</td>
+					<td><spring:message code="${moduleId}.tools.startHibernateSQLMsg" arguments="${sqlLoggerName},OFF" /></td>
 				</c:otherwise>
 			</c:choose>
 		</tr>
