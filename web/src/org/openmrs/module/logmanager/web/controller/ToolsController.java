@@ -67,19 +67,29 @@ public class ToolsController extends ParameterizableViewController {
 			reloadConfiguration(configs);
 			WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools.reloadSuccess", null);
 		}
-		else if (request.getParameter("startSQL") != null)		
+		else if (request.getParameter("startProfiling") != null)		
+			setProfilingLogging(true);
+		else if (request.getParameter("stopProfiling") != null)		
+			setProfilingLogging(false);
+		else if (request.getParameter("startHibernateSQL") != null)		
 			setHibernateSQLLogging(true);
-		else if (request.getParameter("stopSQL") != null)		
+		else if (request.getParameter("stopHibernateSQL") != null)		
 			setHibernateSQLLogging(false);
 		
 		List<Map<String, Object>> log4jConfigs = getLog4jConfigs();
 		model.put("log4jConfigs", log4jConfigs);
 		
+		Logger profilingLogger = LogManager.exists(Constants.LOGGER_API_PROFILING);
+		Level profilingLoggerLevel = (profilingLogger != null) ? profilingLogger.getEffectiveLevel() : null;
+		
+		model.put("profilingLoggerName", Constants.LOGGER_API_PROFILING);
+		model.put("profilingStarted", (profilingLoggerLevel != null) ? (profilingLoggerLevel.toInt() <= Level.TRACE.toInt()) : false);
+		
 		Logger sqlLogger = LogManager.exists(Constants.LOGGER_HIBERNATE_SQL);
 		Level sqlLoggerLevel = (sqlLogger != null) ? sqlLogger.getEffectiveLevel() : null;
 		
 		model.put("sqlLoggerName", Constants.LOGGER_HIBERNATE_SQL);
-		model.put("sqlLoggerStarted", (sqlLoggerLevel != null) ? (sqlLoggerLevel.toInt() <= Level.DEBUG.toInt()) : false);
+		model.put("sqlStarted", (sqlLoggerLevel != null) ? (sqlLoggerLevel.toInt() <= Level.DEBUG.toInt()) : false);
 		
 		return new ModelAndView(getViewName(), model);
 	}
@@ -173,6 +183,14 @@ public class ToolsController extends ParameterizableViewController {
 				}
 			}
 		}	
+	}
+	
+	/**
+	 * Toggles profiling of API service methods
+	 * @param on true to enable logging, else false
+	 */
+	private void setProfilingLogging(boolean on) {
+		LogManager.getLogger("org.openmrs.api").setLevel(on ? Level.TRACE : Level.WARN);
 	}
 	
 	/**
