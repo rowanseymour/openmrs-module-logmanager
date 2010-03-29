@@ -102,6 +102,9 @@ function submitViewForm(format) {
 		<tr>
 			<th>&nbsp;</th>
 			<th><spring:message code="${moduleId}.viewer.time"/></th>
+			<c:if test="${!empty timeDiffs}">
+				<th>&nbsp;</th>
+			</c:if>
 			<th><spring:message code="${moduleId}.viewer.location"/></th>
 			<th><spring:message code="${moduleId}.viewer.message"/></th>
 		</tr>
@@ -117,8 +120,13 @@ function submitViewForm(format) {
 						width="16" height="16" />
 				</td>
 				<td nowrap="nowrap" style="font-size: 10px" valign="top">
-					${logmgr:formatTimestamp(event.timeStamp)}
+					${logmgr:formatTimeStamp(event.timeStamp)}
 				</td>
+				<c:if test="${!empty timeDiffs}">
+					<td style="font-size: 10px" valign="top">			
+						${timeDiffs[rowStatus.index] >= 0 ? logmgr:formatTimeDiff(timeDiffs[rowStatus.index]) : ""}				
+					</td>
+				</c:if>
 				<td style="font-size: 10px" valign="top">
 					<span title="${event.locationInformation.className}">
 						${logmgr:formatLocInfo(event.locationInformation)}
