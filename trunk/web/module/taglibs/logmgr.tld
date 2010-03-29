@@ -9,9 +9,15 @@
 	<uri>http://openmrs.org/modules/logmanager</uri>
 
 	<function>
-		<name>formatTimestamp</name>
+		<name>formatTimeStamp</name>
 		<function-class>org.openmrs.module.logmanager.web.taglib.ELFunctions</function-class>
-		<function-signature>java.util.Date formatTimestamp(java.lang.Long)</function-signature>
+		<function-signature>java.util.Date formatTimeStamp(java.lang.Long)</function-signature>
+	</function>
+	
+	<function>
+		<name>formatTimeDiff</name>
+		<function-class>org.openmrs.module.logmanager.web.taglib.ELFunctions</function-class>
+		<function-signature>java.util.Date formatTimeDiff(java.lang.Long)</function-signature>
 	</function>
 	
 	<function>

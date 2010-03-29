@@ -105,26 +105,37 @@ public class ViewerController extends ParameterizableViewController {
 				appender = appenders.get(0);
 		}
 		
+		List<LoggingEvent> events = new ArrayList<LoggingEvent>();
 		if (appender != null) {
 			if (appender.isViewable())
-				model.put("events", svc.getAppenderEvents(appender, level, levelOp, queryField, queryValue, paging));
-			else {
-				model.put("events", new ArrayList<LoggingEvent>());
+				events = svc.getAppenderEvents(appender, level, levelOp, queryField, queryValue, paging);
+			else
 				WebUtils.setErrorMessage(request, Constants.MODULE_ID + ".error.invalidAppender", null);
-			}
 		}
-		else {
-			model.put("events", new ArrayList<LoggingEvent>());
+		else
 			WebUtils.setErrorMessage(request, Constants.MODULE_ID + ".error.noSuitableAppender", null);
-		}
 		
+		model.put("events", events);
 		model.put("appender", appender);
 		model.put("appenders", appenders);
 
+		// Check request params for XML / TXT requests
 		String format = request.getParameter("format");
 		if (format != null && !format.isEmpty()) {
 			model.put("format", format);
 			return new ModelAndView(getExportView(), model);
+		}
+		
+		boolean showProfiling = request.getParameter("profiling") != null;
+		
+		// Calc time diffs for profiling
+		if (showProfiling && events.size() > 0) {
+			long[] timeDiffs = new long[events.size()];
+			for (int e = 0; e < events.size() - 1; e++)
+				timeDiffs[e] = events.get(e).getTimeStamp() - events.get(e + 1).getTimeStamp();
+			
+			timeDiffs[events.size() - 1] = -1;
+			model.put("timeDiffs", timeDiffs);
 		}
 		
 		model.put("levelIcons", IconFactory.getLevelIconMap());	
