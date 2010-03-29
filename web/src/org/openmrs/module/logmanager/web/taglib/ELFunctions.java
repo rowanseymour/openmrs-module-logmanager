@@ -13,6 +13,8 @@
  */
 package org.openmrs.module.logmanager.web.taglib;
 
+import java.text.DecimalFormat;
+import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -24,15 +26,33 @@ import org.apache.log4j.spi.LocationInfo;
  */
 public class ELFunctions {
 	
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private static final Format dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private static final Format secondsFormat1 = new DecimalFormat("#0.000s");
+	private static final Format secondsFormat2 = new DecimalFormat("#0.00s");
 	
 	/**
-	 * Formats a timestamp
-	 * @param timestamp the timestamp value
+	 * Formats a time stamp
+	 * @param timeStamp the time stamp value
 	 * @return the formatted date time string
 	 */
-	public static String formatTimestamp(Long timestamp) {
-		return dateFormat.format(new Date(timestamp));
+	public static String formatTimeStamp(Long timeStamp) {
+		return dateFormat.format(new Date(timeStamp));
+	}
+	
+	/**
+	 * Formats a time diff value
+	 * @param timeDiff the timeDiff value
+	 * @return the formatted string
+	 */
+	public static String formatTimeDiff(Long timeDiff) {
+		float seconds = timeDiff / 1000.0f;
+		
+		if (timeDiff < 1000)
+			return secondsFormat1.format(seconds);
+		else if (timeDiff < 60000)
+			return secondsFormat2.format(seconds);
+		else
+			return (int)seconds + "s";
 	}
 	
 	/**
