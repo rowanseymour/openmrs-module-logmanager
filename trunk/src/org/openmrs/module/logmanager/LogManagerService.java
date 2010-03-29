@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
+import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.logmanager.util.PagingInfo;
@@ -35,6 +36,7 @@ public interface LogManagerService extends OpenmrsService {
 	 * @return the list of loggers
 	 * @throws APIException
 	 */
+	@Authorized( { Constants.PRIV_VIEW_SERVER_LOG })
 	@Transactional(readOnly=true)
 	public List<LoggerProxy> getLoggers(boolean incImplicit) throws APIException;
 	
@@ -44,6 +46,7 @@ public interface LogManagerService extends OpenmrsService {
 	 * @return the appender
 	 * @throws APIException
 	 */
+	@Authorized( { Constants.PRIV_VIEW_SERVER_LOG })
 	@Transactional(readOnly=true)
 	public AppenderProxy getAppender(int id) throws APIException;
 	
@@ -52,6 +55,7 @@ public interface LogManagerService extends OpenmrsService {
 	 * @param sorted true if method should return a sorted list, otherwise returns a set
 	 * @return the set of appenders
 	 */
+	@Authorized( { Constants.PRIV_VIEW_SERVER_LOG })
 	@Transactional(readOnly=true)
 	public Collection<AppenderProxy> getAppenders(boolean sorted) throws APIException;
 	
@@ -60,6 +64,7 @@ public interface LogManagerService extends OpenmrsService {
 	 * @param appender the appender
 	 * @throws APIException
 	 */
+	@Authorized( { Constants.PRIV_MANAGE_SERVER_LOG })
 	public void deleteAppender(AppenderProxy appender) throws APIException;
 	
 	/**
@@ -73,6 +78,7 @@ public interface LogManagerService extends OpenmrsService {
 	 * @return the list of logging events
 	 * @throws APIException
 	 */
+	@Authorized( { Constants.PRIV_VIEW_SERVER_LOG })
 	@Transactional(readOnly=true)
 	public List<LoggingEvent> getAppenderEvents(AppenderProxy appender, Level level, int levelOp, QueryField queryField, String queryValue, PagingInfo paging) throws APIException;
 
@@ -82,6 +88,7 @@ public interface LogManagerService extends OpenmrsService {
 	 * @param id the id of the logging event
 	 * @return the logging event
 	 */
+	@Authorized( { Constants.PRIV_VIEW_SERVER_LOG })
 	@Transactional(readOnly=true)
 	public LoggingEvent getAppenderEvent(AppenderProxy appender, int id) throws APIException;
 	
@@ -93,6 +100,7 @@ public interface LogManagerService extends OpenmrsService {
 	 * @param the number of previous events to include
 	 * @return the logging event
 	 */
+	@Authorized( { Constants.PRIV_VIEW_SERVER_LOG })
 	@Transactional(readOnly=true)
 	public LoggingEvent getAppenderEvent(AppenderProxy appender, int id, List<LoggingEvent> prevEvents, int prevCount) throws APIException;
 	
@@ -101,6 +109,7 @@ public interface LogManagerService extends OpenmrsService {
 	 * @return the version string
 	 * @throws APIException
 	 */
+	@Authorized( { Constants.PRIV_VIEW_SERVER_LOG })
 	@Transactional(readOnly=true)
 	public String getMySQLVersion() throws APIException;
 	
@@ -110,6 +119,7 @@ public interface LogManagerService extends OpenmrsService {
 	 * @return the presets
 	 * @throws APIException
 	 */
+	@Authorized( { Constants.PRIV_VIEW_SERVER_LOG })
 	@Transactional(readOnly=true)
 	public Preset getPreset(int presetId) throws APIException;
 	
@@ -118,6 +128,7 @@ public interface LogManagerService extends OpenmrsService {
 	 * @return the list of presets
 	 * @throws APIException
 	 */
+	@Authorized( { Constants.PRIV_VIEW_SERVER_LOG })
 	@Transactional(readOnly=true)
 	public List<Preset> getPresets() throws APIException;
 	
@@ -126,6 +137,7 @@ public interface LogManagerService extends OpenmrsService {
 	 * @param preset the preset to save
 	 * @throws APIException
 	 */
+	@Authorized( { Constants.PRIV_MANAGE_SERVER_LOG })
 	public void saveCurrentLoggersAsPreset(Preset preset) throws APIException;
 	
 	/**
@@ -133,5 +145,6 @@ public interface LogManagerService extends OpenmrsService {
 	 * @param preset the preset to delete
 	 * @throws APIException
 	 */
+	@Authorized( { Constants.PRIV_MANAGE_SERVER_LOG })
 	public void deletePreset(Preset preset) throws APIException;
 }

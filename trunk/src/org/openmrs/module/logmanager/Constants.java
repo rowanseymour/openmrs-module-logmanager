@@ -21,6 +21,7 @@ public class Constants {
 	public static final String MODULE_ID = "logmanager";
 	
 	// Privileges
+	public static final String PRIV_VIEW_SERVER_LOG = "View Server Log";
 	public static final String PRIV_MANAGE_SERVER_LOG = "Manage Server Log";
 	
 	// Property keys
