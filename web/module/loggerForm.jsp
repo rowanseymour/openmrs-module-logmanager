@@ -19,7 +19,7 @@
 		</c:otherwise>
 	</c:choose>
 </b>
-<form:form commandName="logger" cssClass="box">
+<logmgr_form:form commandName="logger" cssClass="box">
 	<table cellpadding="2" cellspacing="2" width="100%">
 		<tr>
 			<th width="150"><spring:message code="${moduleId}.loggers.name"/></th>
@@ -32,8 +32,8 @@
 						${logger.name}
 					</c:when>
 					<c:otherwise>
-						<form:input path="name" cssStyle="width: 400px" />
-						<form:errors path="name" cssClass="error" />
+						<logmgr_form:input path="name" cssStyle="width: 400px" />
+						<logmgr_form:errors path="name" cssClass="error" />
 					</c:otherwise>
 				</c:choose>
 			</td>
@@ -83,6 +83,6 @@
 			</td>
 		</tr>
 	</table>
-</form:form>
+</logmgr_form:form>
 
 <%@ include file="/WEB-INF/template/footer.jsp"%>

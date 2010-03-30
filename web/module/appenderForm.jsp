@@ -33,13 +33,13 @@ function onChangeLayoutType(value) {
 		</c:otherwise>
 	</c:choose>
 </b>
-<form:form commandName="appender" cssClass="box">
+<logmgr_form:form commandName="appender" cssClass="box">
 	<table cellpadding="2" cellspacing="2" width="100%">
 		<tr>
 			<th width="150"><spring:message code="${moduleId}.appenders.name"/></th>
 			<td>
-				<form:input path="name" cssStyle="width: 300px" />
-				<form:errors path="name" cssClass="error" />
+				<logmgr_form:input path="name" cssStyle="width: 300px" />
+				<logmgr_form:errors path="name" cssClass="error" />
 			</td>
 		</tr>
 		<tr>
@@ -63,11 +63,11 @@ function onChangeLayoutType(value) {
 							<spring:bind path="layoutType">
 								<logmgr_tag:layoutTypeList name="${status.expression}" value="${status.value}" showUnknown="false" onchange="onChangeLayoutType(this.value)" />
 							</spring:bind>
-							<form:input path="layoutPattern" cssStyle="width: 300px; display: ${appender.layoutType.ordinal == 3 ? '' : 'none' }" />
-							<form:errors path="layoutPattern" cssClass="error" />
+							<logmgr_form:input path="layoutPattern" cssStyle="width: 300px; display: ${appender.layoutType.ordinal == 3 ? '' : 'none' }" />
+							<logmgr_form:errors path="layoutPattern" cssClass="error" />
 							
 							<span id="useLocationSpan" style="display: ${(appender.layoutType.ordinal == 4 || appender.layoutType.ordinal == 5) ? '' : 'none' }">
-								<form:checkbox path="layoutUsesLocation" />
+								<logmgr_form:checkbox path="layoutUsesLocation" />
 								<spring:message code="${moduleId}.appenders.useLocationInformation"/>
 							</span>
 						</c:when>
@@ -82,8 +82,8 @@ function onChangeLayoutType(value) {
 			<tr>
 				<th><spring:message code="${moduleId}.appenders.bufferSize"/></th>
 				<td>
-					<form:input path="bufferSize" size="6" />
-					<form:errors path="bufferSize" cssClass="error" />
+					<logmgr_form:input path="bufferSize" size="6" />
+					<logmgr_form:errors path="bufferSize" cssClass="error" />
 				</td>		
 			</tr>
 		</c:if>
@@ -91,9 +91,9 @@ function onChangeLayoutType(value) {
 			<tr>
 				<th><spring:message code="${moduleId}.appenders.host"/></th>
 				<td>
-					<form:input path="remoteHost" />
+					<logmgr_form:input path="remoteHost" />
 					<spring:message code="${moduleId}.appenders.port"/>
-					<form:input path="port" size="5" />
+					<logmgr_form:input path="port" size="5" />
 				</td>
 			</tr>
 		</c:if>
@@ -101,8 +101,8 @@ function onChangeLayoutType(value) {
 			<tr>
 				<th><spring:message code="${moduleId}.appenders.source"/></th>
 				<td>
-					<form:input path="source" />
-					<form:errors path="source" cssClass="error" />
+					<logmgr_form:input path="source" />
+					<logmgr_form:errors path="source" cssClass="error" />
 				</td>		
 			</tr>
 		</c:if>
@@ -128,6 +128,6 @@ function onChangeLayoutType(value) {
 			</td>
 		</tr>
 	</table>
-</form:form>
+</logmgr_form:form>
 
 <%@ include file="/WEB-INF/template/footer.jsp"%>
