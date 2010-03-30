@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//OpenMRS//DTD OpenMRS Config 1.2//EN" "./config-1.2.dtd">
+<module configVersion="1.0">
+	<id>logmanager</id>
+	<name>Log Manager</name>
+	<version>1.0</version>
+	<package>org.openmrs.module.@MODULE_ID@</package>
+	<author>Rowan Seymour</author>
+	<description>Management of logging for developers</description>
+	<activator>@MODULE_PACKAGE@.ModuleActivator</activator>
+	<updateURL>https://dev.openmrs.org/modules/download/@MODULE_ID@/update.rdf</updateURL>
+	<require_version>1.5.0</require_version>
+	
+	<extension>
+		<point>org.openmrs.uncaughtException</point>
+		<class>@MODULE_PACKAGE@.web.extension.UncaughtExceptionExtension</class>
+	</extension>
+	
+	<extension>
+		<point>org.openmrs.admin.maintenance.localHeader</point>
+		<class>@MODULE_PACKAGE@.web.extension.MaintenanceLinksExtension</class>
+	</extension>
+	
+	<privilege>
+		<name>Manage Server Log</name>
+		<description>Able to manage and configure server logging</description>
+	</privilege>
+	
+	<globalProperty>
+		<property>@MODULE_ID@.defaultAppenderName</property>
+		<defaultValue>MEMORY_APPENDER</defaultValue>
+		<description>The default appender to use for the log viewer</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>@MODULE_ID@.recreateDefaultAppender</property>
+		<defaultValue>true</defaultValue>
+		<description>Recreate default appender on module startup if missing</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>@MODULE_ID@.logUncaughtExceptions</property>
+		<defaultValue>true</defaultValue>
+		<description>Log uncaught exceptions</description>
+	</globalProperty>
+	
+	<filter>
+		<filter-name>logMgrRequestFilter</filter-name>
+		<filter-class>@MODULE_PACKAGE@.web.filter.RequestProviderFilter</filter-class>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>logMgrRequestFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<messages>
+		<lang>en</lang>
+		<file>messages.properties</file>
+	</messages>
+	
+	<mappingFiles>
+		Preset.hbm.xml
+	</mappingFiles>
+</module>
+
