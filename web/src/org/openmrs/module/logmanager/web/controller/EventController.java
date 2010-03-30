@@ -81,7 +81,7 @@ public class EventController extends ParameterizableViewController {
 		model.put("levelIcons", IconFactory.getLevelIconMap());	
 		model.put("levelLabels", IconFactory.getLevelLabelMap());
 		
-		if (request.getParameter("report") != null)
+		if (event != null && request.getParameter("report") != null)
 			return new ModelAndView(reportView, model);
 		else
 			return new ModelAndView(getViewName(), model);
