@@ -126,16 +126,20 @@ public class ViewerController extends ParameterizableViewController {
 			return new ModelAndView(getExportView(), model);
 		}
 		
-		boolean showProfiling = request.getParameter("profiling") != null;
+		boolean showTimeDiffs = request.getParameter("showTimeDiffs") != null;
 		
 		// Calc time diffs for profiling
-		if (showProfiling && events.size() > 0) {
+		if (showTimeDiffs && events.size() > 0) {
 			long[] timeDiffs = new long[events.size()];
 			for (int e = 0; e < events.size() - 1; e++)
-				timeDiffs[e] = events.get(e).getTimeStamp() - events.get(e + 1).getTimeStamp();
+				// Sometimes events get wrong order, so max away in negative values
+				timeDiffs[e] = Math.max(events.get(e).getTimeStamp() - events.get(e + 1).getTimeStamp(), 0);
 			
+			// Last event can't have a time diff so make it -1
 			timeDiffs[events.size() - 1] = -1;
+			
 			model.put("timeDiffs", timeDiffs);
+			model.put("showTimeDiffs", true);
 		}
 		
 		model.put("levelIcons", IconFactory.getLevelIconMap());	
