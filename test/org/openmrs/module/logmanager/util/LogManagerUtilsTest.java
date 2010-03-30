@@ -20,7 +20,7 @@ import org.openmrs.module.logmanager.AppenderType;
 import org.openmrs.module.logmanager.util.LogManagerUtils;
 
 /**
- * Test cases for the utility class LogManagerUtils
+ * Test cases for the class LogManagerUtils
  */
 public class LogManagerUtilsTest {
 
@@ -29,7 +29,7 @@ public class LogManagerUtilsTest {
 		AppenderProxy app = new AppenderProxy(AppenderType.CONSOLE, "Test Appender");
 		
 		// Check access to private fields of appender proxy class
-		Assert.assertEquals(LogManagerUtils.getPrivateField(app, "type"), AppenderType.CONSOLE);
-		Assert.assertEquals(LogManagerUtils.getPrivateField(app, "name"), "Test Appender");
+		Assert.assertEquals(AppenderType.CONSOLE, LogManagerUtils.getPrivateField(app, "type"));
+		Assert.assertEquals("Test Appender", LogManagerUtils.getPrivateField(app, "name"));
 	}
 }

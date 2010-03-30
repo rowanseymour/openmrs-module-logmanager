@@ -18,6 +18,9 @@ import junit.framework.Assert;
 import org.apache.log4j.Level;
 import org.junit.Test;
 
+/**
+ * Test cases for the class LevelEditor
+ */
 public class LevelEditorTest {
 
 	@Test
@@ -25,15 +28,15 @@ public class LevelEditorTest {
 		// Test conversion of level enum to integer
 		LevelEditor editor1 = new LevelEditor();
 		editor1.setValue(Level.ERROR);
-		Assert.assertEquals(editor1.getAsText(), "" + Level.ERROR_INT);
+		Assert.assertEquals("" + Level.ERROR_INT, editor1.getAsText());
 		
 		LevelEditor editor2 = new LevelEditor();
 		editor2.setValue(Level.TRACE);
-		Assert.assertEquals(editor2.getAsText(), "" + Level.TRACE_INT);
+		Assert.assertEquals("" + Level.TRACE_INT, editor2.getAsText());
 		
 		// Test null object, should return empty string
 		LevelEditor editor3 = new LevelEditor();
-		Assert.assertEquals(editor3.getAsText(), "");
+		Assert.assertEquals("", editor3.getAsText());
 	}
 	
 	@Test
@@ -41,11 +44,11 @@ public class LevelEditorTest {
 		// Test conversion of integer to level enum
 		LevelEditor editor1 = new LevelEditor();
 		editor1.setAsText("" + Level.ERROR_INT);
-		Assert.assertEquals(editor1.getValue(), Level.ERROR);
+		Assert.assertEquals(Level.ERROR, editor1.getValue());
 		
 		LevelEditor editor2 = new LevelEditor();
 		editor2.setAsText("" + Level.TRACE_INT);
-		Assert.assertEquals(editor2.getValue(), Level.TRACE);
+		Assert.assertEquals(Level.TRACE, editor2.getValue());
 		
 		// Test empty string, should return null object
 		LevelEditor editor3 = new LevelEditor();

@@ -21,7 +21,7 @@ import org.openmrs.module.logmanager.web.util.WebUtils;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 /**
- * Test cases for the web utility class WebUtils
+ * Test cases for the class WebUtils
  */
 public class WebUtilsTest {
 	
