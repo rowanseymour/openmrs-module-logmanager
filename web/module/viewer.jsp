@@ -56,10 +56,10 @@ function submitViewForm(format) {
 	<input type="hidden" name="format" value="" />
 	<table cellpadding="2" cellspacing="0" width="100%">
 		<tr>
-			<td>	
+			<td nowrap="nowrap">	
 				<spring:message code="${moduleId}.viewer.from" />
 				
-				<select name="viewId">
+				<select name="viewId" style="width: 150px">
 					<c:forEach var="app" items="${appenders}">
 						<option value="${app.id}" ${app.id == appender.id ? 'selected="selected"' : ""}>${app.name}</option>
 					</c:forEach>
@@ -78,17 +78,20 @@ function submitViewForm(format) {
 				<spring:message code="${moduleId}.viewer.where" />
 				
 				<select name="queryField">
-					<option value="0" ${queryField.ordinal == 0 ? "selected" : ""}><spring:message code="${moduleId}.viewer.loggerName" /></option>
-					<option value="1" ${queryField.ordinal == 1 ? "selected" : ""}><spring:message code="${moduleId}.viewer.className" /></option>
+					<option value="0" ${queryField.ordinal == 0 ? "selected" : ""}><spring:message code="${moduleId}.viewer.logger" /></option>
+					<option value="1" ${queryField.ordinal == 1 ? "selected" : ""}><spring:message code="${moduleId}.viewer.class" /></option>
 					<option value="2" ${queryField.ordinal == 2 ? "selected" : ""}><spring:message code="${moduleId}.viewer.filename" /></option>
 				</select>
 				
 				<spring:message code="${moduleId}.viewer.matches" />
 				
-				<input type="text" name="queryValue" value="${queryValue}" style="width: 300px" />
+				<input type="text" name="queryValue" value="${queryValue}" style="width: 150px" />
 			</td>
 			
-			<td align="right">
+			<td align="right" nowrap="nowrap">
+				<input type="checkbox" name="showTimeDiffs" value="1" ${showTimeDiffs ? 'checked="checked"' : ''} />
+				<spring:message code="${moduleId}.viewer.showTimeDiffs" />
+				&nbsp;
 				<a class="formatLink" href="javascript:submitViewForm('txt')">TXT</a>
 				<a class="formatLink" href="javascript:submitViewForm('xml')">XML</a>
 				&nbsp;
@@ -102,8 +105,8 @@ function submitViewForm(format) {
 		<tr>
 			<th>&nbsp;</th>
 			<th><spring:message code="${moduleId}.viewer.time"/></th>
-			<c:if test="${!empty timeDiffs}">
-				<th>&nbsp;</th>
+			<c:if test="${showTimeDiffs}">
+				<th>&#916;</th>
 			</c:if>
 			<th><spring:message code="${moduleId}.viewer.location"/></th>
 			<th><spring:message code="${moduleId}.viewer.message"/></th>
@@ -122,9 +125,14 @@ function submitViewForm(format) {
 				<td nowrap="nowrap" style="font-size: 10px" valign="top">
 					${logmgr:formatTimeStamp(event.timeStamp)}
 				</td>
-				<c:if test="${!empty timeDiffs}">
-					<td style="font-size: 10px" valign="top">			
-						${timeDiffs[rowStatus.index] >= 0 ? logmgr:formatTimeDiff(timeDiffs[rowStatus.index]) : ""}				
+				<c:if test="${showTimeDiffs}">
+					<td style="font-size: 10px" valign="top">
+						<c:if test="${timeDiffs[rowStatus.index] >= 0}">
+							<logmgr_tag:progressBar width="100"
+								value="${timeDiffs[rowStatus.index] / 10}"
+								label="${logmgr:formatTimeDiff(timeDiffs[rowStatus.index])}"
+							/>	
+						</c:if>				
 					</td>
 				</c:if>
 				<td style="font-size: 10px" valign="top">
