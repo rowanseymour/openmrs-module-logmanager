@@ -18,6 +18,9 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.openmrs.module.logmanager.LayoutType;
 
+/**
+ * Test cases for the class LayoutTypeEditor
+ */
 public class LayoutTypeEditorTest {
 
 	@Test
@@ -25,15 +28,15 @@ public class LayoutTypeEditorTest {
 		// Test conversion of layout type enum to integer
 		LayoutTypeEditor editor1 = new LayoutTypeEditor();
 		editor1.setValue(LayoutType.SIMPLE);
-		Assert.assertEquals(editor1.getAsText(), "" + LayoutType.SIMPLE.ordinal());
+		Assert.assertEquals("" + LayoutType.SIMPLE.ordinal(), editor1.getAsText());
 		
 		LayoutTypeEditor editor2 = new LayoutTypeEditor();
 		editor2.setValue(LayoutType.XML);
-		Assert.assertEquals(editor2.getAsText(), "" + LayoutType.XML.ordinal());
+		Assert.assertEquals("" + LayoutType.XML.ordinal(), editor2.getAsText());
 		
 		// Test null object, should return empty string
 		LayoutTypeEditor editor3 = new LayoutTypeEditor();
-		Assert.assertEquals(editor3.getAsText(), "");
+		Assert.assertEquals("", editor3.getAsText());
 	}
 	
 	@Test
@@ -41,11 +44,11 @@ public class LayoutTypeEditorTest {
 		// Test conversion of integer to level enum
 		LayoutTypeEditor editor1 = new LayoutTypeEditor();
 		editor1.setAsText("" + LayoutType.SIMPLE.ordinal());
-		Assert.assertEquals(editor1.getValue(), LayoutType.SIMPLE);
+		Assert.assertEquals(LayoutType.SIMPLE, editor1.getValue());
 		
 		LayoutTypeEditor editor2 = new LayoutTypeEditor();
 		editor2.setAsText("" + LayoutType.XML.ordinal());
-		Assert.assertEquals(editor2.getValue(), LayoutType.XML);
+		Assert.assertEquals(LayoutType.XML, editor2.getValue());
 		
 		// Test empty string, should return null object
 		LayoutTypeEditor editor3 = new LayoutTypeEditor();
