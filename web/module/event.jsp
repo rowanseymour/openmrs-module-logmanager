@@ -15,9 +15,20 @@
 <form method="post" class="box" name="eventViewForm">
 	<table cellpadding="2" cellspacing="0" width="100%">
 		<tr>
-			<td align="right">
+			<td align="left">
 				<input type="button"
-					onclick="location.href='viewer.htm?appId=${appender.id}'"
+					onclick="location.href='event.htm?appId=${appender.id}&amp;eventId=${logmgr:hashCode(contextEvents[0])}'"
+					value="<spring:message code="general.previous"/>"
+					${contextEvents[0] == null ? 'disabled="disabled"' : ''}
+				/>
+				<input type="button"
+					onclick="location.href='event.htm?appId=${appender.id}&amp;eventId=${logmgr:hashCode(contextEvents[1])}'"
+					value="<spring:message code="general.next"/>"
+					${contextEvents[1] == null ? 'disabled="disabled"' : ''}
+				/>
+			</td>
+			<td align="right">
+				<input type="button" onclick="history.go(-1)"
 					value="<spring:message code="general.back"/>"
 				/>
 				<input type="submit" name="report" value="<spring:message code="${moduleId}.viewer.createReport" />" />

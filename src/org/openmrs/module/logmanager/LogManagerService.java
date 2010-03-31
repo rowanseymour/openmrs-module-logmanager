@@ -102,7 +102,7 @@ public interface LogManagerService extends OpenmrsService {
 	 */
 	@Authorized( { Constants.PRIV_VIEW_SERVER_LOG })
 	@Transactional(readOnly=true)
-	public LoggingEvent getAppenderEvent(AppenderProxy appender, int id, List<LoggingEvent> prevEvents, int prevCount) throws APIException;
+	public LoggingEvent getAppenderEvent(AppenderProxy appender, int id, List<LoggingEvent> contextEvents, int contextCount) throws APIException;
 	
 	/**
 	 * Gets the version of MySQL being used by OpenMRS
