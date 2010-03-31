@@ -26,6 +26,7 @@ import org.springframework.web.servlet.view.AbstractView;
 public class EventReportView extends AbstractView {
 
 	protected static final SimpleDateFormat dfFilename = new SimpleDateFormat("yyyyMMdd-HHmm");
+	protected static final PatternLayout layout = new PatternLayout(Constants.DEF_LAYOUT);
 	
 	/**
 	 * Gets the filename of the response
@@ -83,14 +84,29 @@ public class EventReportView extends AbstractView {
 		
 		// Output event 
 		out.println("=================== LOG EVENT =====================");
-		LoggingEvent event = (LoggingEvent)model.get("event");
-		PatternLayout layout = new PatternLayout(Constants.DEF_LAYOUT);
-		out.println(layout.format(event));
+		LoggingEvent event = (LoggingEvent)model.get("event");	
+		printEvent(out, event);
 		
 		// Add finally the previous N events
 		out.println("================ PREVIOUS EVENTS ==================");
 		List<LoggingEvent> prevEvents = (List<LoggingEvent>)model.get("contextEvents");
 		for (LoggingEvent e : prevEvents)
-			out.println(layout.format(e));
+			printEvent(out, e);
+	}
+	
+	/**
+	 * Prints an event to the given writer
+	 * @param out the print writer
+	 * @param event the event
+	 */
+	public void printEvent(PrintWriter out, LoggingEvent event) {
+		out.print(layout.format(event));
+		
+		if (event.getThrowableStrRep() != null) {
+			for (String line : event.getThrowableStrRep())
+				out.println(line);
+		}
+		
+		out.println();
 	}
 }
