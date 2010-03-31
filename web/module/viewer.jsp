@@ -12,6 +12,10 @@
 <c:set var="level_ERROR" value="<%= org.apache.log4j.Level.ERROR_INT %>" />
 
 <style type="text/css">
+#eventsTable td {
+	font-size: 10px;
+	vertical-align: top;
+}
 .rowLink {
 	cursor: hand;
 	cursor: pointer;
@@ -89,8 +93,8 @@ function submitViewForm(format) {
 			</td>
 			
 			<td align="right" nowrap="nowrap">
-				<input type="checkbox" name="showTimeDiffs" value="1" ${showTimeDiffs ? 'checked="checked"' : ''} />
-				<spring:message code="${moduleId}.viewer.showTimeDiffs" />
+				<input type="checkbox" name="profiler" value="1" ${profiler ? 'checked="checked"' : ''} />
+				<spring:message code="${moduleId}.viewer.showProfilerView" />
 				&nbsp;
 				<a class="formatLink" href="javascript:submitViewForm('txt')">TXT</a>
 				<a class="formatLink" href="javascript:submitViewForm('xml')">XML</a>
@@ -101,12 +105,13 @@ function submitViewForm(format) {
 		</tr>
 	</table>
 
-	<table cellpadding="2" cellspacing="0" width="100%">
+	<table cellpadding="2" cellspacing="0" width="100%" id="eventsTable">
 		<tr>
 			<th>&nbsp;</th>
 			<th><spring:message code="${moduleId}.viewer.time"/></th>
-			<c:if test="${showTimeDiffs}">
+			<c:if test="${profiler}">
 				<th>&#916;</th>
+				<th><spring:message code="${moduleId}.viewer.thread"/></th>
 			</c:if>
 			<th><spring:message code="${moduleId}.viewer.location"/></th>
 			<th><spring:message code="${moduleId}.viewer.message"/></th>
@@ -117,16 +122,16 @@ function submitViewForm(format) {
 				class="rowLink <c:choose><c:when test="${logmgr:levelToInt(event.level) >= level_ERROR}">errorLevel</c:when><c:when test="${rowStatus.index % 2 == 0}">evenRow</c:when><c:otherwise>oddRow</c:otherwise></c:choose>"
 				onclick="location.href='${pageContext.request.contextPath}/module/logmanager/event.htm?appId=${appender.id}&amp;eventId=${logmgr:hashCode(event)}'"
 			>
-				<td valign="top" width="16">
+				<td width="16">
 					<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/${levelIcons[event.level]}"
 						title="${levelLabels[event.level]}"
 						width="16" height="16" />
 				</td>
-				<td nowrap="nowrap" style="font-size: 10px" valign="top">
-					${logmgr:formatTimeStamp(event.timeStamp)}
+				<td nowrap="nowrap">
+					${logmgr:formatTimeStamp(event.timeStamp, !profiler)}
 				</td>
-				<c:if test="${showTimeDiffs}">
-					<td style="font-size: 10px" valign="top">
+				<c:if test="${profiler}">
+					<td>
 						<c:if test="${timeDiffs[rowStatus.index] >= 0}">
 							<logmgr_tag:progressBar width="100"
 								value="${timeDiffs[rowStatus.index] / 10}"
@@ -134,13 +139,16 @@ function submitViewForm(format) {
 							/>	
 						</c:if>				
 					</td>
+					<td>
+						${event.threadName}
+					</td>
 				</c:if>
-				<td style="font-size: 10px" valign="top">
+				<td>
 					<span title="${event.locationInformation.className}">
 						${logmgr:formatLocInfo(event.locationInformation)}
 					</span>
 				</td>
-				<td style="font-size: 10px" valign="top">
+				<td>
 					${logmgr:formatMessage(event.message)}
 					
 					<c:if test="${event.throwableInformation != null}">

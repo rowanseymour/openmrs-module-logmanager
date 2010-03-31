@@ -26,11 +26,15 @@ public class ELFunctionsTest {
 
 	@Test
 	public void formatTimeStamp() {
-		String res1 = ELFunctions.formatTimeStamp(0l);
-		String res2 = ELFunctions.formatTimeStamp(1000000l);
+		String res1 = ELFunctions.formatTimeStamp(0l, true);
+		String res2 = ELFunctions.formatTimeStamp(1000000l, true);
+		String res3 = ELFunctions.formatTimeStamp(0l, false);
+		String res4 = ELFunctions.formatTimeStamp(1000000l, false);
 		
 		Assert.assertTrue(res1 != null && !res1.isEmpty());
 		Assert.assertTrue(res2 != null && !res2.isEmpty());
+		Assert.assertTrue(res3 != null && !res3.isEmpty());
+		Assert.assertTrue(res4 != null && !res4.isEmpty());
 	}
 	
 	@Test

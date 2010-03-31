@@ -11,7 +11,7 @@
 	<function>
 		<name>formatTimeStamp</name>
 		<function-class>org.openmrs.module.logmanager.web.taglib.ELFunctions</function-class>
-		<function-signature>java.util.Date formatTimeStamp(java.lang.Long)</function-signature>
+		<function-signature>java.util.Date formatTimeStamp(java.lang.Long,java.lang.Boolean)</function-signature>
 	</function>
 	
 	<function>

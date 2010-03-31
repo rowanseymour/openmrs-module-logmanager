@@ -47,7 +47,7 @@
 		</tr>	
 		<tr>
 			<th valign="top"><spring:message code="${moduleId}.viewer.time" /></th>
-			<td>${logmgr:formatTimeStamp(event.timeStamp)}</td>	
+			<td>${logmgr:formatTimeStamp(event.timeStamp, true)}</td>	
 		</tr>
 		<tr>
 			<th valign="top"><spring:message code="${moduleId}.viewer.thread" /></th>
