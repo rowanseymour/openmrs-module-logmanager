@@ -69,9 +69,13 @@ public class ELFunctionsTest {
 	
 	@Test
 	public void _hashCode() {
+		// Hash code should be the same as hash code from object method
 		Object o1 = new String("hello");
 		Object o2 = new Integer(1234);
 		Assert.assertEquals(new Integer(o1.hashCode()), ELFunctions.hashCode(o1));
 		Assert.assertEquals(new Integer(o2.hashCode()), ELFunctions.hashCode(o2));
+		
+		// Null object should return null hash code
+		Assert.assertNull(ELFunctions.hashCode(null));
 	}
 }

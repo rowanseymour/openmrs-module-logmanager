@@ -89,7 +89,7 @@ public class EventReportView extends AbstractView {
 		
 		// Add finally the previous N events
 		out.println("================ PREVIOUS EVENTS ==================");
-		List<LoggingEvent> prevEvents = (List<LoggingEvent>)model.get("prevEvents");
+		List<LoggingEvent> prevEvents = (List<LoggingEvent>)model.get("contextEvents");
 		for (LoggingEvent e : prevEvents)
 			out.println(layout.format(e));
 	}

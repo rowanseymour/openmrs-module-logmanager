@@ -195,30 +195,36 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	 * @see LogManagerService#getAppenderEvent(org.openmrs.module.logmanager.AppenderProxy, int)
 	 */
 	public LoggingEvent getAppenderEvent(AppenderProxy appender, int id) {
-		List<LoggingEvent> events = getAppenderEvents(appender, null, 0, null, null, null);
-		for (LoggingEvent e : events) {
-			if (e.hashCode() == id)
-				return e;
-		}
-		return null;
+		return getAppenderEvent(appender, id, null, 0);
 	}
 	
 	/**
 	 * @see LogManagerService#getAppenderEvent(AppenderProxy, int, List, int)
 	 */
-	public LoggingEvent getAppenderEvent(AppenderProxy appender, int id, List<LoggingEvent> prevEvents, int prevCount) throws APIException {
+	public LoggingEvent getAppenderEvent(AppenderProxy appender, int id, List<LoggingEvent> contextEvents, int contextCount) throws APIException {
 		List<LoggingEvent> events = getAppenderEvents(appender, null, 0, null, null, null);
-	
+		LoggingEvent prevEvent = null;
+		
 		for (Iterator<LoggingEvent> iter = events.iterator(); iter.hasNext(); ) {
 			LoggingEvent e = iter.next();
 			
 			if (e.hashCode() == id) {
-				// Add previous events
-				for (; iter.hasNext() && prevEvents.size() <= prevCount; )
-					prevEvents.add(iter.next());
+				if (contextEvents != null) {
+					// Add next n events in list
+					if (contextEvents != null && contextCount > 0)
+						for (; iter.hasNext() && contextEvents.size() <= contextCount; )
+							contextEvents.add(iter.next());
+					// And previous and next events
+					else if (contextCount == -1) {
+						contextEvents.add(iter.hasNext() ? iter.next() : null);
+						contextEvents.add(prevEvent);
+					}
+				}
 				
 				return e;
 			}
+			
+			prevEvent = e;
 		}
 		return null;
 	}

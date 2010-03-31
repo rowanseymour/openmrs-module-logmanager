@@ -93,6 +93,6 @@ public class ELFunctions {
 	 * @return the hash code
 	 */
 	public static Integer hashCode(Object obj) {
-		return obj.hashCode();
+		return obj != null ? obj.hashCode() : null;
 	}
 }

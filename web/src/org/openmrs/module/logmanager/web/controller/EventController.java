@@ -55,6 +55,7 @@ public class EventController extends ParameterizableViewController {
 		
 		Map<String, Object> model = new HashMap<String, Object>();
 		LogManagerService svc = Context.getService(LogManagerService.class);
+		boolean isReport = request.getParameter("report") != null;
 		
 		// Get specific appender or default to MEMORY_APPENDER
 		int viewId = ServletRequestUtils.getIntParameter(request, "appId", 0);
@@ -70,18 +71,18 @@ public class EventController extends ParameterizableViewController {
 		
 		// Find specific event and also its previous N events
 		int eventId = ServletRequestUtils.getIntParameter(request, "eventId", 0);
-		List<LoggingEvent> prevEvents = new ArrayList<LoggingEvent>();
-		LoggingEvent event = svc.getAppenderEvent(appender, eventId, prevEvents, Constants.EVENT_REPORT_PREV_EVENTS);
+		List<LoggingEvent> contextEvents = new ArrayList<LoggingEvent>();
+		LoggingEvent event = svc.getAppenderEvent(appender, eventId, contextEvents, isReport ? Constants.EVENT_REPORT_PREV_EVENTS : -1);
 		
 		if (event == null)
 			WebUtils.setErrorMessage(request, Constants.MODULE_ID + ".error.invalidEvent", null);
 		
 		model.put("event", event);
-		model.put("prevEvents", prevEvents);
+		model.put("contextEvents", contextEvents);
 		model.put("levelIcons", IconFactory.getLevelIconMap());	
 		model.put("levelLabels", IconFactory.getLevelLabelMap());
 		
-		if (event != null && request.getParameter("report") != null)
+		if (event != null && isReport)
 			return new ModelAndView(reportView, model);
 		else
 			return new ModelAndView(getViewName(), model);
