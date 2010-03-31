@@ -27,16 +27,19 @@ import org.apache.log4j.spi.LocationInfo;
 public class ELFunctions {
 	
 	private static final Format dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private static final Format timeFormat = new SimpleDateFormat("HH:mm:ss.SSS");
 	private static final Format secondsFormat1 = new DecimalFormat("#0.000s");
 	private static final Format secondsFormat2 = new DecimalFormat("#0.00s");
 	
 	/**
 	 * Formats a time stamp
 	 * @param timeStamp the time stamp value
+	 * @param asDateAndTime true if should be formatted as date and time
 	 * @return the formatted date time string
 	 */
-	public static String formatTimeStamp(Long timeStamp) {
-		return dateFormat.format(new Date(timeStamp));
+	public static String formatTimeStamp(Long timeStamp, Boolean asDateAndTime) {
+		Date date = new Date(timeStamp);
+		return asDateAndTime ? dateFormat.format(date) : timeFormat.format(date);
 	}
 	
 	/**
