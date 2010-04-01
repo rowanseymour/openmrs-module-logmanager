@@ -23,8 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.Appender;
-import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.AppenderProxy;
@@ -57,17 +55,13 @@ public class EventController extends ParameterizableViewController {
 		LogManagerService svc = Context.getService(LogManagerService.class);
 		boolean isReport = request.getParameter("report") != null;
 		
-		// Get specific appender or default to MEMORY_APPENDER
-		int viewId = ServletRequestUtils.getIntParameter(request, "appId", 0);
+		// Get specific appender or default to system appender
+		int appId = ServletRequestUtils.getIntParameter(request, "appId", 0);
 		AppenderProxy appender = null;
-		if (viewId != 0)
-			appender = svc.getAppender(viewId);
-		else {
-			// Try default appender from Constants
-			Appender target = Logger.getRootLogger().getAppender(Constants.DEF_DEFAULT_APPENDER_NAME);
-			if (target != null)
-				appender = new AppenderProxy(target);
-		}
+		if (appId != 0)
+			appender = svc.getAppender(appId);
+		else
+			appender = AppenderProxy.getSystemAppender();
 		
 		// Find specific event and also its previous N events
 		int eventId = ServletRequestUtils.getIntParameter(request, "eventId", 0);

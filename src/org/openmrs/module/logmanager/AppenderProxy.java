@@ -51,6 +51,8 @@ public class AppenderProxy {
 	protected String layoutPattern;
 	protected boolean layoutUsesLocation;
 	
+	protected static AppenderProxy systemAppender;
+	
 	/**
 	 * Creates a proxy for a new appender
 	 * @param type the type
@@ -389,6 +391,30 @@ public class AppenderProxy {
 	 */
 	public void setSource(String source) {
 		this.source = source;
+	}
+
+	/**
+	 * Gets the system appender
+	 * @return the system appender
+	 */
+	public static AppenderProxy getSystemAppender() {
+		return systemAppender;
+	}
+
+	/**
+	 * Sets the system appender
+	 * @param systemAppender the new system appender
+	 */
+	public static void setSystemAppender(AppenderProxy systemAppender) {
+		AppenderProxy.systemAppender = systemAppender;
+	}
+	
+	/**
+	 * Gets whether this appender is the system appender
+	 * @return true if this appender is the system appender
+	 */
+	public boolean isSystemAppender() {
+		return (this.target == systemAppender.target);
 	}
 
 	/**

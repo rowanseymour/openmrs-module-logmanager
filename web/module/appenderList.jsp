@@ -89,10 +89,18 @@ function clearAppender(id) {
 					</c:if>
 				</td>
 				<td align="right">
-					<input type="image" src="${pageContext.request.contextPath}/images/trash.gif"
-						onclick="return confirm('<spring:message code="${moduleId}.appenders.confirmDeleteAppender"/>');"
-						name="deleteId" value="${appender.id}"
-						title="<spring:message code="general.delete"/>" /></a>
+					<c:choose>
+						<c:when test="${!appender.systemAppender}">
+							<input type="image" src="${pageContext.request.contextPath}/images/trash.gif"
+								onclick="return confirm('<spring:message code="${moduleId}.appenders.confirmDeleteAppender"/>');"
+								name="deleteId" value="${appender.id}"
+								title="<spring:message code="general.delete"/>"
+							/>
+						</c:when>
+						<c:otherwise>
+							<img src="${pageContext.request.contextPath}/images/lock.gif" title="<spring:message code="${moduleId}.appenders.systemAppender"/>" />
+						</c:otherwise>
+					</c:choose>
 				</td>
 			</tr>
 		</c:forEach>

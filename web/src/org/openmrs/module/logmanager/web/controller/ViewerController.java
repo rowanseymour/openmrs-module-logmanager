@@ -24,9 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.Appender;
 import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.AppenderProxy;
@@ -90,20 +88,13 @@ public class ViewerController extends ParameterizableViewController {
 				appenders.add(app);
 		}
 		
-		// Get specific appender or default to MEMORY_APPENDER
+		// Get specific appender or default to system appender
 		int appId = ServletRequestUtils.getIntParameter(request, "appId", 0);
 		AppenderProxy appender = null;
 		if (appId != 0)
 			appender = svc.getAppender(appId);
-		else {
-			// Try default appender from Constants
-			Appender target = Logger.getRootLogger().getAppender(Constants.DEF_DEFAULT_APPENDER_NAME);
-			if (target != null)
-				appender = new AppenderProxy(target);
-			// Resort to first viewable appender
-			else if (appenders.size() > 0)
-				appender = appenders.get(0);
-		}
+		else
+			appender = AppenderProxy.getSystemAppender();
 		
 		List<LoggingEvent> events = new ArrayList<LoggingEvent>();
 		if (appender != null) {

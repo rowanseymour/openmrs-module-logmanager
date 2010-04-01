@@ -24,8 +24,6 @@ public class Config {
 	
 	protected static Config config;
 	
-	protected String defaultAppenderName;
-	protected boolean recreateDefaultAppender;
 	protected boolean logUncaughtExceptions;
 	
 	/**
@@ -49,8 +47,6 @@ public class Config {
 	 * Loads the configuration from global properties
 	 */
 	public void load() {
-		defaultAppenderName = loadStringOption(Constants.PROP_DEFAULT_APPENDER_NAME, Constants.DEF_DEFAULT_APPENDER_NAME); 
-		recreateDefaultAppender = loadBooleanOption(Constants.PROP_RECREATE_DEFAULT_APPENDER, Constants.DEF_RECREATE_DEFAULT_APPENDER);
 		logUncaughtExceptions = loadBooleanOption(Constants.PROP_LOG_UNCAUGHT_EXCEPTIONS, Constants.DEF_LOG_UNCAUGHT_EXCEPTIONS);
 	}
 	
@@ -58,42 +54,9 @@ public class Config {
 	 * Saves the configuration to global properties
 	 */
 	public void save() {
-		saveOption(Constants.PROP_DEFAULT_APPENDER_NAME, defaultAppenderName);
-		saveOption(Constants.PROP_RECREATE_DEFAULT_APPENDER, recreateDefaultAppender);
 		saveOption(Constants.PROP_LOG_UNCAUGHT_EXCEPTIONS, logUncaughtExceptions);
 	}
-
-	/**
-	 * Gets default appender used by the log viewer
-	 * @return the appender name
-	 */
-	public String getDefaultAppenderName() {
-		return defaultAppenderName;
-	}
-
-	/**
-	 * Sets default appender used by the log viewer
-	 * @param defaultAppender the appender name
-	 */
-	public void setDefaultAppenderName(String defaultAppenderName) {
-		this.defaultAppenderName = defaultAppenderName;
-	}
 	
-	/**
-	 * Gets whether the default appender should be recreated if missing on module startup
-	 * @return true if appender should be recreated
-	 */
-	public boolean isRecreateDefaultAppender() {
-		return recreateDefaultAppender;
-	}
-
-	/**
-	 * Sets whether the default appender should be recreated if missing on module startup
-	 * @param recreateDefaultAppender true if appender should be recreated
-	 */
-	public void setRecreateDefaultAppender(boolean recreateDefaultAppender) {
-		this.recreateDefaultAppender = recreateDefaultAppender;
-	}
 
 	/**
 	 * Gets whether the module should log uncaught exceptions
@@ -117,6 +80,7 @@ public class Config {
 	 * @param def the default value if global property is invalid
 	 * @return the string value
 	 */
+	@SuppressWarnings("unused")
 	private static String loadStringOption(String name, String def) {
 		AdministrationService svc = Context.getAdministrationService();
 		String s = svc.getGlobalProperty(name);
