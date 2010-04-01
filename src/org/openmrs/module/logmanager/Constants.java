@@ -31,7 +31,6 @@ public class Constants {
 	public static final boolean DEF_LOG_UNCAUGHT_EXCEPTIONS = true;
 	
 	// Defaults
-	public static final int DEF_SYSTEM_APPENDER_SIZE = 200;
 	public static final String DEF_LAYOUT = "%p - %C{1}.%M(%L) |%d{ISO8601}| %m%n";
 	public static final int DEF_PORT = 4560;
 	public static final String DEF_SOURCE = "OpenMRS";
