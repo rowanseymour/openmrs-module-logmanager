@@ -43,7 +43,7 @@
 		</tr>
 		<tr>
 			<th valign="top"><spring:message code="${moduleId}.viewer.logger" /></th>
-			<td>${event.loggerName}</td>	
+			<td><a href="logger.form?logger=${event.loggerName}">${event.loggerName}</a></td>	
 		</tr>	
 		<tr>
 			<th valign="top"><spring:message code="${moduleId}.viewer.time" /></th>

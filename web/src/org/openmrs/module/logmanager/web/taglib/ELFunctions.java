@@ -87,7 +87,7 @@ public class ELFunctions {
 	 * @return the integer value
 	 */
 	public static Integer levelToInt(Level level) {
-		return level.toInt();
+		return level != null ? level.toInt() : null;
 	}
 	
 	/**

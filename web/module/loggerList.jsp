@@ -29,7 +29,7 @@ function onChangePreset(value) {
 }
 
 function onChangeAddLoggerName(value) {
-	var addBtn = document.addForm.addLogger;
+	var addBtn = document.getElementById("addLogger");
 	addBtn.disabled = (value.length == 0);
 }
 
@@ -129,7 +129,7 @@ function onSavePreset() {
 				<input type="text" name="logger" style="width: 400px" onkeyup="onChangeAddLoggerName(this.value)" />
 			</td>
 			<td align="right" valign="top">
-				<input type="submit" name="addLogger" value="<spring:message code="general.add"/>" disabled="disabled" />
+				<input type="submit" id="addLogger" value="<spring:message code="general.add"/>" disabled="disabled" />
 			</td>
 		</tr>
 	</table>

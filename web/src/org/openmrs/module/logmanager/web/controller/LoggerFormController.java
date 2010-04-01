@@ -123,7 +123,7 @@ public class LoggerFormController extends SimpleFormController {
 		else if (request.getParameter("root") != null)
 			return LoggerProxy.getRootLogger();
 	
-		// Else create new logger
+		// Else create new logger with given name
 		return new LoggerProxy(name, Level.INFO);
 	}
 
