@@ -33,20 +33,23 @@ public class ModuleActivator implements Activator {
 	public void startup() {
 		log.info("Starting log manager module");
 		
-		Config config = Config.getInstance();
-		
-		// Check for OpenMRS's default memory appender which sometimes get's
-		// nuked by misbehaving modules, and recreate it if it doesn't exist
-		if (LogManager.getRootLogger().getAppender(config.getDefaultAppenderName()) == null
-				&& config.isRecreateDefaultAppender()) {
-			
-			MemoryAppender memApp = new MemoryAppender();
-			memApp.setName(config.getDefaultAppenderName());
-			memApp.activateOptions();
-			LogManager.getRootLogger().addAppender(memApp);
-			
-			log.warn("Default appender had to be recreated. This is likely due to a module modifying the root logger.");
+		// Create / modify the memory appender defined in OpenMRS's log4j.xml
+		// and configure it to be used as the system appender
+		MemoryAppender sysApp = (MemoryAppender)LogManager.getRootLogger().getAppender(Constants.SYSTEM_APPENDER_NAME);
+		if (sysApp == null) {
+			sysApp = new MemoryAppender();
+			sysApp.setBufferSize(Constants.DEF_SYSTEM_APPENDER_SIZE);
+			sysApp.activateOptions();
+			LogManager.getRootLogger().addAppender(sysApp);
 		}
+		else if (sysApp.getBufferSize() != Constants.DEF_SYSTEM_APPENDER_SIZE) {
+			sysApp.setBufferSize(Constants.DEF_SYSTEM_APPENDER_SIZE);
+			sysApp.activateOptions();
+		}
+		
+		// Store as static member of AppenderProxy so it can't be lost
+		// even if another module now modifies the root log4j logger
+		AppenderProxy.setSystemAppender(new AppenderProxy(sysApp));
 	}
 	
 
