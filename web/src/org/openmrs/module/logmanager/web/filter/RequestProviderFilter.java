@@ -31,30 +31,11 @@ public class RequestProviderFilter extends RequestContextFilter {
 			HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		
-		//boolean isLogManagerRequest = request.getRequestURI().contains("/module/" + Constants.MODULE_ID + "/")
-			//|| request.getRequestURI().contains("/maintenance/serverLog.form");
-		
-		//Level oldRootLevel = null;
-		//if (isLogManagerRequest) {
-		//	oldRootLevel = LogManager.getRootLogger().getLevel();
-		//	LogManager.getRootLogger().setLevel(Level.OFF);
-		//}
-		
-		//if (!isLogManagerRequest)
-			//log.trace("Starting request on thread " + Thread.currentThread().getName() + " for " + request.getRequestURI());
-
 		requests.set(request);
 		
 		super.doFilterInternal(request, response, filterChain);
 		
 		requests.remove();
-		
-		//if (!isLogManagerRequest)
-			//log.trace("Finished request on thread " + Thread.currentThread().getName());
-		
-		//if (oldRootLevel != null) {
-		//	LogManager.getRootLogger().setLevel(oldRootLevel);
-		//}
 	}
 	
 	/**

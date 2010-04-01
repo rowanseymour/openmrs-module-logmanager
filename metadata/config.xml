@@ -27,18 +27,6 @@
 	</privilege>
 	
 	<globalProperty>
-		<property>@MODULE_ID@.defaultAppenderName</property>
-		<defaultValue>MEMORY_APPENDER</defaultValue>
-		<description>The default appender to use for the log viewer</description>
-	</globalProperty>
-	
-	<globalProperty>
-		<property>@MODULE_ID@.recreateDefaultAppender</property>
-		<defaultValue>true</defaultValue>
-		<description>Recreate default appender on module startup if missing</description>
-	</globalProperty>
-	
-	<globalProperty>
 		<property>@MODULE_ID@.logUncaughtExceptions</property>
 		<defaultValue>true</defaultValue>
 		<description>Log uncaught exceptions</description>

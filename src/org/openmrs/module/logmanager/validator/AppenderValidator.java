@@ -13,9 +13,13 @@
  */
 package org.openmrs.module.logmanager.validator;
 
+import java.util.Collection;
+
+import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.AppenderProxy;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LayoutType;
+import org.openmrs.module.logmanager.LogManagerService;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -41,6 +45,9 @@ public class AppenderValidator implements Validator {
 		// General validation
 		if (!appender.getName().matches("[\\w\\.\\- ]+"))
 			errors.rejectValue("name", Constants.MODULE_ID + ".error.name");
+		else if (isAppenderNameInUse(appender.getName()))
+			errors.rejectValue("name", Constants.MODULE_ID + ".error.nameAlreadyInUse");
+		
 		if (appender.getLayoutType() == LayoutType.PATTERN && appender.getLayoutPattern().isEmpty())
 			errors.rejectValue("layout", Constants.MODULE_ID + ".error.layout");
 		
@@ -88,5 +95,19 @@ public class AppenderValidator implements Validator {
 	private void validateNTEventLogAppender(AppenderProxy appender, Errors errors) {
 		if (appender.getSource().isEmpty())
 			errors.rejectValue("source", Constants.MODULE_ID + ".error.source");
+	}
+	
+	/**
+	 * Checks to see if the given appender name is already being used
+	 * @param name the name to check
+	 * @return true if name is in use
+	 */
+	private boolean isAppenderNameInUse(String name) {
+		LogManagerService svc = Context.getService(LogManagerService.class);
+		Collection<AppenderProxy> appenders = svc.getAppenders(false);
+		for (AppenderProxy appender : appenders)
+			if (name.equals(appender.getName()))
+				return true;
+		return false;
 	}
 }
