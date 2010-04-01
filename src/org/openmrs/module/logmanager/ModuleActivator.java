@@ -33,18 +33,13 @@ public class ModuleActivator implements Activator {
 	public void startup() {
 		log.info("Starting log manager module");
 		
-		// Create / modify the memory appender defined in OpenMRS's log4j.xml
+		// Ensure that the memory appender defined in OpenMRS's log4j.xml exists
 		// and configure it to be used as the system appender
 		MemoryAppender sysApp = (MemoryAppender)LogManager.getRootLogger().getAppender(Constants.SYSTEM_APPENDER_NAME);
 		if (sysApp == null) {
 			sysApp = new MemoryAppender();
-			sysApp.setBufferSize(Constants.DEF_SYSTEM_APPENDER_SIZE);
 			sysApp.activateOptions();
 			LogManager.getRootLogger().addAppender(sysApp);
-		}
-		else if (sysApp.getBufferSize() != Constants.DEF_SYSTEM_APPENDER_SIZE) {
-			sysApp.setBufferSize(Constants.DEF_SYSTEM_APPENDER_SIZE);
-			sysApp.activateOptions();
 		}
 		
 		// Store as static member of AppenderProxy so it can't be lost
