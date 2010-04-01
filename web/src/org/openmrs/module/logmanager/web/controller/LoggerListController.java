@@ -66,7 +66,7 @@ public class LoggerListController extends ParameterizableViewController {
 		if (delLogger != null) {
 			LoggerProxy logToRemove = LoggerProxy.getLogger(delLogger);
 			if (logToRemove != null)
-				logToRemove.nullify(true);
+				logToRemove.makeImplicit(true);
 		}
 		
 		model.put("presets", svc.getPresets());
@@ -124,7 +124,7 @@ public class LoggerListController extends ParameterizableViewController {
 		
 		// Nullify all existing loggers
 		for (LoggerProxy logger : svc.getLoggers(false))
-			logger.nullify(false);
+			logger.makeImplicit(false);
 		
 		// Load loggers from preset
 		for (Map.Entry<String, Integer> entry : preset.getLoggerMap().entrySet()) {

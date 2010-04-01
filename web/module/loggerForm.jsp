@@ -11,7 +11,7 @@
 
 <b class="boxHeader">
 	<c:choose>
-		<c:when test="${logger.existing}">
+		<c:when test="${logger.existing && !logger.implicit}">
 			<spring:message code="${moduleId}.loggers.editLogger" />
 		</c:when>
 		<c:otherwise>
@@ -42,7 +42,7 @@
 			<th><spring:message code="${moduleId}.loggers.level"/></th>
 			<td>
 				<spring:bind path="logger.level">
-					<logmgr_tag:levelList name="${status.expression}" value="${status.value}" showALL="true" showOFF="true" showInherit="false" />
+					<logmgr_tag:levelList name="${status.expression}" value="${logmgr:levelToInt(logger.effectiveLevel)}" showALL="true" showOFF="true" showInherit="false" />
 				</spring:bind>
 			</td>
 		</tr>	

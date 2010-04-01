@@ -147,7 +147,12 @@ public class LoggerProxy {
 	 * @return the effective level
 	 */
 	public Level getEffectiveLevel() {
-		return (target != null) ? target.getEffectiveLevel() : null;
+		if (target != null) 
+			return target.getEffectiveLevel();
+		else if (level != null)
+			return level;
+		else
+			return null;
 	}
 	
 	/**
@@ -217,11 +222,23 @@ public class LoggerProxy {
 	}
 	
 	/**
+	 * Gets whether this is an implicit logger, i.e. null level and no appenders
+	 * If the target exists, decision is based on the target
+	 * @return true if logger is implicit
+	 */
+	public boolean isImplicit() {
+		if (target != null)
+			return (target.getLevel() == null && !target.getAllAppenders().hasMoreElements());
+		else
+			return (level == null && appenders.isEmpty());
+	}
+	
+	/**
 	 * There is no mechanism for removing loggers in log4j 1.2
 	 * so instead we nullify its level and remove its appenders 
 	 * @param removeAppenders true if appenders should be removed
 	 */
-	public void nullify(boolean removeAppenders) {
+	public void makeImplicit(boolean removeAppenders) {
 		level = null;
 		if (removeAppenders)
 			appenders.clear();

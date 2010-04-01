@@ -66,9 +66,13 @@ public class ELFunctionsTest {
 	
 	@Test
 	public void levelToInt() {
+		// Integer should be the same as the int equivalents 
 		Assert.assertEquals(new Integer(Level.OFF_INT), ELFunctions.levelToInt(Level.OFF));
 		Assert.assertEquals(new Integer(Level.INFO_INT), ELFunctions.levelToInt(Level.INFO));
 		Assert.assertEquals(new Integer(Level.ALL_INT), ELFunctions.levelToInt(Level.ALL));
+		
+		// Null level should return null integer
+		Assert.assertNull(ELFunctions.levelToInt(null));
 	}
 	
 	@Test
