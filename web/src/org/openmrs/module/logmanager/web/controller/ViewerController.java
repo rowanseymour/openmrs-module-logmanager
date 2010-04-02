@@ -28,6 +28,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.AppenderProxy;
+import org.openmrs.module.logmanager.Config;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.QueryField;
@@ -58,8 +59,9 @@ public class ViewerController extends ParameterizableViewController {
 		
 		// Ensure that the memory appender defined in OpenMRS's log4j.xml exists
 		// and configure it to be used as the system appender
-		if (!LogManagerUtils.ensureSystemAppenderExists())
-			WebUtils.setErrorMessage(request, Constants.MODULE_ID + ".viewer.systemAppenderRecreatedMsg", null);
+		if (Config.getInstance().isAlwaysRecreateSystemAppender())
+			if (!LogManagerUtils.ensureSystemAppenderExists())
+				WebUtils.setErrorMessage(request, Constants.MODULE_ID + ".viewer.systemAppenderRecreatedMsg", null);
 		
 		Map<String, Object> model = new HashMap<String, Object>();
 		LogManagerService svc = Context.getService(LogManagerService.class);
