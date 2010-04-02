@@ -20,8 +20,12 @@ import java.util.TreeMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.LogManager;
 import org.openmrs.module.Module;
 import org.openmrs.module.ModuleFactory;
+import org.openmrs.module.logmanager.AppenderProxy;
+import org.openmrs.module.logmanager.Constants;
+import org.openmrs.util.MemoryAppender;
 
 /**
  * Various utility methods
@@ -29,6 +33,32 @@ import org.openmrs.module.ModuleFactory;
 public class LogManagerUtils {
 	
 	protected static final Log log = LogFactory.getLog(LogManagerUtils.class);
+	
+	/**
+	 * Ensure that the memory appender defined in OpenMRS's log4j.xml exists
+	 * and configure it to be used as the system appender
+	 * @return true if appender already existed
+	 */
+	public static boolean ensureSystemAppenderExists() {
+		boolean existed = true;
+		
+		MemoryAppender sysApp = (MemoryAppender)LogManager.getRootLogger().getAppender(Constants.SYSTEM_APPENDER_NAME);
+		
+		// If appender wasn't found, recreate it
+		if (sysApp == null) {
+			sysApp = new MemoryAppender();
+			sysApp.setName(Constants.SYSTEM_APPENDER_NAME);
+			sysApp.activateOptions();
+			LogManager.getRootLogger().addAppender(sysApp);
+			existed = false;
+		}
+		
+		// Store as static member of AppenderProxy so it can't be lost
+		// even if another module now modifies the root log4j logger
+		AppenderProxy.setSystemAppender(new AppenderProxy(sysApp));
+		
+		return existed;
+	}
 	
 	/**
 	 * Gets the value of a protected/private field of an object

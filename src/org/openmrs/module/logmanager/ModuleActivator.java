@@ -15,9 +15,8 @@ package org.openmrs.module.logmanager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.LogManager;
 import org.openmrs.module.Activator;
-import org.openmrs.util.MemoryAppender;
+import org.openmrs.module.logmanager.util.LogManagerUtils;
 
 /**
  * This class contains the logic that is run every time this module is either
@@ -35,16 +34,8 @@ public class ModuleActivator implements Activator {
 		
 		// Ensure that the memory appender defined in OpenMRS's log4j.xml exists
 		// and configure it to be used as the system appender
-		MemoryAppender sysApp = (MemoryAppender)LogManager.getRootLogger().getAppender(Constants.SYSTEM_APPENDER_NAME);
-		if (sysApp == null) {
-			sysApp = new MemoryAppender();
-			sysApp.activateOptions();
-			LogManager.getRootLogger().addAppender(sysApp);
-		}
-		
-		// Store as static member of AppenderProxy so it can't be lost
-		// even if another module now modifies the root log4j logger
-		AppenderProxy.setSystemAppender(new AppenderProxy(sysApp));
+		if (!LogManagerUtils.ensureSystemAppenderExists())
+			log.warn("System appender had to be recreated. This is likely due to another module modifying the root logger.");
 	}
 	
 
