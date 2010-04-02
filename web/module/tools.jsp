@@ -103,7 +103,7 @@ function onClickConfig(state) {
 <form method="post" class="box" id="specialForm">
 	<table cellpadding="2" cellspacing="0" width="100%">
 		<tr>
-			<td colspan="3">
+			<td colspan="3" style="padding-bottom: 8px;">
 				<span style="font-style: italic">
 					<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/icon_warn.png" />
 					<spring:message code="${moduleId}.tools.logMessageVolumeWarning" />
