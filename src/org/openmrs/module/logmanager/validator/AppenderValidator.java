@@ -71,8 +71,9 @@ public class AppenderValidator implements Validator {
 	 * @param errors the errors
 	 */
 	private void validateMemoryAppender(AppenderProxy appender, Errors errors) {
-		if (appender.getBufferSize() < 1 || appender.getBufferSize() > 100000)
-			errors.rejectValue("bufferSize", Constants.MODULE_ID + ".error.bufferSize");
+		if (appender.getBufferSize() < 1 || appender.getBufferSize() > Constants.MAX_APPENDER_BUFFER_SIZE)
+			errors.rejectValue("bufferSize", Constants.MODULE_ID + ".error.bufferSize",
+				new Object[]{ Constants.MAX_APPENDER_BUFFER_SIZE }, "");
 	}
 	
 	/**
@@ -82,9 +83,11 @@ public class AppenderValidator implements Validator {
 	 */
 	private void validateSocketAppender(AppenderProxy appender, Errors errors) {
 		if (appender.getRemoteHost().isEmpty())
-			errors.rejectValue("host", Constants.MODULE_ID + ".error.host");
-		if (appender.getPort() < 0 || appender.getPort() > 65535)
-			errors.rejectValue("port", Constants.MODULE_ID + ".error.port");
+			errors.rejectValue("remoteHost", Constants.MODULE_ID + ".error.host");
+		
+		if (appender.getPort() < Constants.MIN_APPENDER_PORT || appender.getPort() > Constants.MAX_APPENDER_PORT)
+			errors.rejectValue("port", Constants.MODULE_ID + ".error.port",
+				new Object[]{ Constants.MIN_APPENDER_PORT, Constants.MAX_APPENDER_PORT }, "");
 	}
 	
 	/**

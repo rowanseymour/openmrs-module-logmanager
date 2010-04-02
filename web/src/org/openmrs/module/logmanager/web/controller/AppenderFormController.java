@@ -148,17 +148,17 @@ public class AppenderFormController extends SimpleFormController {
 			break;
 		case SOCKET:		
 			appender.setRemoteHost(request.getRemoteAddr());
-			appender.setPort(Constants.DEF_PORT);
+			appender.setPort(Constants.DEF_APPENDER_PORT);
 			break;
 		case NT_EVENT_LOG:
-			appender.setSource(Constants.DEF_SOURCE);
+			appender.setSource(Constants.DEF_APPENDER_SOURCE);
 			break;
 		}
 		
 		// Default to pattern layout
 		if (appender.getRequiresLayout()) {
 			appender.setLayoutType(LayoutType.PATTERN);
-			appender.setLayoutPattern(Constants.DEF_LAYOUT);
+			appender.setLayoutPattern(Constants.DEF_APPENDER_LAYOUT);
 		}
 		
 		return appender;

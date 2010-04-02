@@ -92,8 +92,10 @@ function onChangeLayoutType(value) {
 				<th><spring:message code="${moduleId}.appenders.host"/></th>
 				<td>
 					<logmgr_form:input path="remoteHost" />
+					<logmgr_form:errors path="remoteHost" cssClass="error" />
 					<spring:message code="${moduleId}.appenders.port"/>
 					<logmgr_form:input path="port" size="5" />
+					<logmgr_form:errors path="port" cssClass="error" />
 				</td>
 			</tr>
 		</c:if>
