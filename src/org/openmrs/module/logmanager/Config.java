@@ -25,6 +25,7 @@ public class Config {
 	protected static Config config;
 	
 	protected boolean logUncaughtExceptions;
+	protected boolean alwaysRecreateSystemAppender;
 	
 	/**
 	 * The default constructor
@@ -48,6 +49,7 @@ public class Config {
 	 */
 	public void load() {
 		logUncaughtExceptions = loadBooleanOption(Constants.PROP_LOG_UNCAUGHT_EXCEPTIONS, Constants.DEF_LOG_UNCAUGHT_EXCEPTIONS);
+		//alwaysRecreateSystemAppender = loadBooleanOption(, );
 	}
 	
 	/**
