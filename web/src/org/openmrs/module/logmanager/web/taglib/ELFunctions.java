@@ -64,6 +64,9 @@ public class ELFunctions {
 	 * @return the formatted location string
 	 */
 	public static String formatLocInfo(LocationInfo locInfo) {
+		if (locInfo.getClassName().equals("?") || locInfo.getMethodName().equals("?"))
+			return "Unknown";
+		
 		String clazz = locInfo.getClassName();
 		int lastPeriod = clazz.lastIndexOf('.');
 		if (lastPeriod >= 0)

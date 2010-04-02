@@ -87,7 +87,7 @@ function submitViewForm(format) {
 					<option value="2" ${queryField.ordinal == 2 ? "selected" : ""}><spring:message code="${moduleId}.viewer.filename" /></option>
 				</select>
 				
-				<spring:message code="${moduleId}.viewer.matches" />
+				<spring:message code="${moduleId}.viewer.contains" />
 				
 				<input type="text" name="queryValue" value="${queryValue}" style="width: 150px" />
 			</td>

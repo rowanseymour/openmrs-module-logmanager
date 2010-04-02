@@ -67,9 +67,10 @@ public class ToolsController extends ParameterizableViewController {
 			reloadConfiguration(configs);
 			WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools.reloadSuccess", null);
 		}
-		else if (request.getParameter("startProfiling") != null)		
+		// Special logger switches
+		else if (request.getParameter("startAPIProfiling") != null)		
 			setProfilingLogging(true);
-		else if (request.getParameter("stopProfiling") != null)		
+		else if (request.getParameter("stopAPIProfiling") != null)		
 			setProfilingLogging(false);
 		else if (request.getParameter("startHibernateSQL") != null)		
 			setHibernateSQLLogging(true);
@@ -82,14 +83,14 @@ public class ToolsController extends ParameterizableViewController {
 		Logger profilingLogger = LogManager.exists(Constants.LOGGER_API_PROFILING);
 		Level profilingLoggerLevel = (profilingLogger != null) ? profilingLogger.getEffectiveLevel() : null;
 		
-		model.put("profilingLoggerName", Constants.LOGGER_API_PROFILING);
-		model.put("profilingStarted", (profilingLoggerLevel != null) ? (profilingLoggerLevel.toInt() <= Level.TRACE.toInt()) : false);
+		model.put("apiProfilingLoggerName", Constants.LOGGER_API_PROFILING);
+		model.put("apiProfilingStarted", (profilingLoggerLevel != null) ? (profilingLoggerLevel.toInt() <= Level.TRACE.toInt()) : false);
 		
 		Logger sqlLogger = LogManager.exists(Constants.LOGGER_HIBERNATE_SQL);
 		Level sqlLoggerLevel = (sqlLogger != null) ? sqlLogger.getEffectiveLevel() : null;
 		
-		model.put("sqlLoggerName", Constants.LOGGER_HIBERNATE_SQL);
-		model.put("sqlStarted", (sqlLoggerLevel != null) ? (sqlLoggerLevel.toInt() <= Level.DEBUG.toInt()) : false);
+		model.put("hibernateSQLLoggerName", Constants.LOGGER_HIBERNATE_SQL);
+		model.put("hibernateSQLStarted", (sqlLoggerLevel != null) ? (sqlLoggerLevel.toInt() <= Level.DEBUG.toInt()) : false);
 		
 		return new ModelAndView(getViewName(), model);
 	}

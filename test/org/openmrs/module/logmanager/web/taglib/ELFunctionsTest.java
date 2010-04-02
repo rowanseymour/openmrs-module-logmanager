@@ -49,10 +49,10 @@ public class ELFunctionsTest {
 	@Test
 	public void formatLocInfo() {
 		String res1 = ELFunctions.formatLocInfo(new LocationInfo("test.java", "Foo", "bar", "123"));
-		String res2 = ELFunctions.formatLocInfo(new LocationInfo("", "", "", ""));
+		String res2 = ELFunctions.formatLocInfo(new LocationInfo("?", "?", "?", "?"));
 		
 		Assert.assertTrue(res1 != null && !res1.isEmpty());
-		Assert.assertTrue(res2 != null && !res2.isEmpty());
+		Assert.assertEquals("Unknown", res2);
 	}
 	
 	@Test
