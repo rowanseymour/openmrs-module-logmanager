@@ -32,10 +32,13 @@ public class Constants {
 	public static final boolean DEF_LOG_UNCAUGHT_EXCEPTIONS = true;
 	public static final boolean DEF_ALWAYS_RECREATE_SYSTEM_APPENDER = true;
 	
-	// Defaults
-	public static final String DEF_LAYOUT = "%p - %C{1}.%M(%L) |%d{ISO8601}| %m%n";
-	public static final int DEF_PORT = 4560;
-	public static final String DEF_SOURCE = "OpenMRS";
+	// Appender defaults / limits
+	public static final String DEF_APPENDER_LAYOUT = "%p - %C{1}.%M(%L) |%d{ISO8601}| %m%n";
+	public static final int DEF_APPENDER_PORT = 4560;
+	public static final int MIN_APPENDER_PORT = 1024;
+	public static final int MAX_APPENDER_PORT = 65535;
+	public static final String DEF_APPENDER_SOURCE = "OpenMRS";
+	public static final int MAX_APPENDER_BUFFER_SIZE = 10000;
 	
 	// Other constants
 	public static final String SYSTEM_APPENDER_NAME = "MEMORY_APPENDER";
