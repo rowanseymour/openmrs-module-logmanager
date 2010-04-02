@@ -9,6 +9,12 @@
 <%@ include file="/WEB-INF/view/admin/maintenance/localHeader.jsp"%>
 <%@ include file="template/localHeader.jsp"%>
 
+<style type="text/css">
+.switchButton {
+	width: 65px;
+}
+</style>
+
 <script type="text/javascript">
 function onToggleSelectAll(state) {
 	boxes = document.configForm.configs;
@@ -36,7 +42,7 @@ function onClickConfig(state) {
 	<table cellpadding="2" cellspacing="0" width="100%">
 		<tr>
 			<td width="150">			
-				<input type="submit" name="clear"
+				<input type="submit" name="clear" class="switchButton"
 					value="<spring:message code="${moduleId}.tools.clear" />" 
 					onclick="return confirm('<spring:message code="${moduleId}.tools.confirmClear" />')"
 				/>
@@ -45,7 +51,7 @@ function onClickConfig(state) {
 		</tr>
 		<tr>
 			<td>
-				<input type="submit" name="reload"
+				<input type="submit" name="reload" class="switchButton"
 					value="<spring:message code="${moduleId}.tools.reload" />" 
 					disabled="disabled"
 				/>
@@ -56,8 +62,7 @@ function onClickConfig(state) {
 	
 	<table cellpadding="2" cellspacing="0" width="100%">
 		<tr>
-			<th>Source</th>
-			<th>&nbsp;</th>
+			<th align="left">Source</th>
 			<th align="right">
 				<small>
 					<spring:message code="general.select" />:
@@ -69,8 +74,11 @@ function onClickConfig(state) {
 	
 		<c:forEach var="log4jConfig" items="${log4jConfigs}" varStatus="rowStatus">
 			<tr class="<c:choose><c:when test="${rowStatus.index % 2 == 0}">evenRow</c:when><c:otherwise>oddRow</c:otherwise></c:choose>">
-				<td>${log4jConfig.display}</td>
-				<td>
+				<td align="left">
+					<input type="checkbox" name="configs" value="${log4jConfig.moduleId}" onclick="onClickConfig()" />
+					${log4jConfig.display}
+				</td>
+				<td align="left">
 					<c:choose>
 						<c:when test="${log4jConfig.usesRoot}">
 							<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/icon_warn.png" />
@@ -82,7 +90,6 @@ function onClickConfig(state) {
 						</c:when>
 					</c:choose>
 				</td>
-				<td align="right"><input type="checkbox" name="configs" value="${log4jConfig.moduleId}" onclick="onClickConfig()" /></td>
 			</tr>
 		</c:forEach>
 	</table>
@@ -91,51 +98,37 @@ function onClickConfig(state) {
 <br/>
 
 <b class="boxHeader">
-	<spring:message code="${moduleId}.tools.profiling" />
+	<spring:message code="${moduleId}.tools.specialLoggers" />
 </b>
-<form method="post" class="box" name="profilingForm">
+<form method="post" class="box" id="specialForm">
 	<table cellpadding="2" cellspacing="0" width="100%">
 		<tr>
-			<c:choose>
-				<c:when test="${profilingStarted}">
-					<td width="150">
-						<input type="submit" name="stopProfiling" value="<spring:message code="${moduleId}.tools.stop" />" />
-					</td>
-					<td><spring:message code="${moduleId}.tools.stopProfilingMsg" arguments="${profilingLoggerName},WARN" /></td>
-				</c:when>
-				<c:otherwise>
-					<td width="150">
-						<input type="submit" name="startProfiling" value="<spring:message code="${moduleId}.tools.start" />" />
-					</td>
-					<td><spring:message code="${moduleId}.tools.startProfilingMsg" arguments="${profilingLoggerName},TRACE" /></td>
-				</c:otherwise>
-			</c:choose>
+			<td colspan="3">
+				<span style="font-style: italic">
+					<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/icon_warn.png" />
+					<spring:message code="${moduleId}.tools.logMessageVolumeWarning" />
+				</span>
+			</td>
 		</tr>
-	</table>
-</form>
-
-<br/>
-
-<b class="boxHeader">
-	<spring:message code="${moduleId}.tools.hibernateSQLLogging" />
-</b>
-<form method="post" class="box" name="hibernateForm">
-	<table cellpadding="2" cellspacing="0" width="100%">
 		<tr>
-			<c:choose>
-				<c:when test="${sqlStarted}">
-					<td width="150">
-						<input type="submit" name="stopHibernateSQL" value="<spring:message code="${moduleId}.tools.stop" />" />
-					</td>
-					<td><spring:message code="${moduleId}.tools.stopHibernateSQLMsg" arguments="${sqlLoggerName},DEBUG" /></td>
-				</c:when>
-				<c:otherwise>
-					<td width="150">
-						<input type="submit" name="startHibernateSQL" value="<spring:message code="${moduleId}.tools.start" />" />
-					</td>
-					<td><spring:message code="${moduleId}.tools.startHibernateSQLMsg" arguments="${sqlLoggerName},OFF" /></td>
-				</c:otherwise>
-			</c:choose>
+			<td width="150">
+				<input type="submit" class="switchButton"
+					name="${apiProfilingStarted ? 'stop' : 'start'}APIProfiling"
+					value="<spring:message code="${moduleId}.tools.${apiProfilingStarted ? 'stop' : 'start'}" />"
+				/>
+			</td>
+			<td><b><spring:message code="${moduleId}.tools.APIProfiling" /></b></td>
+			<td><spring:message code="${moduleId}.tools.${apiProfilingStarted ? 'stop' : 'start'}APIProfilingMsg" arguments="${apiProfilingLoggerName},${apiProfilingStarted ? 'WARN' : 'TRACE'}" /></td>
+		</tr>
+		<tr>
+			<td width="150">
+				<input type="submit" class="switchButton"
+					name="${hibernateSQLStarted ? 'stop' : 'start'}HibernateSQL"
+					value="<spring:message code="${moduleId}.tools.${hibernateSQLStarted ? 'stop' : 'start'}" />"
+				/>
+			</td>
+			<td><b><spring:message code="${moduleId}.tools.hibernateSQL" /></b></td>
+			<td><spring:message code="${moduleId}.tools.${hibernateSQLStarted ? 'stop' : 'start'}HibernateSQLMsg" arguments="${hibernateSQLLoggerName},${hibernateSQLStarted ? 'DEBUG' : 'OFF'}" /></td>
 		</tr>
 	</table>
 </form>
