@@ -24,11 +24,13 @@ public class Constants {
 	public static final String PRIV_VIEW_SERVER_LOG = "View Server Log";
 	public static final String PRIV_MANAGE_SERVER_LOG = "Manage Server Log";
 	
-	// Property keys
+	// Global property keys
 	public static final String PROP_LOG_UNCAUGHT_EXCEPTIONS = MODULE_ID + ".logUncaughtExceptions";
+	public static final String PROP_ALWAYS_RECREATE_SYSTEM_APPENDER = MODULE_ID + ".alwaysRecreateSystemAppender";
 	
-	// Property defaults
+	// Global property defaults
 	public static final boolean DEF_LOG_UNCAUGHT_EXCEPTIONS = true;
+	public static final boolean DEF_ALWAYS_RECREATE_SYSTEM_APPENDER = true;
 	
 	// Defaults
 	public static final String DEF_LAYOUT = "%p - %C{1}.%M(%L) |%d{ISO8601}| %m%n";

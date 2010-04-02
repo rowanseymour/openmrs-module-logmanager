@@ -34,8 +34,9 @@ public class ModuleActivator implements Activator {
 		
 		// Ensure that the memory appender defined in OpenMRS's log4j.xml exists
 		// and configure it to be used as the system appender
-		if (!LogManagerUtils.ensureSystemAppenderExists())
-			log.warn("System appender had to be recreated. This is likely due to another module modifying the root logger.");
+		if (Config.getInstance().isAlwaysRecreateSystemAppender())
+			if (!LogManagerUtils.ensureSystemAppenderExists())
+				log.warn("System appender had to be recreated. This is likely due to another module modifying the root logger.");
 	}
 	
 

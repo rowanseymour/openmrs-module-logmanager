@@ -49,7 +49,7 @@ public class Config {
 	 */
 	public void load() {
 		logUncaughtExceptions = loadBooleanOption(Constants.PROP_LOG_UNCAUGHT_EXCEPTIONS, Constants.DEF_LOG_UNCAUGHT_EXCEPTIONS);
-		//alwaysRecreateSystemAppender = loadBooleanOption(, );
+		alwaysRecreateSystemAppender = loadBooleanOption(Constants.PROP_ALWAYS_RECREATE_SYSTEM_APPENDER, Constants.DEF_ALWAYS_RECREATE_SYSTEM_APPENDER);
 	}
 	
 	/**
@@ -57,6 +57,7 @@ public class Config {
 	 */
 	public void save() {
 		saveOption(Constants.PROP_LOG_UNCAUGHT_EXCEPTIONS, logUncaughtExceptions);
+		saveOption(Constants.PROP_ALWAYS_RECREATE_SYSTEM_APPENDER, alwaysRecreateSystemAppender);
 	}
 	
 
@@ -74,6 +75,22 @@ public class Config {
 	 */
 	public void setLogUncaughtExceptions(boolean logUncaughtExceptions) {
 		this.logUncaughtExceptions = logUncaughtExceptions;
+	}
+
+	/**
+	 * Gets whether system appender should always be recreated if it doesn't exist
+	 * @return the true if it should be recreated
+	 */
+	public boolean isAlwaysRecreateSystemAppender() {
+		return alwaysRecreateSystemAppender;
+	}
+
+	/**
+	 * Sets whether system appender should always be recreated if it doesn't exist
+	 * @param alwaysRecreateSystemAppender the true if it should be recreated
+	 */
+	public void setAlwaysRecreateSystemAppender(boolean alwaysRecreateSystemAppender) {
+		this.alwaysRecreateSystemAppender = alwaysRecreateSystemAppender;
 	}
 
 	/**
