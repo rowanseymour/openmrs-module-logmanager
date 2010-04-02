@@ -45,7 +45,7 @@ public class AppenderValidator implements Validator {
 		// General validation
 		if (!appender.getName().matches("[\\w\\.\\- ]+"))
 			errors.rejectValue("name", Constants.MODULE_ID + ".error.name");
-		else if (isAppenderNameInUse(appender.getName()))
+		else if (!appender.isExisting() && isAppenderNameInUse(appender.getName()))
 			errors.rejectValue("name", Constants.MODULE_ID + ".error.nameAlreadyInUse");
 		
 		if (appender.getLayoutType() == LayoutType.PATTERN && appender.getLayoutPattern().isEmpty())
