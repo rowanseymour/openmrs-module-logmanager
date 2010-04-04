@@ -38,8 +38,11 @@ function onChangeLayoutType(value) {
 		<tr>
 			<th width="150"><spring:message code="${moduleId}.appenders.name"/></th>
 			<td>
-				<logmgr_form:input path="name" cssStyle="width: 300px" />
+				<logmgr_form:input path="name" cssStyle="width: 300px" disabled="${appender.systemAppender}" />
 				<logmgr_form:errors path="name" cssClass="error" />
+				<c:if test="${appender.systemAppender}">
+					<img src="${pageContext.request.contextPath}/images/lock.gif" title="<spring:message code="${moduleId}.appenders.systemAppender"/>" />
+				</c:if>
 			</td>
 		</tr>
 		<tr>

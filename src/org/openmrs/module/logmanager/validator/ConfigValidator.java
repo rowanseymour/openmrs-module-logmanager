@@ -14,6 +14,7 @@
 package org.openmrs.module.logmanager.validator;
 
 import org.openmrs.module.logmanager.Config;
+import org.openmrs.module.logmanager.Constants;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -34,6 +35,9 @@ public class ConfigValidator implements Validator {
 	 * @see org.springframework.validation.Validator#validate(Object, Errors)
 	 */
 	public void validate(Object obj, Errors errors) {
-		//Config config = (Config)obj;		
+		Config config = (Config)obj;
+		
+		if (!config.getSystemAppenderName().matches("[\\w\\.\\- ]+"))
+			errors.rejectValue("systemAppenderName", Constants.MODULE_ID + ".error.name");
 	}
 }

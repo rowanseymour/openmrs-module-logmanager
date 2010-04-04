@@ -24,7 +24,7 @@ import org.apache.log4j.LogManager;
 import org.openmrs.module.Module;
 import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.logmanager.AppenderProxy;
-import org.openmrs.module.logmanager.Constants;
+import org.openmrs.module.logmanager.Config;
 import org.openmrs.util.MemoryAppender;
 
 /**
@@ -42,12 +42,14 @@ public class LogManagerUtils {
 	public static boolean ensureSystemAppenderExists() {
 		boolean existed = true;
 		
-		MemoryAppender sysApp = (MemoryAppender)LogManager.getRootLogger().getAppender(Constants.SYSTEM_APPENDER_NAME);
+		String sysAppName = Config.getCurrent().getSystemAppenderName();
+		
+		MemoryAppender sysApp = (MemoryAppender)LogManager.getRootLogger().getAppender(sysAppName);
 		
 		// If appender wasn't found, recreate it
 		if (sysApp == null) {
 			sysApp = new MemoryAppender();
-			sysApp.setName(Constants.SYSTEM_APPENDER_NAME);
+			sysApp.setName(sysAppName);
 			sysApp.activateOptions();
 			LogManager.getRootLogger().addAppender(sysApp);
 			existed = false;

@@ -33,6 +33,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 import org.openmrs.module.Module;
 import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.logmanager.AppenderProxy;
+import org.openmrs.module.logmanager.Config;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.web.util.WebUtils;
 import org.openmrs.util.MemoryAppender;
@@ -176,9 +177,10 @@ public class ToolsController extends ParameterizableViewController {
 				URL url = ToolsController.class.getResource("/log4j.xml");
 				DOMConfigurator.configure(url);
 				
-				// Reloading the OpenMRS log4j.xml file will likely create MEMORY_APPENDER
-				// again so switch the system logger to the new MEMORY_APPENDER
-				MemoryAppender sysApp = (MemoryAppender)LogManager.getRootLogger().getAppender(Constants.SYSTEM_APPENDER_NAME);
+				// Reloading the OpenMRS log4j.xml file may recreate the appender
+				// being used as the system appender, so reset the system appender
+				String sysAppName = Config.getCurrent().getSystemAppenderName();
+				MemoryAppender sysApp = (MemoryAppender)LogManager.getRootLogger().getAppender(sysAppName);
 				if (sysApp != null)
 					AppenderProxy.setSystemAppender(new AppenderProxy(sysApp));
 			}

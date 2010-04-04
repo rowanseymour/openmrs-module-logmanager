@@ -69,14 +69,10 @@ function clearAppender(id) {
 			<tr class="<c:choose><c:when test="${rowStatus.index % 2 == 0}">evenRow</c:when><c:otherwise>oddRow</c:otherwise></c:choose>">
 				<td>
 					<a href="appender.form?editId=${appender.id}">
-					<c:choose>
-						<c:when test="${!empty appender.name}">
-							${appender.name}
-						</c:when>
-						<c:otherwise>
-							<i><spring:message code="${moduleId}.anonymous"/></i>
-						</c:otherwise>
-					</c:choose></a>
+						<c:choose><c:when test="${!empty appender.name}">${appender.name}</c:when><c:otherwise><i><spring:message code="${moduleId}.anonymous"/></i></c:otherwise></c:choose></a>
+					<c:if test="${appender.systemAppender}">
+						(<i><spring:message code="${moduleId}.system"/></i>)
+					</c:if>
 				</td>
 				<td>${appender.target.class.simpleName}</td>
 				<td>${appender.layoutStr}</td>
