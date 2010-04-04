@@ -28,7 +28,7 @@ public class UncaughtExceptionExtension extends Extension {
 		// Get exception object
 		HttpServletRequest request = ContextProvider.getServletRequest();
 		
-		if (Config.getInstance().isLogUncaughtExceptions()) {
+		if (Config.getCurrent().isLogUncaughtExceptions()) {
 			Exception exception = (Exception)request.getAttribute("javax.servlet.error.exception");
 			String className = "";
 			if (exception != null && exception.getStackTrace().length > 0)

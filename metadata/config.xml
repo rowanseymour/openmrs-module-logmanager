@@ -27,15 +27,15 @@
 	</privilege>
 	
 	<globalProperty>
-		<property>@MODULE_ID@.logUncaughtExceptions</property>
-		<defaultValue>true</defaultValue>
-		<description>Log uncaught exceptions</description>
+		<property>@MODULE_ID@.systemAppenderName</property>
+		<defaultValue>MEMORY_APPENDER</defaultValue>
+		<description>System appender name</description>
 	</globalProperty>
 	
 	<globalProperty>
-		<property>@MODULE_ID@.alwaysRecreateSystemAppender</property>
+		<property>@MODULE_ID@.logUncaughtExceptions</property>
 		<defaultValue>true</defaultValue>
-		<description>Always recreate system appender if missing</description>
+		<description>Log uncaught exceptions</description>
 	</globalProperty>
 	
 	<filter>

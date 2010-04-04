@@ -25,12 +25,14 @@ public class Constants {
 	public static final String PRIV_MANAGE_SERVER_LOG = "Manage Server Log";
 	
 	// Global property keys
-	public static final String PROP_LOG_UNCAUGHT_EXCEPTIONS = MODULE_ID + ".logUncaughtExceptions";
+	public static final String PROP_SYSTEM_APPENDER_NAME = MODULE_ID + ".systemAppenderName";
 	public static final String PROP_ALWAYS_RECREATE_SYSTEM_APPENDER = MODULE_ID + ".alwaysRecreateSystemAppender";
+	public static final String PROP_LOG_UNCAUGHT_EXCEPTIONS = MODULE_ID + ".logUncaughtExceptions";
 	
 	// Global property defaults
-	public static final boolean DEF_LOG_UNCAUGHT_EXCEPTIONS = true;
+	public static final String DEF_SYSTEM_APPENDER_NAME = "MEMORY_APPENDER";
 	public static final boolean DEF_ALWAYS_RECREATE_SYSTEM_APPENDER = true;
+	public static final boolean DEF_LOG_UNCAUGHT_EXCEPTIONS = true;
 	
 	// Appender defaults / limits
 	public static final String DEF_APPENDER_LAYOUT = "%p - %C{1}.%M(%L) |%d{ISO8601}| %m%n";
@@ -41,7 +43,6 @@ public class Constants {
 	public static final int MAX_APPENDER_BUFFER_SIZE = 10000;
 	
 	// Other constants
-	public static final String SYSTEM_APPENDER_NAME = "MEMORY_APPENDER";
 	public static final int EVENT_REPORT_PREV_EVENTS = 5;
 	public static final int RESULTS_PAGE_SIZE = 25;
 	public static final int VIEWER_PAGE_SIZE = 100;

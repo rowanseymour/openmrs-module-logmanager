@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.logmanager.Config;
 import org.openmrs.module.logmanager.Constants;
+import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.openmrs.module.logmanager.web.util.WebUtils;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
@@ -45,8 +46,14 @@ public class ConfigController extends SimpleFormController {
 	@Override
 	protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response, Object command,
             BindException errors) throws Exception {
+		
+		// Persist the config's settings and make current
 		Config config = (Config)command;
 		config.save();
+		Config.setCurrent(config);
+			
+		// System appender name may have been changed
+		LogManagerUtils.ensureSystemAppenderExists();
 		
 		WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".config.saveSuccess", null);
 		
@@ -58,7 +65,7 @@ public class ConfigController extends SimpleFormController {
 	 */
 	@Override
 	protected Object formBackingObject(HttpServletRequest request) throws Exception {
-		return Config.getInstance();
+		return new Config();
 	}
 	
 	/**

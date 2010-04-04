@@ -24,13 +24,14 @@ public class Config {
 	
 	protected static Config config;
 	
-	protected boolean logUncaughtExceptions;
+	protected String systemAppenderName;
 	protected boolean alwaysRecreateSystemAppender;
+	protected boolean logUncaughtExceptions;
 	
 	/**
 	 * The default constructor
 	 */
-	protected Config() {
+	public Config() {
 		load(); 
 	}
 	
@@ -38,43 +39,52 @@ public class Config {
 	 * Gets the singleton instance of this class
 	 * @return the config instance
 	 */
-	public static Config getInstance() {
+	public static Config getCurrent() {
 		if (config == null)
 			config = new Config();
 		return config;
 	}
 	
 	/**
+	 * Sets the singleton instance of this class
+	 * @param config the config instance
+	 */
+	public static void setCurrent(Config config) {
+		Config.config = config;
+	}
+	
+	/**
 	 * Loads the configuration from global properties
 	 */
 	public void load() {
-		logUncaughtExceptions = loadBooleanOption(Constants.PROP_LOG_UNCAUGHT_EXCEPTIONS, Constants.DEF_LOG_UNCAUGHT_EXCEPTIONS);
+		systemAppenderName = loadStringOption(Constants.PROP_SYSTEM_APPENDER_NAME, Constants.DEF_SYSTEM_APPENDER_NAME);
 		alwaysRecreateSystemAppender = loadBooleanOption(Constants.PROP_ALWAYS_RECREATE_SYSTEM_APPENDER, Constants.DEF_ALWAYS_RECREATE_SYSTEM_APPENDER);
+		logUncaughtExceptions = loadBooleanOption(Constants.PROP_LOG_UNCAUGHT_EXCEPTIONS, Constants.DEF_LOG_UNCAUGHT_EXCEPTIONS);
 	}
 	
 	/**
 	 * Saves the configuration to global properties
 	 */
 	public void save() {
-		saveOption(Constants.PROP_LOG_UNCAUGHT_EXCEPTIONS, logUncaughtExceptions);
+		saveOption(Constants.PROP_SYSTEM_APPENDER_NAME, systemAppenderName);
 		saveOption(Constants.PROP_ALWAYS_RECREATE_SYSTEM_APPENDER, alwaysRecreateSystemAppender);
+		saveOption(Constants.PROP_LOG_UNCAUGHT_EXCEPTIONS, logUncaughtExceptions);
 	}
 	
-
 	/**
-	 * Gets whether the module should log uncaught exceptions
-	 * @return true to enable logging of uncaught exceptions
+	 * Gets the name of the system appender
+	 * @return the system appender name
 	 */
-	public boolean isLogUncaughtExceptions() {
-		return logUncaughtExceptions;
+	public String getSystemAppenderName() {
+		return systemAppenderName;
 	}
 
 	/**
-	 * Sets whether the module should log uncaught exceptions
-	 * @param logUncaughtExceptions true to enable logging of uncaught exceptions
+	 * Sets the name of the system appender
+	 * @param systemAppenderName the system appender name
 	 */
-	public void setLogUncaughtExceptions(boolean logUncaughtExceptions) {
-		this.logUncaughtExceptions = logUncaughtExceptions;
+	public void setSystemAppenderName(String systemAppenderName) {
+		this.systemAppenderName = systemAppenderName;
 	}
 
 	/**
@@ -92,6 +102,22 @@ public class Config {
 	public void setAlwaysRecreateSystemAppender(boolean alwaysRecreateSystemAppender) {
 		this.alwaysRecreateSystemAppender = alwaysRecreateSystemAppender;
 	}
+	
+	/**
+	 * Gets whether the module should log uncaught exceptions
+	 * @return true to enable logging of uncaught exceptions
+	 */
+	public boolean isLogUncaughtExceptions() {
+		return logUncaughtExceptions;
+	}
+
+	/**
+	 * Sets whether the module should log uncaught exceptions
+	 * @param logUncaughtExceptions true to enable logging of uncaught exceptions
+	 */
+	public void setLogUncaughtExceptions(boolean logUncaughtExceptions) {
+		this.logUncaughtExceptions = logUncaughtExceptions;
+	}
 
 	/**
 	 * Utility method to load a string option from global properties
@@ -99,7 +125,6 @@ public class Config {
 	 * @param def the default value if global property is invalid
 	 * @return the string value
 	 */
-	@SuppressWarnings("unused")
 	private static String loadStringOption(String name, String def) {
 		AdministrationService svc = Context.getAdministrationService();
 		String s = svc.getGlobalProperty(name);
