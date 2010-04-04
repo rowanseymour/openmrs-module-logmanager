@@ -41,6 +41,11 @@
 	<bean id="logMgrEventsExportView" class="@MODULE_PACKAGE@.web.view.EventsExportView" />
 	
 	<bean id="logMgrEventReportView" class="@MODULE_PACKAGE@.web.view.EventReportView" />
+	
+	<bean id="logMgrDocumentXmlView" class="@MODULE_PACKAGE@.web.view.DocumentXmlView">
+		<property name="filename"><value>log4j.xml</value></property>
+		<property name="sourceKey"><value>source</value></property>
+	</bean>
 
 	<!-- ========================= Controllers ========================= -->
 	
@@ -95,6 +100,9 @@
 	<bean id="logMgrToolsController" class="@MODULE_PACKAGE@.web.controller.ToolsController">
 		<property name="viewName">
 			<value>module/@MODULE_ID@/tools</value>
+		</property>
+		<property name="documentXmlView">
+			<ref bean="logMgrDocumentXmlView" />
 		</property>
 	</bean>
 	

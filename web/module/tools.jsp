@@ -50,6 +50,12 @@ function onClickConfig(state) {
 			<td><spring:message code="${moduleId}.tools.clearMsg" /></td>
 		</tr>
 		<tr>
+			<td>			
+				<input type="submit" name="export" class="switchButton" value="<spring:message code="${moduleId}.tools.export" />" />
+			</td>
+			<td><spring:message code="${moduleId}.tools.exportMsg" /></td>
+		</tr>
+		<tr>
 			<td>
 				<input type="submit" name="reload" class="switchButton"
 					value="<spring:message code="${moduleId}.tools.reload" />" 
