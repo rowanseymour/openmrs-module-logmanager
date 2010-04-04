@@ -35,10 +35,13 @@ import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.logmanager.AppenderProxy;
 import org.openmrs.module.logmanager.Config;
 import org.openmrs.module.logmanager.Constants;
+import org.openmrs.module.logmanager.util.DOMConfigurationBuilder;
 import org.openmrs.module.logmanager.web.util.WebUtils;
+import org.openmrs.module.logmanager.web.view.DocumentXmlView;
 import org.openmrs.util.MemoryAppender;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -50,6 +53,8 @@ import org.w3c.dom.NodeList;
 public class ToolsController extends ParameterizableViewController {
 	
 	protected static final Log log = LogFactory.getLog(ToolsController.class);
+	
+	protected DocumentXmlView documentXmlView;
 	
 	/**
 	 * @see org.springframework.web.servlet.mvc.ParameterizableViewController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
@@ -64,6 +69,12 @@ public class ToolsController extends ParameterizableViewController {
 		if (request.getParameter("clear") != null) {		
 			clearConfiguration();
 			WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools.clearSuccess", null);
+		}
+		else if (request.getParameter("export") != null) {	
+			Document document = DOMConfigurationBuilder.createDocument();	
+			model.put(documentXmlView.getSourceKey(), document);
+			
+			return new ModelAndView(documentXmlView, model);
 		}
 		else if (request.getParameter("reload") != null) {
 			String[] configs = request.getParameterValues("configs");
@@ -210,5 +221,13 @@ public class ToolsController extends ParameterizableViewController {
 	 */
 	private void setHibernateSQLLogging(boolean on) {
 		LogManager.getLogger("org.hibernate.SQL").setLevel(on ? Level.DEBUG : Level.OFF);
+	}
+
+	/**
+	 * Sets the document XML view used to export the log4j configuration
+	 * @param xsltView the xsltView to set
+	 */
+	public void setDocumentXmlView(DocumentXmlView documentXmlView) {
+		this.documentXmlView = documentXmlView;
 	}
 }
