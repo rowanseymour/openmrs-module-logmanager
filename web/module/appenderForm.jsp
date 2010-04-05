@@ -18,7 +18,7 @@ function onChangeLayoutType(value) {
 	var showPattern = (value == <%= LayoutType.PATTERN.ordinal() %>);
 	var showUseLocation = (value == <%= LayoutType.HTML.ordinal() %> || value == <%= LayoutType.XML.ordinal() %>);
 	
-	document.getElementById("layoutPattern").style.display = showPattern ? "" : "none";
+	document.getElementById("layout.conversionPattern").style.display = showPattern ? "" : "none";
 	document.getElementById("useLocationSpan").style.display = showUseLocation ? "" : "none";
 }
 </script>
@@ -48,7 +48,14 @@ function onChangeLayoutType(value) {
 		<tr>
 			<th valign="top"><spring:message code="${moduleId}.appenders.type"/></th>
 			<td>
-				<c:out value="${appender.type}" />
+				<c:choose>
+					<c:when test="${appender.type.ordinal > 0}">
+						<c:out value="${appender.type}" />
+					</c:when>
+					<c:otherwise>
+						<i>${appender.target.class.simpleName}</i>
+					</c:otherwise>
+				</c:choose>
 				<c:if test="${appender.type.ordinal == 4}">
 					<p style="font-style: italic">
 						<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/icon_warn.png" />
@@ -62,20 +69,20 @@ function onChangeLayoutType(value) {
 				<th valign="top"><spring:message code="${moduleId}.appenders.layout"/></th>
 				<td>
 					<c:choose>
-						<c:when test="${appender.layoutType.ordinal > 0}">
-							<spring:bind path="layoutType">
+						<c:when test="${appender.layout.type.ordinal > 0}">
+							<spring:bind path="layout.type">
 								<logmgr_tag:layoutTypeList name="${status.expression}" value="${status.value}" showUnknown="false" onchange="onChangeLayoutType(this.value)" />
 							</spring:bind>
-							<logmgr_form:input path="layoutPattern" cssStyle="width: 300px; display: ${appender.layoutType.ordinal == 3 ? '' : 'none' }" />
-							<logmgr_form:errors path="layoutPattern" cssClass="error" />
+							<logmgr_form:input path="layout.conversionPattern" cssStyle="width: 300px; display: ${appender.layout.type.ordinal == 3 ? '' : 'none' }" />
+							<logmgr_form:errors path="layout.conversionPattern" cssClass="error" />
 							
-							<span id="useLocationSpan" style="display: ${(appender.layoutType.ordinal == 4 || appender.layoutType.ordinal == 5) ? '' : 'none' }">
-								<logmgr_form:checkbox path="layoutUsesLocation" />
+							<span id="useLocationSpan" style="display: ${(appender.layout.type.ordinal == 4 || appender.layout.type.ordinal == 5) ? '' : 'none' }">
+								<logmgr_form:checkbox path="layout.locationInfo" />
 								<spring:message code="${moduleId}.appenders.useLocationInformation"/>
 							</span>
 						</c:when>
 						<c:otherwise>
-							${appender.layout.class.simpleName}
+							${appender.layout.target.class.simpleName}
 						</c:otherwise>
 					</c:choose>
 				</td>		

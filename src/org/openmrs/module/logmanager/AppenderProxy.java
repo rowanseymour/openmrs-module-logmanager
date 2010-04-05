@@ -18,16 +18,10 @@ import java.util.Collection;
 import org.apache.commons.collections.buffer.CircularFifoBuffer;
 import org.apache.log4j.Appender;
 import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.HTMLLayout;
-import org.apache.log4j.Layout;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.SimpleLayout;
-import org.apache.log4j.TTCCLayout;
 import org.apache.log4j.net.SocketAppender;
 import org.apache.log4j.nt.NTEventLogAppender;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.OptionHandler;
-import org.apache.log4j.xml.XMLLayout;
 import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.openmrs.util.MemoryAppender;
 
@@ -41,15 +35,11 @@ public class AppenderProxy {
 	
 	// Proxied properties
 	protected String name;
-	protected LayoutType layoutType;
+	protected LayoutProxy layout;
 	protected int bufferSize;
 	protected String remoteHost;
 	protected int port;
 	protected String source;
-	
-	// Proxied properties of the layout
-	protected String layoutPattern;
-	protected boolean layoutUsesLocation;
 	
 	protected static AppenderProxy systemAppender;
 	
@@ -73,14 +63,8 @@ public class AppenderProxy {
 		
 		this.name = target.getName();
 		
-		if (target.getLayout() != null) {
-			Layout layout = target.getLayout();
-			this.layoutType = LayoutType.fromLayout(layout);
-			if (layout instanceof PatternLayout)
-				this.layoutPattern = ((PatternLayout)layout).getConversionPattern();
-			if (layout instanceof HTMLLayout)
-				this.layoutUsesLocation = ((HTMLLayout)layout).getLocationInfo();
-		}
+		if (target.getLayout() != null)
+			this.layout = new LayoutProxy(target.getLayout());
 		
 		if (target instanceof MemoryAppender)
 			this.bufferSize = ((MemoryAppender)target).getBufferSize();
@@ -115,28 +99,9 @@ public class AppenderProxy {
 		target.setName(name);
 		
 		// Update layout
-		if (getRequiresLayout()) {
-			Layout layout = null;
-			switch (layoutType) {
-			case SIMPLE:
-				layout = new SimpleLayout();
-				break;
-			case TTCC:
-				layout = new TTCCLayout();
-				break;
-			case PATTERN:
-				layout = new PatternLayout(layoutPattern);
-				break;
-			case HTML:
-				layout = new HTMLLayout();
-				((HTMLLayout)layout).setLocationInfo(layoutUsesLocation);
-				break;
-			case XML:
-				layout = new XMLLayout();
-				((XMLLayout)layout).setLocationInfo(layoutUsesLocation);
-				break;
-			}
-			target.setLayout(layout);
+		if (layout != null) {
+			layout.updateTarget();
+			target.setLayout(layout.getTarget());
 		}
 		
 		// Update subclass properties
@@ -197,66 +162,6 @@ public class AppenderProxy {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	/**
-	 * Gets whether this appender requires a layout, based on its type
-	 * @return true if it requires a layout
-	 */
-	public boolean getRequiresLayout() {
-		return (type == AppenderType.CONSOLE || type == AppenderType.NT_EVENT_LOG);
-	}
-	
-	/**
-	 * Gets the layout type
-	 * @return the layout type
-	 */
-	public LayoutType getLayoutType() {
-		return layoutType;
-	}
-
-	/**
-	 * Sets the layout type
-	 * @param layoutType the layout type
-	 */
-	public void setLayoutType(LayoutType layoutType) {
-		this.layoutType = layoutType;
-	}
-
-	/**
-	 * Gets the layout pattern
-	 * Applies to the PATTERN layout type
-	 * @return the layout pattern
-	 */
-	public String getLayoutPattern() {
-		return layoutPattern;
-	}
-
-	/**
-	 * Sets the layout pattern
-	 * Applies to the PATTERN layout type
-	 * @param layoutPattern the layout pattern
-	 */
-	public void setLayoutPattern(String layoutPattern) {
-		this.layoutPattern = layoutPattern;
-	}
-	
-	/**
-	 * Gets whether the layout uses location information information
-	 * Applies to XML and HTML layout types
-	 * @return true if layout should use location information
-	 */
-	public boolean getLayoutUsesLocation() {
-		return layoutUsesLocation;
-	}
-	
-	/**
-	 * Sets whether the layout uses location information information
-	 * Applies to XML and HTML layout types
-	 * @param layoutUsesLocation true if layout should use location information
-	 */
-	public void setLayoutUsesLocation(boolean layoutUsesLocation) {
-		this.layoutUsesLocation = layoutUsesLocation;
-	}
 
 	/**
 	 * Gets whether appender must be closed and restarted after changing
@@ -268,20 +173,34 @@ public class AppenderProxy {
 	}
 	
 	/**
-	 * Gets the string representation of the appenders layout
-	 * @return the layout string
+	 * Gets whether this appender requires a layout, based on its type. Even tho this
+	 * module doesn't require it's memory appender to have a layout - the existing log
+	 * viewer page does
+	 * @return true if it requires a layout
 	 */
-	public String getLayoutStr() {
-		if (getRequiresLayout()) {
-			if (layoutType == LayoutType.PATTERN)
-				return layoutPattern;
-			else if (layoutType != LayoutType.UNKNOWN) {
-				return layoutType.toString();
-			}
-			else if (target != null)
-				return target.getLayout().getClass().getSimpleName();
-		}
-		return "";
+	public boolean isRequiresLayout() {
+		if (target != null)
+			return target.requiresLayout();
+		
+		return (type == AppenderType.CONSOLE
+			 || type == AppenderType.MEMORY
+			 || type == AppenderType.NT_EVENT_LOG);
+	}
+	
+	/**
+	 * Gets the layout used by this appender
+	 * @return the layout
+	 */
+	public LayoutProxy getLayout() {
+		return layout;
+	}
+	
+	/**
+	 * Sets the layout used by this appender
+	 * @param layout the layout
+	 */
+	public void setLayout(LayoutProxy layout) {
+		this.layout = layout;
 	}
 	
 	/**
@@ -432,5 +351,5 @@ public class AppenderProxy {
 	@Override
 	public int hashCode() {
 		return target != null ? target.hashCode() : super.hashCode();
-	}
+	}	
 }

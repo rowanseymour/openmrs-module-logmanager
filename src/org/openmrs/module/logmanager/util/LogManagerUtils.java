@@ -21,10 +21,12 @@ import java.util.TreeMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.LogManager;
+import org.apache.log4j.PatternLayout;
 import org.openmrs.module.Module;
 import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.logmanager.AppenderProxy;
 import org.openmrs.module.logmanager.Config;
+import org.openmrs.module.logmanager.Constants;
 import org.openmrs.util.MemoryAppender;
 
 /**
@@ -50,6 +52,7 @@ public class LogManagerUtils {
 		if (sysApp == null) {
 			sysApp = new MemoryAppender();
 			sysApp.setName(sysAppName);
+			sysApp.setLayout(new PatternLayout(Constants.DEF_APPENDER_LAYOUT));
 			sysApp.activateOptions();
 			LogManager.getRootLogger().addAppender(sysApp);
 			existed = false;

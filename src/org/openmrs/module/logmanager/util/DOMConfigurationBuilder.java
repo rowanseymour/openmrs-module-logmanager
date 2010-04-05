@@ -35,6 +35,9 @@ public class DOMConfigurationBuilder {
 	
 	protected static final Log log = LogFactory.getLog(DOMConfigurationBuilder.class);
 	
+	protected static final String LOG4J_NAMESPACE = "http://jakarta.apache.org/log4j/";
+	protected static final String LOG4J_TAG_PREFIX = "log4j";
+	
 	/**
 	 * Gets a DOM representation of the current logging configuration
 	 * @return the DOM document
@@ -47,11 +50,9 @@ public class DOMConfigurationBuilder {
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = builder.newDocument();
 			
-			String log4jNS = "http://jakarta.apache.org/log4j/";
-			
 			// Create document element
-			Element documentElem = document.createElementNS(log4jNS, "configuration");
-			documentElem.setPrefix("log4j");			
+			Element documentElem = document.createElementNS(LOG4J_NAMESPACE, "configuration");
+			documentElem.setPrefix(LOG4J_TAG_PREFIX);			
 			document.appendChild(documentElem);
 			
 			// Create appender elements
