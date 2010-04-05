@@ -18,6 +18,7 @@ import java.util.Collection;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.AppenderProxy;
 import org.openmrs.module.logmanager.Constants;
+import org.openmrs.module.logmanager.LayoutProxy;
 import org.openmrs.module.logmanager.LayoutType;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.springframework.validation.Errors;
@@ -41,16 +42,18 @@ public class AppenderValidator implements Validator {
 	 */
 	public void validate(Object obj, Errors errors) {
 		AppenderProxy appender = (AppenderProxy)obj;
+		LayoutProxy layout = appender.getLayout();
 		
 		// General validation
 		if (!appender.getName().matches("[\\w\\.\\- ]+"))
 			errors.rejectValue("name", Constants.MODULE_ID + ".error.name");
 		else if (!appender.isExisting() && isAppenderNameInUse(appender.getName()))
-			errors.rejectValue("name", Constants.MODULE_ID + ".error.nameAlreadyInUse");
+			errors.rejectValue("name", Constants.MODULE_ID + ".error.nameAlreadyInUse");	
 		
-		if (appender.getLayoutType() == LayoutType.PATTERN && appender.getLayoutPattern().isEmpty())
-			errors.rejectValue("layout", Constants.MODULE_ID + ".error.layout");
-		
+		// Validate the layout
+		if (layout != null)
+			validateLayout(layout, errors);
+
 		// Subclass validation
 		switch (appender.getType()) {
 		case MEMORY:
@@ -63,6 +66,11 @@ public class AppenderValidator implements Validator {
 			validateNTEventLogAppender(appender, errors);
 			break;
 		}		
+	}
+	
+	private void validateLayout(LayoutProxy layout, Errors errors) {
+		if (layout.getType() == LayoutType.PATTERN && layout.getConversionPattern().isEmpty())
+			errors.rejectValue("layout.conversionPattern", Constants.MODULE_ID + ".error.layout.conversionPattern");
 	}
 	
 	/**

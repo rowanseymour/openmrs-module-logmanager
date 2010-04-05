@@ -74,8 +74,17 @@ function clearAppender(id) {
 						(<i><spring:message code="${moduleId}.system"/></i>)
 					</c:if>
 				</td>
-				<td>${appender.target.class.simpleName}</td>
-				<td>${appender.layoutStr}</td>
+				<td>
+					<c:choose>
+						<c:when test="${appender.type.ordinal > 0}">
+							<c:out value="${appender.type}" />
+						</c:when>
+						<c:otherwise>
+							<i>${appender.target.class.simpleName}</i>
+						</c:otherwise>
+					</c:choose>
+				</td>
+				<td><c:out value="${appender.layout}" /></td>
 				<td>
 					<c:if test="${appender.viewable}">
 						<a href="viewer.htm?appId=${appender.id}"><spring:message code="general.view"/></a>

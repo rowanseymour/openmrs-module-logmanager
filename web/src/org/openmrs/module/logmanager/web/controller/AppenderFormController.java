@@ -15,6 +15,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.AppenderProxy;
 import org.openmrs.module.logmanager.AppenderType;
 import org.openmrs.module.logmanager.Constants;
+import org.openmrs.module.logmanager.LayoutProxy;
 import org.openmrs.module.logmanager.LayoutType;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.LoggerProxy;
@@ -156,10 +157,8 @@ public class AppenderFormController extends SimpleFormController {
 		}
 		
 		// Default to pattern layout
-		if (appender.getRequiresLayout()) {
-			appender.setLayoutType(LayoutType.PATTERN);
-			appender.setLayoutPattern(Constants.DEF_APPENDER_LAYOUT);
-		}
+		if (appender.isRequiresLayout())
+			appender.setLayout(new LayoutProxy(LayoutType.PATTERN));
 		
 		return appender;
 	}
