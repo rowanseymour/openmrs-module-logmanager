@@ -41,6 +41,7 @@ public class LayoutProxy {
 	 * @param target the layout
 	 */
 	public LayoutProxy(Layout target) {
+		this.target = target;
 		this.type = LayoutType.fromLayout(target);
 		
 		if (target instanceof PatternLayout)

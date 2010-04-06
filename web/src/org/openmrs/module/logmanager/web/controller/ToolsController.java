@@ -13,7 +13,6 @@
  */
 package org.openmrs.module.logmanager.web.controller;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,27 +24,20 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.openmrs.module.Module;
 import org.openmrs.module.ModuleFactory;
-import org.openmrs.module.logmanager.AppenderProxy;
-import org.openmrs.module.logmanager.Config;
 import org.openmrs.module.logmanager.Constants;
-import org.openmrs.module.logmanager.util.DOMConfigurationBuilder;
+import org.openmrs.module.logmanager.log4j.DOMConfigurationBuilder;
+import org.openmrs.module.logmanager.log4j.Log4jUtils;
 import org.openmrs.module.logmanager.web.util.WebUtils;
 import org.openmrs.module.logmanager.web.view.DocumentXmlView;
-import org.openmrs.util.MemoryAppender;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * Controller for tools page
@@ -66,19 +58,24 @@ public class ToolsController extends ParameterizableViewController {
 		Map<String, Object> model = new HashMap<String, Object>();
 		
 		// Reset log4j configuration
-		if (request.getParameter("clear") != null) {		
-			clearConfiguration();
+		if (request.getParameter("clear") != null) {			
+			Document document = DOMConfigurationBuilder.createConfiguration();
+			
+			Log4jUtils.clearConfiguration();
+			
+			DOMConfigurator.configure(document.getDocumentElement());
+			
 			WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools.clearSuccess", null);
 		}
 		else if (request.getParameter("export") != null) {	
-			Document document = DOMConfigurationBuilder.createDocument();	
+			Document document = DOMConfigurationBuilder.createConfiguration();	
 			model.put(documentXmlView.getSourceKey(), document);
 			
 			return new ModelAndView(documentXmlView, model);
 		}
 		else if (request.getParameter("reload") != null) {
 			String[] configs = request.getParameterValues("configs");
-			reloadConfiguration(configs);
+			Log4jUtils.reloadConfiguration(configs);
 			WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools.reloadSuccess", null);
 		}
 		// Special logger switches
@@ -128,83 +125,13 @@ public class ToolsController extends ParameterizableViewController {
 				Map<String, Object> modConfig = new HashMap<String, Object>();
 				modConfig.put("display", "Module: " + module.getModuleId() + " (log4j.xml)");
 				modConfig.put("moduleId", module.getModuleId());
-				modConfig.put("usesRoot", isModuleModifyingRoot(module));
-				modConfig.put("outsideNS", isModuleModifyingLoggerOutsideNS(module));
+				modConfig.put("usesRoot", Log4jUtils.isModuleModifyingRoot(module));
+				modConfig.put("outsideNS", Log4jUtils.isModuleModifyingLoggerOutsideNS(module));
 				log4jConfigs.add(modConfig);
 			}
 		}
 		
 		return log4jConfigs;
-	}
-	
-	/**
-	 * Checks to see if the given module is modifying log4j's root logger
-	 * @param module the module to check
-	 * @return true if root logger is being modified
-	 */
-	private boolean isModuleModifyingRoot(Module module) {
-		Element log4jDocElm = module.getLog4j().getDocumentElement();
-		NodeList roots = log4jDocElm.getElementsByTagName("root");
-		return roots.getLength() > 0;
-	}
-	
-	/**
-	 * Checks to see if the given module is modifying loggers outside of its namespace
-	 * @param module the module to check
-	 * @return true if loggers are being modified
-	 */
-	private boolean isModuleModifyingLoggerOutsideNS(Module module) {
-		String moduleNS = "org.openmrs.module." + module.getModuleId();
-		
-		Element log4jDocElm = module.getLog4j().getDocumentElement();
-		NodeList loggers = log4jDocElm.getElementsByTagName("logger");
-		for (int n = 0; n < loggers.getLength(); n++) {
-			NamedNodeMap attrs = loggers.item(n).getAttributes();
-			Node nameNode = attrs.getNamedItem("name");
-			if (!nameNode.getNodeValue().startsWith(moduleNS))
-				return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Clears the log4j configuration
-	 */
-	private void clearConfiguration() {
-		BasicConfigurator.resetConfiguration();
-	}
-	
-	/**
-	 * Reloads the log4j configuration
-	 * @param the list of module ids ($ means the main OpenMRS config)
-	 */
-	private void reloadConfiguration(String[] moduleIds) {
-		if (moduleIds == null)
-			return;
-		
-		for (String moduleId : moduleIds) {
-			if (moduleId.equals("$")) {
-				// Load main OpenMRS log4j.xml
-				URL url = ToolsController.class.getResource("/log4j.xml");
-				DOMConfigurator.configure(url);
-				
-				// Reloading the OpenMRS log4j.xml file may recreate the appender
-				// being used as the system appender, so reset the system appender
-				String sysAppName = Config.getCurrent().getSystemAppenderName();
-				MemoryAppender sysApp = (MemoryAppender)LogManager.getRootLogger().getAppender(sysAppName);
-				if (sysApp != null)
-					AppenderProxy.setSystemAppender(new AppenderProxy(sysApp));
-			}
-			else {
-				try {
-					Module module = ModuleFactory.getModuleById(moduleId);
-					if (module.getLog4j() != null)
-						DOMConfigurator.configure(module.getLog4j().getDocumentElement());
-				} catch (Exception e) {
-					log.error(e.getMessage());
-				}
-			}
-		}	
 	}
 	
 	/**
