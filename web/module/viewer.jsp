@@ -24,11 +24,7 @@
 	border-top: 1px solid #FFF;
 	border-bottom: 1px solid #FFF;
 }
-.rowLink:hover {
-	/*background-color: #EAFFE0;*/
-}
 .rowLink:hover td {
-	/*background-color: #EAFFE0;*/
 	border-top: 1px solid #DDD;
 	border-bottom: 1px solid #DDD;
 }
@@ -63,7 +59,7 @@ function submitViewForm(format) {
 			<td nowrap="nowrap">	
 				<spring:message code="${moduleId}.viewer.from" />
 				
-				<select name="viewId" style="width: 150px">
+				<select name="appId" style="width: 150px">
 					<c:forEach var="app" items="${appenders}">
 						<option value="${app.id}" ${app.id == appender.id ? 'selected="selected"' : ""}>${app.name}</option>
 					</c:forEach>
