@@ -13,7 +13,11 @@
  */
 package org.openmrs.module.logmanager.log4j;
 
+import java.io.InputStream;
 import java.net.URL;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,6 +29,7 @@ import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.logmanager.AppenderProxy;
 import org.openmrs.module.logmanager.Config;
 import org.openmrs.util.MemoryAppender;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -42,7 +47,33 @@ public class Log4jUtils {
 	}
 	
 	/**
-	 * Reloads the log4j configuration
+	 * Parses the given input stream as an XML log4j configuration 
+	 * @param input the input stream
+	 * @return true if parsing was successful, else false
+	 */
+	public static boolean parseConfiguration(InputStream input) {
+		// Parse as DOM document
+		try {
+			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = docBuilderFactory.newDocumentBuilder();
+			Document log4jDoc = builder.parse(input);
+			DOMConfigurator.configure(log4jDoc.getDocumentElement());
+			
+			// Reloading the OpenMRS log4j.xml file may recreate the appender
+			// being used as the system appender, so reset the system appender
+			resetSystemAppender();
+
+			log.info("Parsed log4j configuration file");	
+			return true;
+			
+		} catch (Exception e) {
+			log.warn("Invalid log4j configuration file", e);
+			return false;
+		}
+	}
+	
+	/**
+	 * Reloads the log4j configuration from OpenMRS core and started modules
 	 * @param the list of module ids ($ means the main OpenMRS config)
 	 */
 	public static void reloadConfiguration(String[] moduleIds) {
@@ -57,10 +88,7 @@ public class Log4jUtils {
 				
 				// Reloading the OpenMRS log4j.xml file may recreate the appender
 				// being used as the system appender, so reset the system appender
-				String sysAppName = Config.getCurrent().getSystemAppenderName();
-				MemoryAppender sysApp = (MemoryAppender)LogManager.getRootLogger().getAppender(sysAppName);
-				if (sysApp != null)
-					AppenderProxy.setSystemAppender(new AppenderProxy(sysApp));
+				resetSystemAppender();
 			}
 			else {
 				try {
@@ -72,6 +100,16 @@ public class Log4jUtils {
 				}
 			}
 		}	
+	}
+	
+	/**
+	 * Resets the system appender after configuration changes
+	 */
+	public static void resetSystemAppender() {
+		String sysAppName = Config.getCurrent().getSystemAppenderName();
+		MemoryAppender sysApp = (MemoryAppender)LogManager.getRootLogger().getAppender(sysAppName);
+		if (sysApp != null)
+			AppenderProxy.setSystemAppender(new AppenderProxy(sysApp));
 	}
 	
 	/**

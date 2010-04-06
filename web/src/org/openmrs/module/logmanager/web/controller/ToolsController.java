@@ -13,6 +13,7 @@
  */
 package org.openmrs.module.logmanager.web.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -27,7 +28,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
 import org.openmrs.module.Module;
 import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.logmanager.Constants;
@@ -35,6 +35,8 @@ import org.openmrs.module.logmanager.log4j.DOMConfigurationBuilder;
 import org.openmrs.module.logmanager.log4j.Log4jUtils;
 import org.openmrs.module.logmanager.web.util.WebUtils;
 import org.openmrs.module.logmanager.web.view.DocumentXmlView;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 import org.w3c.dom.Document;
@@ -57,27 +59,20 @@ public class ToolsController extends ParameterizableViewController {
 		
 		Map<String, Object> model = new HashMap<String, Object>();
 		
-		// Reset log4j configuration
-		if (request.getParameter("clear") != null) {			
-			Document document = DOMConfigurationBuilder.createConfiguration();
-			
-			Log4jUtils.clearConfiguration();
-			
-			DOMConfigurator.configure(document.getDocumentElement());
-			
-			WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools.clearSuccess", null);
-		}
+		// Log4j configuration operations
+		if (request.getParameter("clear") != null)
+			clearConfiguration(request);
+		else if (request.getParameter("import") != null)	
+			importConfiguration(request);	
 		else if (request.getParameter("export") != null) {	
 			Document document = DOMConfigurationBuilder.createConfiguration();	
 			model.put(documentXmlView.getSourceKey(), document);
 			
 			return new ModelAndView(documentXmlView, model);
 		}
-		else if (request.getParameter("reload") != null) {
-			String[] configs = request.getParameterValues("configs");
-			Log4jUtils.reloadConfiguration(configs);
-			WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools.reloadSuccess", null);
-		}
+		else if (request.getParameter("reload") != null)
+			reloadConfiguration(request);
+			
 		// Special logger switches
 		else if (request.getParameter("startAPIProfiling") != null)		
 			setProfilingLogging(true);
@@ -104,6 +99,62 @@ public class ToolsController extends ParameterizableViewController {
 		model.put("hibernateSQLStarted", (sqlLoggerLevel != null) ? (sqlLoggerLevel.toInt() <= Level.DEBUG.toInt()) : false);
 		
 		return new ModelAndView(getViewName(), model);
+	}
+	
+	/**
+	 * Handles a clear configuration request
+	 * @param request the http request
+	 */
+	private void clearConfiguration(HttpServletRequest request) {
+		Log4jUtils.clearConfiguration();
+		WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools.clearSuccess", null);
+	}
+	
+	/**
+	 * Handles an import configuration request
+	 * @param request the http request
+	 */
+	private void importConfiguration(HttpServletRequest request) {
+		if (request instanceof MultipartHttpServletRequest) {
+			// Spring will have detected a multipart request and wrapped it
+			MultipartHttpServletRequest mpRequest = (MultipartHttpServletRequest)request;
+			MultipartFile importFile = mpRequest.getFile("importFile");
+			
+			// Check file exists and isn't empty
+			if (importFile == null || importFile.isEmpty()) {
+				log.error("Uploaded file is empty or invalid");
+				return;
+			}
+			
+			String filename = importFile.getOriginalFilename();
+			
+			// Check for xml extension
+			if (!filename.toLowerCase().endsWith(".xml")) {
+				WebUtils.setErrorMessage(request, Constants.MODULE_ID + ".error.invalidConfigurationFile", new Object[] { filename });
+				return;
+			}
+			
+			// Parse as an XML configuration
+			try {
+				if (Log4jUtils.parseConfiguration(importFile.getInputStream()))
+					WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools.importSuccess", new Object[] { filename });
+				else
+					WebUtils.setErrorMessage(request, Constants.MODULE_ID + ".error.invalidConfigurationFile", new Object[] { filename });
+					
+			} catch (IOException e) {
+				log.error(e);
+			}
+		}
+	}
+	
+	/**
+	 * Handles an reload configuration request
+	 * @param request the http request
+	 */
+	private void reloadConfiguration(HttpServletRequest request) {
+		String[] configs = request.getParameterValues("configs");
+		Log4jUtils.reloadConfiguration(configs);
+		WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools.reloadSuccess", null);
 	}
 	
 	/**
