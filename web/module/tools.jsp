@@ -38,7 +38,7 @@ function onClickConfig(state) {
 <b class="boxHeader">
 	<spring:message code="${moduleId}.tools.log4jConfiguration" />
 </b>
-<form method="post" class="box" name="configForm">
+<form method="post" class="box" name="configForm" enctype="multipart/form-data">
 	<table cellpadding="2" cellspacing="0" width="100%">
 		<tr>
 			<td width="150">			
@@ -48,6 +48,20 @@ function onClickConfig(state) {
 				/>
 			</td>
 			<td><spring:message code="${moduleId}.tools.clearMsg" /></td>
+		</tr>
+		<tr>
+			<td>			
+				<input type="submit" name="import" id="importButton" class="switchButton"
+					value="<spring:message code="${moduleId}.tools.import" />"
+					disabled="disabled"
+				/>		
+			</td>
+			<td>
+				<spring:message code="${moduleId}.tools.importMsg" />
+				<input type="file" id="importFile" name="importFile" accept="text/xml"
+					onchange="document.configForm.import.disabled = (this.value == '')"
+				/>
+			</td>
 		</tr>
 		<tr>
 			<td>			
