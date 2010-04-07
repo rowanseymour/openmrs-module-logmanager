@@ -33,14 +33,13 @@ public class AppenderProxy extends AbstractProxy<Appender> {
 	
 	protected AppenderType type;
 	protected boolean existing;
-	
-	// Proxied properties
 	protected String name;
 	protected LayoutProxy layout;
-	protected int bufferSize;
-	protected String remoteHost;
-	protected int port;
-	protected String source;
+	
+	protected static final String[] PROPS_CONSOLE = { "target", "follow" };
+	protected static final String[] PROPS_MEMORY = { "bufferSize" };
+	protected static final String[] PROPS_SOCKET = { "application", "locationInfo", "reconnectionDelay", "remoteHost", "port" };
+	protected static final String[] PROPS_NT_EVENT_LOG = { "source" };
 	
 	protected static AppenderProxy systemAppender;
 	
@@ -50,8 +49,6 @@ public class AppenderProxy extends AbstractProxy<Appender> {
 	 * @param name the name
 	 */
 	public AppenderProxy(AppenderType type, String name) {
-		this.type = type;
-		this.name = name;
 		this.existing = false;
 		
 		// Create target based on type
@@ -64,16 +61,14 @@ public class AppenderProxy extends AbstractProxy<Appender> {
 			break;
 		case SOCKET:		
 			target = new SocketAppender();
-			port = Constants.DEF_APPENDER_PORT;
 			break;
 		case NT_EVENT_LOG:
 			target = new NTEventLogAppender();
-			source = Constants.DEF_APPENDER_SOURCE;
 		}
 		
-		// Default to pattern layout if layout is required
-		if (isRequiresLayout())
-			layout = new LayoutProxy(LayoutType.PATTERN);
+		this.target.setName(name);
+		
+		copyTarget();	
 	}
 	
 	/**
@@ -82,22 +77,38 @@ public class AppenderProxy extends AbstractProxy<Appender> {
 	 */
 	public AppenderProxy(Appender target) {
 		this.target = target;
-		this.type = AppenderType.fromAppender(target);
 		this.existing = true;
 		
+		copyTarget();	
+	}
+	
+	/**
+	 * Copies name, type and property values from target
+	 */
+	protected void copyTarget() {
+		this.type = AppenderType.fromAppender(target);
 		this.name = target.getName();
+		
+		switch (type) {
+		case CONSOLE:
+			copyPropertesFromTarget(PROPS_CONSOLE);
+			break;
+		case MEMORY: 
+			copyPropertesFromTarget(PROPS_MEMORY);
+			break;
+		case SOCKET:		
+			copyPropertesFromTarget(PROPS_SOCKET);
+			break;
+		case NT_EVENT_LOG:
+			copyPropertesFromTarget(PROPS_NT_EVENT_LOG);
+			break;
+		}
 		
 		// Create proxy for layout
 		if (target.getLayout() != null)
 			this.layout = new LayoutProxy(target.getLayout());
-		
-		// Copy parameters based on type
-		if (target instanceof MemoryAppender)
-			this.bufferSize = ((MemoryAppender)target).getBufferSize();
-		else if (target instanceof SocketAppender) {
-			this.remoteHost = ((SocketAppender)target).getRemoteHost();
-			this.port = ((SocketAppender)target).getPort();
-		}
+		else if (target.requiresLayout()) 
+			this.layout = new LayoutProxy(LayoutType.PATTERN);
 	}
 	
 	/**
@@ -107,21 +118,26 @@ public class AppenderProxy extends AbstractProxy<Appender> {
 		// Update general properties
 		target.setName(name);
 		
+		switch (type) {
+		case CONSOLE:
+			updatePropertiesOnTarget(PROPS_CONSOLE);
+			break;
+		case MEMORY: 
+			updatePropertiesOnTarget(PROPS_MEMORY);
+			break;
+		case SOCKET:		
+			updatePropertiesOnTarget(PROPS_SOCKET);
+			break;
+		case NT_EVENT_LOG:
+			updatePropertiesOnTarget(PROPS_NT_EVENT_LOG);
+			break;
+		}
+		
 		// Update layout
 		if (layout != null) {
 			layout.updateTarget();
 			target.setLayout(layout.getTarget());
 		}
-		
-		// Update subclass properties
-		if (target instanceof MemoryAppender)
-			((MemoryAppender)target).setBufferSize(bufferSize);
-		else if (target instanceof SocketAppender) {
-			((SocketAppender)target).setRemoteHost(remoteHost);
-			((SocketAppender)target).setPort(port);
-		}
-		else if (target instanceof NTEventLogAppender)
-			((NTEventLogAppender)target).setSource(source);
 	}
 	
 	/**
@@ -242,70 +258,6 @@ public class AppenderProxy extends AbstractProxy<Appender> {
 		
 		if (buffer != null)
 			buffer.clear();
-	}
-
-	/**
-	 * Gets the buffer size (applies to memory appenders)
-	 * @return the buffer size
-	 */
-	public int getBufferSize() {
-		return bufferSize;
-	}
-
-	/**
-	 * Sets the buffer size (applies to memory appenders)
-	 * @param bufferSize the bufferSize to set
-	 */
-	public void setBufferSize(int bufferSize) {
-		this.bufferSize = bufferSize;
-	}
-
-	/**
-	 * Gets the remote host (applies to socket appenders)
-	 * @return the remote host
-	 */
-	public String getRemoteHost() {
-		return remoteHost;
-	}
-
-	/**
-	 * Sets the remote host (applies to socket appenders)
-	 * @param remoteHost the remoteHost to set
-	 */
-	public void setRemoteHost(String remoteHost) {
-		this.remoteHost = remoteHost;
-	}
-
-	/**
-	 * Gets the remote port (applies to socket appenders)
-	 * @return the port
-	 */
-	public int getPort() {
-		return port;
-	}
-
-	/**
-	 * Sets the remote port (applies to socket appenders)
-	 * @param port the port to set
-	 */
-	public void setPort(int port) {
-		this.port = port;
-	}
-
-	/**
-	 * Gets the source (applies to NT event log appenders)
-	 * @return the source
-	 */
-	public String getSource() {
-		return source;
-	}
-
-	/**
-	 * Sets the source (applies to NT event log appenders)
-	 * @param source the source
-	 */
-	public void setSource(String source) {
-		this.source = source;
 	}
 
 	/**

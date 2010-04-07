@@ -52,7 +52,7 @@ public class LogManagerUtils {
 		if (sysApp == null) {
 			sysApp = new MemoryAppender();
 			sysApp.setName(sysAppName);
-			sysApp.setLayout(new PatternLayout(Constants.DEF_APPENDER_LAYOUT));
+			sysApp.setLayout(new PatternLayout(Constants.DEF_LAYOUT_PATTERN));
 			sysApp.activateOptions();
 			LogManager.getRootLogger().addAppender(sysApp);
 			existed = false;

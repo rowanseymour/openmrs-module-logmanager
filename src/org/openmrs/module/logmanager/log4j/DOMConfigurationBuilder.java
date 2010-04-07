@@ -25,7 +25,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.AppenderProxy;
-import org.openmrs.module.logmanager.AppenderType;
 import org.openmrs.module.logmanager.LayoutProxy;
 import org.openmrs.module.logmanager.LayoutType;
 import org.openmrs.module.logmanager.LogManagerService;
@@ -43,15 +42,6 @@ public class DOMConfigurationBuilder {
 	protected static final String LOG4J_NAMESPACE = "http://jakarta.apache.org/log4j/";
 	protected static final String LOG4J_TAG_PREFIX = "log4j";
 	
-	// Parameter names for different appender types
-	protected static final String[] PARAMS_APPENDER_CONSOLE = { "target", "follow" };
-	protected static final String[] PARAMS_APPENDER_MEMORY = { "bufferSize" };
-	protected static final String[] PARAMS_APPENDER_SOCKET = { "application", "locationInfo", "reconnectionDelay", "remoteHost", "port" };
-	protected static final String[] PARAMS_APPENDER_NT_EVENT_LOG = { "source" };
-	
-	// Map of appender types to parameter name arrays
-	protected static final Map<AppenderType, String[]> appenderTypeParams = new HashMap<AppenderType, String[]>();
-	
 	// Parameter names for different layout types
 	protected static final String[] PARAMS_LAYOUT_TTCC = { "categoryPrefixing", "contextPrinting", "threadPrinting" };
 	protected static final String[] PARAMS_LAYOUT_PATTERN = { "conversionPattern" };
@@ -62,11 +52,6 @@ public class DOMConfigurationBuilder {
 	protected static final Map<LayoutType, String[]> layoutTypeParams = new HashMap<LayoutType, String[]>();
 	
 	static {
-		appenderTypeParams.put(AppenderType.CONSOLE, PARAMS_APPENDER_CONSOLE);
-		appenderTypeParams.put(AppenderType.MEMORY, PARAMS_APPENDER_MEMORY);
-		appenderTypeParams.put(AppenderType.SOCKET, PARAMS_APPENDER_SOCKET);
-		appenderTypeParams.put(AppenderType.NT_EVENT_LOG, PARAMS_APPENDER_NT_EVENT_LOG);
-		
 		layoutTypeParams.put(LayoutType.TTCC, PARAMS_LAYOUT_TTCC);
 		layoutTypeParams.put(LayoutType.PATTERN, PARAMS_LAYOUT_PATTERN);
 		layoutTypeParams.put(LayoutType.HTML, PARAMS_LAYOUT_HTML);
@@ -132,7 +117,7 @@ public class DOMConfigurationBuilder {
 		element.setAttribute("class", className);
 		
 		// Create param elements for this appender type
-		String[] paramNames = appenderTypeParams.get(appender.getType());
+		String[] paramNames = appender.getPropertyNames();
 		if (paramNames != null)
 			addObjectParamElements(document, element, appender.getTarget(), paramNames);
 		

@@ -13,15 +13,16 @@
  */
 package org.openmrs.module.logmanager;
 
-import java.util.HashMap;
-import java.util.Map;
+import net.sf.cglib.beans.BeanGenerator;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Base class for proxy classes
+ * Base class for proxy classes. Contains a properties object which is dynamically
+ * created with a set of properties - these can be used to proxy the properties of
+ * subclasses of the target class 
  * @param <T> the target object class
  */
 public abstract class AbstractProxy<T> {
@@ -34,9 +35,14 @@ public abstract class AbstractProxy<T> {
 	protected T target;
 	
 	/**
-	 * The property map
+	 * The dynamic properties object
 	 */
-	protected Map<String, Object> properties = new HashMap<String, Object>();
+	protected Object properties;
+	
+	/**
+	 * The names of the dynamic property currently stored
+	 */
+	protected String[] propertyNames; 
 	
 	/**
 	 * Gets the target object
@@ -52,30 +58,25 @@ public abstract class AbstractProxy<T> {
 	public abstract void updateTarget();
 	
 	/**
-	 * Gets the property map
-	 * @return the property map
+	 * Gets the dynamic properties object used for spring binding
+	 * @return the properties
 	 */
-	@SuppressWarnings("unchecked")
-	public Map<String, String> getStringProperties() {
-		return (Map<String, String>)(Object)properties;
+	public Object getProperties() {
+		return properties;
 	}
-	
-	/**
-	 * Gets the property map
-	 * @return the property map
-	 */
-	@SuppressWarnings("unchecked")
-	public Map<String, Integer> getIntProperties() {
-		return (Map<String, Integer>)(Object)properties;
-	}
-	
+
 	/**
 	 * Gets a property value
 	 * @param name the name of the property
 	 * @return the value of the property
 	 */
 	public Object getProperty(String name) {
-		return properties.get(name);
+		try {
+			return PropertyUtils.getSimpleProperty(properties, name);
+		} catch (Exception e) {
+			log.error(e);
+			return null;
+		}
 	}
 	
 	/**
@@ -84,36 +85,63 @@ public abstract class AbstractProxy<T> {
 	 * @param value the value of the property
 	 */
 	public void setProperty(String name, Object value) {
-		properties.put(name, value);
-	}
-	
-	/**
-	 * Reads a parameter from the target and puts in it the parameter map
-	 * @param name the name of the parameter
-	 */
-	protected void readProperty(String name) {
 		try {
-			Object value = PropertyUtils.getSimpleProperty(target, name);
-			properties.put(name, value);
-			
-			log.trace("Read property name:" + name + " value:" + value + " type:" + (value != null ? value.getClass().getSimpleName() : "unknown"));
-			
+			PropertyUtils.setSimpleProperty(properties, name, value);
 		} catch (Exception e) {
 			log.error(e);
 		}
 	}
 	
 	/**
-	 * Updates a parameter on the target using value from the parameter map 
-	 * @param paramName the name of the parameter
+	 * Copies properties from the target
+	 * @param names the property names
 	 */
-	protected void updateProperty(String name) {
+	protected void copyPropertesFromTarget(String[] names) {
+		BeanGenerator generator = new BeanGenerator();
+		generator.setSuperclass(Object.class);
+		
 		try {
-			Object value = properties.get(name);
-			PropertyUtils.setSimpleProperty(target, name, value);
+			// Add each property definition to the generator
+			for (String name : names) {
+				Class<?> type = PropertyUtils.getPropertyType(target, name);	
+				generator.addProperty(name, type);
+			}
+			
+			properties = generator.create();
+			
+			// Copy each property value from the target
+			for (String name : names) {
+				Object value = PropertyUtils.getSimpleProperty(target, name);
+				PropertyUtils.setSimpleProperty(properties, name, value);
+			}
 		} catch (Exception e) {
 			log.error(e);
 		}
+		
+		propertyNames = names.clone();
+	}
+	
+	/**
+	 * Updates the properties on the target
+	 * @param names the property names
+	 */
+	protected void updatePropertiesOnTarget(String[] names) {
+		try {
+			for (String name : names) {
+				Object value = PropertyUtils.getSimpleProperty(properties, name);	
+				PropertyUtils.setSimpleProperty(target, name, value);
+			}
+		} catch (Exception e) {
+			log.error(e);
+		}
+	}
+	
+	/**
+	 * Gets the names of the dynamic properties
+	 * @return the property names
+	 */
+	public String[] getPropertyNames() {
+		return propertyNames;
 	}
 	
 	/**

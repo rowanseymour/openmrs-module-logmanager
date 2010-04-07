@@ -79,8 +79,10 @@ public class AppenderValidator implements Validator {
 	 * @param errors the errors
 	 */
 	private void validateMemoryAppender(AppenderProxy appender, Errors errors) {
-		if (appender.getBufferSize() < 1 || appender.getBufferSize() > Constants.MAX_APPENDER_BUFFER_SIZE)
-			errors.rejectValue("bufferSize", Constants.MODULE_ID + ".error.bufferSize",
+		int bufferSize = (Integer)appender.getProperty("bufferSize");
+		
+		if (bufferSize < 1 || bufferSize > Constants.MAX_APPENDER_BUFFER_SIZE)
+			errors.rejectValue("properties.bufferSize", Constants.MODULE_ID + ".error.bufferSize",
 				new Object[]{ Constants.MAX_APPENDER_BUFFER_SIZE }, "");
 	}
 	
@@ -90,11 +92,14 @@ public class AppenderValidator implements Validator {
 	 * @param errors the errors
 	 */
 	private void validateSocketAppender(AppenderProxy appender, Errors errors) {
-		if (appender.getRemoteHost().isEmpty())
-			errors.rejectValue("remoteHost", Constants.MODULE_ID + ".error.host");
+		String remoteHost = (String)appender.getProperty("remoteHost");
+		int port = (Integer)appender.getProperty("port");
 		
-		if (appender.getPort() < Constants.MIN_APPENDER_PORT || appender.getPort() > Constants.MAX_APPENDER_PORT)
-			errors.rejectValue("port", Constants.MODULE_ID + ".error.port",
+		if (remoteHost == null || remoteHost.isEmpty())
+			errors.rejectValue("properties.remoteHost", Constants.MODULE_ID + ".error.host");
+		
+		if (port < Constants.MIN_APPENDER_PORT || port > Constants.MAX_APPENDER_PORT)
+			errors.rejectValue("properties.port", Constants.MODULE_ID + ".error.port",
 				new Object[]{ Constants.MIN_APPENDER_PORT, Constants.MAX_APPENDER_PORT }, "");
 	}
 	
@@ -104,7 +109,9 @@ public class AppenderValidator implements Validator {
 	 * @param errors the errors
 	 */
 	private void validateNTEventLogAppender(AppenderProxy appender, Errors errors) {
-		if (appender.getSource().isEmpty())
+		String source = (String)appender.getProperty("source");
+		
+		if (source == null || source.isEmpty())
 			errors.rejectValue("source", Constants.MODULE_ID + ".error.source");
 	}
 	

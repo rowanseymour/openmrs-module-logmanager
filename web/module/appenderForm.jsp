@@ -88,12 +88,23 @@ function onChangeLayoutType(value) {
 				</td>		
 			</tr>
 		</c:if>
+		<c:if test="${appender.type.ordinal == 1}">
+			<tr>
+				<th><spring:message code="${moduleId}.appenders.target"/></th>
+				<td>
+					<logmgr_form:select path="properties.target">
+						<logmgr_form:option value="System.out" />
+						<logmgr_form:option value="System.err" />
+					</logmgr_form:select>
+				</td>		
+			</tr>
+		</c:if>
 		<c:if test="${appender.type.ordinal == 2}">
 			<tr>
 				<th><spring:message code="${moduleId}.appenders.bufferSize"/></th>
 				<td>
-					<logmgr_form:input path="bufferSize" size="6" />
-					<logmgr_form:errors path="bufferSize" cssClass="error" />
+					<logmgr_form:input path="properties.bufferSize" size="6" />
+					<logmgr_form:errors path="properties.bufferSize" cssClass="error" />
 				</td>		
 			</tr>
 		</c:if>
@@ -101,11 +112,18 @@ function onChangeLayoutType(value) {
 			<tr>
 				<th><spring:message code="${moduleId}.appenders.host"/></th>
 				<td>
-					<logmgr_form:input path="remoteHost" />
-					<logmgr_form:errors path="remoteHost" cssClass="error" />
+					<logmgr_form:input path="properties.remoteHost" />
+					<logmgr_form:errors path="properties.remoteHost" cssClass="error" />
 					<spring:message code="${moduleId}.appenders.port"/>
-					<logmgr_form:input path="port" size="5" />
-					<logmgr_form:errors path="port" cssClass="error" />
+					<logmgr_form:input path="properties.port" size="5" />
+					<logmgr_form:errors path="properties.port" cssClass="error" />
+				</td>
+			</tr>
+			<tr>
+				<th><spring:message code="${moduleId}.appenders.application"/></th>
+				<td>
+					<logmgr_form:input path="properties.application" />
+					<logmgr_form:errors path="properties.application" cssClass="error" />
 				</td>
 			</tr>
 		</c:if>
@@ -113,8 +131,8 @@ function onChangeLayoutType(value) {
 			<tr>
 				<th><spring:message code="${moduleId}.appenders.source"/></th>
 				<td>
-					<logmgr_form:input path="source" />
-					<logmgr_form:errors path="source" cssClass="error" />
+					<logmgr_form:input path="properties.source" />
+					<logmgr_form:errors path="properties.source" cssClass="error" />
 				</td>		
 			</tr>
 		</c:if>
