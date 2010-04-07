@@ -20,8 +20,8 @@ import org.apache.log4j.SimpleLayout;
 import org.apache.log4j.TTCCLayout;
 import org.apache.log4j.xml.XMLLayout;
 
-public class LayoutProxy {
-	protected Layout target;
+public class LayoutProxy extends AbstractProxy<Layout> {
+	
 	protected LayoutType type;
 	
 	// Proxied properties
@@ -73,14 +73,6 @@ public class LayoutProxy {
 			((XMLLayout)target).setLocationInfo(locationInfo);
 			break;
 		}
-	}
-	
-	/**
-	 * Gets the layout referenced by this proxy
-	 * @return the target layout
-	 */
-	public Layout getTarget() {
-		return target;
 	}
 	
 	/**

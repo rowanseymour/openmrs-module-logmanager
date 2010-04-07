@@ -30,8 +30,7 @@ import org.apache.log4j.Logger;
  * This class contains the parameters required to create a logger and is used
  * with the logger form because logger objects cannot be created directly
  */
-public class LoggerProxy {
-	protected Logger target = null;
+public class LoggerProxy extends AbstractProxy<Logger> {
 	
 	// Proxied properties
 	protected String name;

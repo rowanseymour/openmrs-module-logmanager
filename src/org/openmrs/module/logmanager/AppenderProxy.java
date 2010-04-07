@@ -29,8 +29,8 @@ import org.openmrs.util.MemoryAppender;
  * Used to edit appender objects without passing them directly to the SimpleFormController.
  * This ensures that an appender is only modified if all properties have been validated
  */
-public class AppenderProxy {
-	protected Appender target;
+public class AppenderProxy extends AbstractProxy<Appender> {
+	
 	protected AppenderType type;
 	protected boolean existing;
 	
@@ -122,14 +122,6 @@ public class AppenderProxy {
 		}
 		else if (target instanceof NTEventLogAppender)
 			((NTEventLogAppender)target).setSource(source);
-	}
-
-	/**
-	 * Gets the appender referenced by this proxy
-	 * @return the target appender
-	 */
-	public Appender getTarget() {
-		return target;
 	}
 	
 	/**
@@ -338,22 +330,5 @@ public class AppenderProxy {
 	 */
 	public boolean isSystemAppender() {
 		return (this.target == systemAppender.target);
-	}
-
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		AppenderProxy proxy = (AppenderProxy)obj;
-		return proxy.target.equals(this.target);
-	}
-
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		return target.hashCode();
 	}	
 }
