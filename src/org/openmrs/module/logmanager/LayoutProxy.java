@@ -25,7 +25,7 @@ public class LayoutProxy extends AbstractProxy<Layout> {
 	protected LayoutType type;
 	
 	// Proxied properties
-	protected String conversionPattern = Constants.DEF_APPENDER_LAYOUT;
+	protected String conversionPattern = Constants.DEF_LAYOUT_PATTERN;
 	protected boolean locationInfo;
 	
 	/**

@@ -143,9 +143,13 @@ public class AppenderFormController extends SimpleFormController {
 		// Create the appender object based on the requested type
 		AppenderProxy appender = new AppenderProxy(type, name);
 		
-		// Override default remote host for socket appenders
-		if (type == AppenderType.SOCKET)
-			appender.setRemoteHost(request.getRemoteAddr());
+		// Override some properties which are empty by default
+		if (type == AppenderType.SOCKET) {
+			appender.setProperty("remoteHost", request.getRemoteAddr());
+			appender.setProperty("application", Constants.DEF_APPENDER_SOURCE);
+		}
+		else if (type == AppenderType.NT_EVENT_LOG)
+			appender.setProperty("source", Constants.DEF_APPENDER_SOURCE);
 		
 		return appender;
 	}
