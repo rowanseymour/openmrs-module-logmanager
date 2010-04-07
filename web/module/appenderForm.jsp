@@ -64,6 +64,7 @@ function onChangeLayoutType(value) {
 				</c:if>
 			</td>
 		</tr>
+		<%------------------ Layout fields ------------------%>
 		<c:if test="${appender.requiresLayout}">
 			<tr>
 				<th valign="top"><spring:message code="${moduleId}.appenders.layout"/></th>
@@ -88,6 +89,7 @@ function onChangeLayoutType(value) {
 				</td>		
 			</tr>
 		</c:if>
+		<%------------------ CONSOLE fields ------------------%>
 		<c:if test="${appender.type.ordinal == 1}">
 			<tr>
 				<th><spring:message code="${moduleId}.appenders.target"/></th>
@@ -98,7 +100,15 @@ function onChangeLayoutType(value) {
 					</logmgr_form:select>
 				</td>		
 			</tr>
+			<tr>
+				<th><spring:message code="${moduleId}.appenders.options"/></th>
+				<td>
+					<logmgr_form:checkbox path="properties.follow" />
+					<spring:message code="${moduleId}.appenders.honorReassignmentsAfterConfiguration"/>
+				</td>		
+			</tr>
 		</c:if>
+		<%------------------ MEMORY fields ------------------%>
 		<c:if test="${appender.type.ordinal == 2}">
 			<tr>
 				<th><spring:message code="${moduleId}.appenders.bufferSize"/></th>
@@ -108,6 +118,7 @@ function onChangeLayoutType(value) {
 				</td>		
 			</tr>
 		</c:if>
+		<%------------------ SOCKET fields ------------------%>
 		<c:if test="${appender.type.ordinal == 3}">
 			<tr>
 				<th><spring:message code="${moduleId}.appenders.host"/></th>
@@ -126,7 +137,15 @@ function onChangeLayoutType(value) {
 					<logmgr_form:errors path="properties.application" cssClass="error" />
 				</td>
 			</tr>
+			<tr>
+				<th><spring:message code="${moduleId}.appenders.options"/></th>
+				<td>
+					<logmgr_form:checkbox path="properties.locationInfo" />
+					<spring:message code="${moduleId}.appenders.useLocationInformation"/>
+				</td>		
+			</tr>
 		</c:if>
+		<%------------------ NT EVENT LOG fields ------------------%>
 		<c:if test="${appender.type.ordinal == 4}">
 			<tr>
 				<th><spring:message code="${moduleId}.appenders.source"/></th>
@@ -136,6 +155,7 @@ function onChangeLayoutType(value) {
 				</td>		
 			</tr>
 		</c:if>
+		<%------------------ Attach To ------------------%>
 		<c:if test="${not appender.existing}">
 			<tr>
 				<th><spring:message code="${moduleId}.appenders.attachTo"/></th>
