@@ -15,7 +15,6 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.AppenderProxy;
 import org.openmrs.module.logmanager.AppenderType;
 import org.openmrs.module.logmanager.Constants;
-import org.openmrs.module.logmanager.LayoutProxy;
 import org.openmrs.module.logmanager.LayoutType;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.LoggerProxy;
@@ -143,22 +142,10 @@ public class AppenderFormController extends SimpleFormController {
 		
 		// Create the appender object based on the requested type
 		AppenderProxy appender = new AppenderProxy(type, name);
-		switch (type) {
-		case MEMORY:
-			appender.setBufferSize(100);
-			break;
-		case SOCKET:		
-			appender.setRemoteHost(request.getRemoteAddr());
-			appender.setPort(Constants.DEF_APPENDER_PORT);
-			break;
-		case NT_EVENT_LOG:
-			appender.setSource(Constants.DEF_APPENDER_SOURCE);
-			break;
-		}
 		
-		// Default to pattern layout
-		if (appender.isRequiresLayout())
-			appender.setLayout(new LayoutProxy(LayoutType.PATTERN));
+		// Override default remote host for socket appenders
+		if (type == AppenderType.SOCKET)
+			appender.setRemoteHost(request.getRemoteAddr());
 		
 		return appender;
 	}

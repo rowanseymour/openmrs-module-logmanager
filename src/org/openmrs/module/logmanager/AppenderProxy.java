@@ -30,8 +30,9 @@ import org.openmrs.util.MemoryAppender;
  * This ensures that an appender is only modified if all properties have been validated
  */
 public class AppenderProxy {
-	protected Appender target = null;
+	protected Appender target;
 	protected AppenderType type;
+	protected boolean existing;
 	
 	// Proxied properties
 	protected String name;
@@ -51,21 +52,46 @@ public class AppenderProxy {
 	public AppenderProxy(AppenderType type, String name) {
 		this.type = type;
 		this.name = name;
+		this.existing = false;
+		
+		// Create target based on type
+		switch (type) {
+		case CONSOLE:
+			target = new ConsoleAppender();
+			break;
+		case MEMORY: 
+			target = new MemoryAppender();
+			break;
+		case SOCKET:		
+			target = new SocketAppender();
+			port = Constants.DEF_APPENDER_PORT;
+			break;
+		case NT_EVENT_LOG:
+			target = new NTEventLogAppender();
+			source = Constants.DEF_APPENDER_SOURCE;
+		}
+		
+		// Default to pattern layout if layout is required
+		if (isRequiresLayout())
+			layout = new LayoutProxy(LayoutType.PATTERN);
 	}
 	
 	/**
-	 * Creates an appender proxy based on the given appender
+	 * Creates a proxy for an existing appender
 	 * @param target the appender
 	 */
 	public AppenderProxy(Appender target) {
 		this.target = target;
 		this.type = AppenderType.fromAppender(target);
+		this.existing = true;
 		
 		this.name = target.getName();
 		
+		// Create proxy for layout
 		if (target.getLayout() != null)
 			this.layout = new LayoutProxy(target.getLayout());
 		
+		// Copy parameters based on type
 		if (target instanceof MemoryAppender)
 			this.bufferSize = ((MemoryAppender)target).getBufferSize();
 		else if (target instanceof SocketAppender) {
@@ -77,24 +103,7 @@ public class AppenderProxy {
 	/**
 	 * Updates the actual appender referenced by this proxy object
 	 */
-	public void updateTarget() {
-		// Create target if it doesn't exist
-		if (target == null) {
-			switch (type) {
-			case CONSOLE:
-				target = new ConsoleAppender();
-				break;
-			case MEMORY: 
-				target = new MemoryAppender();
-				break;
-			case SOCKET:		
-				target = new SocketAppender();
-				break;
-			case NT_EVENT_LOG:
-				target = new NTEventLogAppender();
-			}
-		}
-		
+	public void updateTarget() {	
 		// Update general properties
 		target.setName(name);
 		
@@ -124,19 +133,19 @@ public class AppenderProxy {
 	}
 	
 	/**
-	 * Gets whether this proxy references an actual appender
-	 * @return true if appender exists in log4j
+	 * Gets whether this proxy references an existing appender
+	 * @return true if appender already exists in log4j
 	 */
 	public boolean isExisting() {
-		return (target != null);
+		return existing;
 	}
 	
 	/**
-	 * Gets the id of this appender or zero if target appender doesn't exist
+	 * Gets the id of this appender
 	 * @return the appender id
 	 */
 	public int getId() {
-		return (target != null) ? target.hashCode() : 0;
+		return target.hashCode();
 	}
 	
 	/**
@@ -169,7 +178,7 @@ public class AppenderProxy {
 	 * @return true if appender must be restarted
 	 */
 	public boolean isRestartOnUpdateRequired() {
-		return this.target instanceof OptionHandler;
+		return target instanceof OptionHandler;
 	}
 	
 	/**
@@ -179,12 +188,7 @@ public class AppenderProxy {
 	 * @return true if it requires a layout
 	 */
 	public boolean isRequiresLayout() {
-		if (target != null)
-			return target.requiresLayout();
-		
-		return (type == AppenderType.CONSOLE
-			 || type == AppenderType.MEMORY
-			 || type == AppenderType.NT_EVENT_LOG);
+		return target.requiresLayout();
 	}
 	
 	/**
@@ -350,6 +354,6 @@ public class AppenderProxy {
 	 */
 	@Override
 	public int hashCode() {
-		return target != null ? target.hashCode() : super.hashCode();
+		return target.hashCode();
 	}	
 }
