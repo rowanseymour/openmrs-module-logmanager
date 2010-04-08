@@ -281,6 +281,6 @@ public class AppenderProxy extends AbstractProxy<Appender> {
 	 * @return true if this appender is the system appender
 	 */
 	public boolean isSystemAppender() {
-		return (this.target == systemAppender.target);
+		return (systemAppender != null && systemAppender.target == this.target);
 	}	
 }
