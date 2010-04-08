@@ -46,8 +46,10 @@ public class LayoutProxy extends AbstractProxy<Layout> {
 		
 		if (target instanceof PatternLayout)
 			this.conversionPattern = ((PatternLayout)target).getConversionPattern();
-		if (target instanceof HTMLLayout)
+		else if (target instanceof HTMLLayout)
 			this.locationInfo = ((HTMLLayout)target).getLocationInfo();
+		else if (target instanceof XMLLayout)
+			this.locationInfo = ((XMLLayout)target).getLocationInfo();
 	}
 	
 	/**
