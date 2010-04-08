@@ -33,6 +33,12 @@
 	</globalProperty>
 	
 	<globalProperty>
+		<property>@MODULE_ID@.alwaysRecreateSystemAppender</property>
+		<defaultValue>true</defaultValue>
+		<description>Always recreate the system appender</description>
+	</globalProperty>
+	
+	<globalProperty>
 		<property>@MODULE_ID@.logUncaughtExceptions</property>
 		<defaultValue>true</defaultValue>
 		<description>Log uncaught exceptions</description>

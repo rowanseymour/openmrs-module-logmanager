@@ -104,7 +104,8 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 		Set<AppenderProxy> appenders = new HashSet<AppenderProxy>();
 		
 		// Add system appender
-		appenders.add(AppenderProxy.getSystemAppender());
+		if (AppenderProxy.getSystemAppender() != null)
+			appenders.add(AppenderProxy.getSystemAppender());
 		
 		// Add appenders attached to the root logger
 		Enumeration<Appender> rootAppenders = LogManager.getRootLogger().getAllAppenders();
