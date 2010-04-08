@@ -94,6 +94,7 @@ public class AppenderValidator implements Validator {
 	private void validateSocketAppender(AppenderProxy appender, Errors errors) {
 		String remoteHost = (String)appender.getProperty("remoteHost");
 		int port = (Integer)appender.getProperty("port");
+		int reconnectionDelay = (Integer)appender.getProperty("reconnectionDelay");
 		
 		if (remoteHost == null || remoteHost.isEmpty())
 			errors.rejectValue("properties.remoteHost", Constants.MODULE_ID + ".error.host");
@@ -101,6 +102,9 @@ public class AppenderValidator implements Validator {
 		if (port < Constants.MIN_APPENDER_PORT || port > Constants.MAX_APPENDER_PORT)
 			errors.rejectValue("properties.port", Constants.MODULE_ID + ".error.port",
 				new Object[]{ Constants.MIN_APPENDER_PORT, Constants.MAX_APPENDER_PORT }, "");
+		
+		if (reconnectionDelay < 0)
+			errors.rejectValue("properties.reconnectionDelay", Constants.MODULE_ID + ".error.reconnectionDelay");
 	}
 	
 	/**

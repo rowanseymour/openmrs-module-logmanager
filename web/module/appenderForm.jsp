@@ -138,6 +138,14 @@ function onChangeLayoutType(value) {
 				</td>
 			</tr>
 			<tr>
+				<th><spring:message code="${moduleId}.appenders.reconnectionDelay"/></th>
+				<td>
+					<logmgr_form:input path="properties.reconnectionDelay" size="6"  />
+					<spring:message code="${moduleId}.milliseconds"/>
+					<logmgr_form:errors path="properties.reconnectionDelay" cssClass="error" />
+				</td>
+			</tr>
+			<tr>
 				<th><spring:message code="${moduleId}.appenders.options"/></th>
 				<td>
 					<logmgr_form:checkbox path="properties.locationInfo" />
