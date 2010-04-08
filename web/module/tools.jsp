@@ -16,22 +16,31 @@
 </style>
 
 <script type="text/javascript">
-function onToggleSelectAll(state) {
+// Called when the user clicks the select all/none links
+function logmgr_onToggleSelectAll(state) {
 	boxes = document.configForm.configs;
 	for (i = 0; i < boxes.length; i++)
 		boxes[i].checked = state;
 
 	document.configForm.reload.disabled = !state;	
 }
-function onClickConfig(state) {
+
+// Called when the user clicks a config checkbox
+function logmgr_onClickConfig(state) {
+	someSelected = false;
 	boxes = document.configForm.configs;
-	for (i = 0; i < boxes.length; i++) {
-		if (boxes[i].checked) {
-			document.configForm.reload.disabled = false;
-			return;
+	// Could be a single checkbox or an array of checkboxes.. oh javscript..
+	if (boxes.length == undefined)
+		someSelected = boxes.checked;
+	else {
+		for (i = 0; i < boxes.length; i++) {
+			if (boxes[i].checked) {
+				someSelected = true;
+				break;
+			}
 		}
 	}
-	document.configForm.reload.disabled = true;
+	document.configForm.reload.disabled = !someSelected;
 }
 </script>
 
@@ -86,8 +95,8 @@ function onClickConfig(state) {
 			<th align="right">
 				<small>
 					<spring:message code="general.select" />:
-					<a href="javascript:onToggleSelectAll(true)"><spring:message code="${moduleId}.all" /></a>
-					<a href="javascript:onToggleSelectAll(false)"><spring:message code="general.none" /></a>
+					<a href="javascript:logmgr_onToggleSelectAll(true)"><spring:message code="${moduleId}.all" /></a>
+					<a href="javascript:logmgr_onToggleSelectAll(false)"><spring:message code="general.none" /></a>
 				</small>
 			</th>
 		</tr>
@@ -95,7 +104,7 @@ function onClickConfig(state) {
 		<c:forEach var="log4jConfig" items="${log4jConfigs}" varStatus="rowStatus">
 			<tr class="<c:choose><c:when test="${rowStatus.index % 2 == 0}">evenRow</c:when><c:otherwise>oddRow</c:otherwise></c:choose>">
 				<td align="left">
-					<input type="checkbox" name="configs" value="${log4jConfig.moduleId}" onclick="onClickConfig()" />
+					<input type="checkbox" name="configs" value="${log4jConfig.moduleId}" onclick="logmgr_onClickConfig()" />
 					${log4jConfig.display}
 				</td>
 				<td align="left">
