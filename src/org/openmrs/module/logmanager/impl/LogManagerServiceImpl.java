@@ -41,6 +41,7 @@ import org.openmrs.module.logmanager.LoggerProxy;
 import org.openmrs.module.logmanager.Preset;
 import org.openmrs.module.logmanager.QueryField;
 import org.openmrs.module.logmanager.db.LogManagerDAO;
+import org.openmrs.module.logmanager.log4j.Log4jUtils;
 import org.openmrs.module.logmanager.util.PagingInfo;
 
 /**
@@ -139,6 +140,18 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	}
 	
 	/**
+	 * @see org.openmrs.module.logmanager.LogManagerService#addAppender(org.openmrs.module.logmanager.AppenderProxy, java.lang.String)
+	 */
+	public void addAppender(AppenderProxy appender, String loggerName)
+			throws APIException {
+		
+		if (loggerName == null)
+			LogManager.getRootLogger().addAppender(appender.getTarget());
+		else
+			LogManager.getLogger(loggerName).addAppender(appender.getTarget());
+	}
+
+	/**
 	 * @see org.openmrs.module.logmanager.LogManagerService#deleteAppender(AppenderProxy)
 	 */
 	@SuppressWarnings("unchecked")
@@ -196,14 +209,14 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	}
 	
 	/**
-	 * @see LogManagerService#getAppenderEvent(org.openmrs.module.logmanager.AppenderProxy, int)
+	 * @see org.openmrs.module.logmanager.LogManagerService#getAppenderEvent(org.openmrs.module.logmanager.AppenderProxy, int)
 	 */
 	public LoggingEvent getAppenderEvent(AppenderProxy appender, int id) {
 		return getAppenderEvent(appender, id, null, 0);
 	}
 	
 	/**
-	 * @see LogManagerService#getAppenderEvent(AppenderProxy, int, List, int)
+	 * @see org.openmrs.module.logmanager.LogManagerService#getAppenderEvent(AppenderProxy, int, List, int)
 	 */
 	public LoggingEvent getAppenderEvent(AppenderProxy appender, int id, List<LoggingEvent> contextEvents, int contextCount) throws APIException {
 		List<LoggingEvent> events = getAppenderEvents(appender, null, 0, null, null, null);
@@ -234,28 +247,28 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	}
 
 	/**
-	 * @see LogManagerService#getMySQLVersion()
+	 * @see org.openmrs.module.logmanager.LogManagerService#getMySQLVersion()
 	 */
 	public String getMySQLVersion() throws APIException {
 		return dao.getMySQLVersion();
 	}
 	
 	/**
-	 * @see LogManagerService#getPreset(int)
+	 * @see org.openmrs.module.logmanager.LogManagerService#getPreset(int)
 	 */
 	public Preset getPreset(int presetId) throws APIException {
 		return dao.getPreset(presetId);
 	}
 
 	/**
-	 * @see LogManagerService#getPresets()
+	 * @see org.openmrs.module.logmanager.LogManagerService#getPresets()
 	 */
 	public List<Preset> getPresets() throws APIException {
 		return dao.getPresets();
 	}
 
 	/**
-	 * @see LogManagerService#savePreset(Preset)
+	 * @see org.openmrs.module.logmanager.LogManagerService#savePreset(Preset)
 	 */
 	public void saveCurrentLoggersAsPreset(Preset preset) throws APIException {	
 		Map<String, Integer> loggerMap = preset.getLoggerMap();
@@ -274,12 +287,19 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	}
 
 	/**
-	 * @see LogManagerService#deletePreset(Preset)
+	 * @see org.openmrs.module.logmanager.LogManagerService#deletePreset(Preset)
 	 */
 	public void deletePreset(Preset preset) throws APIException {
 		dao.deletePreset(preset);
 	}
 	
+	/**
+	 * @see org.openmrs.module.logmanager.LogManagerService#saveConfiguration()
+	 */
+	public void saveConfiguration() throws APIException {
+		Log4jUtils.saveExternalConfiguration();
+	}
+
 	/**
 	 * Gets all loggers with explicit level or appenders from an enumeration of loggers
 	 * @param loggersEnum the enumeration of loggers

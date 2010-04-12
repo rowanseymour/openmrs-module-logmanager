@@ -9,11 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.LogManager;
 import org.apache.log4j.spi.OptionHandler;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.AppenderProxy;
 import org.openmrs.module.logmanager.AppenderType;
+import org.openmrs.module.logmanager.Config;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LayoutType;
 import org.openmrs.module.logmanager.LogManagerService;
@@ -72,15 +72,13 @@ public class AppenderFormController extends SimpleFormController {
 			HttpServletResponse response, Object command, BindException errors)
 			throws Exception {
 		
+		LogManagerService svc = Context.getService(LogManagerService.class);
 		AppenderProxy appender = (AppenderProxy)command;
 		boolean exists = appender.isExisting();
 		
-		// Some appenders require initialising after options have been loaded
-		if (appender.isExisting()
-				&& appender.getType() != AppenderType.CONSOLE // Closing a console appender
-															  // will crash log4j...
-															  // so why is it even possible??
-				&& appender.isRestartOnUpdateRequired())
+		// Some appenders require initialising after options have been loaded. 
+		// However, closing a console appender will crash log4j...
+		if (exists && appender.getType() != AppenderType.CONSOLE && appender.isRestartOnUpdateRequired())
 			appender.getTarget().close();
 		
 		// Ensure appender exists and is synced with proxy
@@ -95,11 +93,12 @@ public class AppenderFormController extends SimpleFormController {
 			if (attachTo.isEmpty())
 				attachTo = request.getParameter("attachToOther");
 			
-			if (attachTo.equals("0"))
-				LogManager.getRootLogger().addAppender(appender.getTarget());
-			else
-				LogManager.getLogger(attachTo).addAppender(appender.getTarget());
+			svc.addAppender(appender, attachTo.equals("0") ? null : attachTo);
 		}
+		
+		// Save configuration if required
+		if (Config.getCurrent().isAutoSaveToExternalConfig())
+			svc.saveConfiguration();
 		
 		WebUtils.setInfoMessage(request, 
 				Constants.MODULE_ID + ".appenders." + (exists ? "editSuccess" : "createSuccess"), 

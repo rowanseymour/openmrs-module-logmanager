@@ -13,21 +13,22 @@
  */
 package org.openmrs.module.logmanager.util;
 
+import java.io.Writer;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.PatternLayout;
 import org.openmrs.module.Module;
 import org.openmrs.module.ModuleFactory;
-import org.openmrs.module.logmanager.AppenderProxy;
-import org.openmrs.module.logmanager.Config;
-import org.openmrs.module.logmanager.Constants;
-import org.openmrs.util.MemoryAppender;
+import org.w3c.dom.Document;
 
 /**
  * Various utility methods
@@ -35,35 +36,6 @@ import org.openmrs.util.MemoryAppender;
 public class LogManagerUtils {
 	
 	protected static final Log log = LogFactory.getLog(LogManagerUtils.class);
-	
-	/**
-	 * Ensure that the memory appender defined in OpenMRS's log4j.xml exists
-	 * and configure it to be used as the system appender
-	 * @return true if appender already existed
-	 */
-	public static boolean ensureSystemAppenderExists() {
-		boolean existed = true;
-		
-		String sysAppName = Config.getCurrent().getSystemAppenderName();
-		
-		MemoryAppender sysApp = (MemoryAppender)LogManager.getRootLogger().getAppender(sysAppName);
-		
-		// If appender wasn't found, recreate it
-		if (sysApp == null) {
-			sysApp = new MemoryAppender();
-			sysApp.setName(sysAppName);
-			sysApp.setLayout(new PatternLayout(Constants.DEF_LAYOUT_PATTERN));
-			sysApp.activateOptions();
-			LogManager.getRootLogger().addAppender(sysApp);
-			existed = false;
-		}
-		
-		// Store as static member of AppenderProxy so it can't be lost
-		// even if another module now modifies the root log4j logger
-		AppenderProxy.setSystemAppender(new AppenderProxy(sysApp));
-		
-		return existed;
-	}
 	
 	/**
 	 * Gets the value of a protected/private field of an object
@@ -106,5 +78,27 @@ public class LogManagerUtils {
 		for (Module module : modules)
 			modMap.put(module.getName(), module.getVersion());
 		return modMap;
+	}
+	
+	/**
+	 * Writes the given DOM document as XML to the given writer
+	 * @param document the document to write
+	 * @param writer the writer to write to
+	 */
+	public static void writeDOMDocument(Document document, Writer writer) {	
+		try {
+			// Get DOM source
+			DOMSource source = new DOMSource(document);
+			
+			// Create an identity transformer
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			transformer.setOutputProperty("indent", "yes");
+			
+			StreamResult result = new StreamResult(writer);
+			transformer.transform(source, result); 
+		} catch (Exception e) {
+			log.error(e);
+		}
 	}
 }

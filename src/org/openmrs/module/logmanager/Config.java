@@ -27,6 +27,7 @@ public class Config {
 	protected String systemAppenderName;
 	protected boolean alwaysRecreateSystemAppender;
 	protected boolean logUncaughtExceptions;
+	protected boolean autoSaveToExternalConfig;
 	
 	/**
 	 * The default constructor
@@ -60,6 +61,7 @@ public class Config {
 		systemAppenderName = loadStringOption(Constants.PROP_SYSTEM_APPENDER_NAME, Constants.DEF_SYSTEM_APPENDER_NAME);
 		alwaysRecreateSystemAppender = loadBooleanOption(Constants.PROP_ALWAYS_RECREATE_SYSTEM_APPENDER, Constants.DEF_ALWAYS_RECREATE_SYSTEM_APPENDER);
 		logUncaughtExceptions = loadBooleanOption(Constants.PROP_LOG_UNCAUGHT_EXCEPTIONS, Constants.DEF_LOG_UNCAUGHT_EXCEPTIONS);
+		autoSaveToExternalConfig = loadBooleanOption(Constants.PROP_AUTO_SAVE_TO_EXTERNAL_CONFIG, Constants.DEF_AUTO_SAVE_TO_EXTERNAL_CONFIG);
 	}
 	
 	/**
@@ -69,6 +71,7 @@ public class Config {
 		saveOption(Constants.PROP_SYSTEM_APPENDER_NAME, systemAppenderName);
 		saveOption(Constants.PROP_ALWAYS_RECREATE_SYSTEM_APPENDER, alwaysRecreateSystemAppender);
 		saveOption(Constants.PROP_LOG_UNCAUGHT_EXCEPTIONS, logUncaughtExceptions);
+		saveOption(Constants.PROP_AUTO_SAVE_TO_EXTERNAL_CONFIG, autoSaveToExternalConfig);
 	}
 	
 	/**
@@ -117,6 +120,22 @@ public class Config {
 	 */
 	public void setLogUncaughtExceptions(boolean logUncaughtExceptions) {
 		this.logUncaughtExceptions = logUncaughtExceptions;
+	}
+
+	/**
+	 * Sets whether should auto save config to external file
+	 * @return true if auto save should occur
+	 */
+	public boolean isAutoSaveToExternalConfig() {
+		return autoSaveToExternalConfig;
+	}
+
+	/**
+	 * Gets whether should auto save config to external file
+	 * @param autoSaveToExternalConfig true if auto save should occur
+	 */
+	public void setAutoSaveToExternalConfig(boolean autoSaveToExternalConfig) {
+		this.autoSaveToExternalConfig = autoSaveToExternalConfig;
 	}
 
 	/**
