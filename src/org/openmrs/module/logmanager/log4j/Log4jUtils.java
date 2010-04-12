@@ -35,6 +35,9 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * Utility class for log4j specific functions
+ */
 public class Log4jUtils {
 	
 	protected static final Log log = LogFactory.getLog(Log4jUtils.class);
@@ -47,59 +50,80 @@ public class Log4jUtils {
 	}
 	
 	/**
-	 * Parses the given input stream as an XML log4j configuration 
+	 * Loads the given input stream as a log4j configuration 
 	 * @param input the input stream
-	 * @return true if parsing was successful, else false
+	 * @return true if loading was successful, else false
 	 */
-	public static boolean parseConfiguration(InputStream input) {
-		// Parse as DOM document
+	public static boolean loadConfiguration(InputStream input) {
 		try {
+			// Parse as DOM document
 			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = docBuilderFactory.newDocumentBuilder();
 			Document log4jDoc = builder.parse(input);
-			DOMConfigurator.configure(log4jDoc.getDocumentElement());
-			
-			// Reloading the OpenMRS log4j.xml file may recreate the appender
-			// being used as the system appender, so reset the system appender
-			resetSystemAppender();
-
-			log.info("Parsed log4j configuration file");	
-			return true;
+	
+			return loadConfiguration(log4jDoc);
 			
 		} catch (Exception e) {
-			log.warn("Invalid log4j configuration file", e);
+			log.error("Unable to parse log4j configuration document", e);
 			return false;
 		}
 	}
 	
 	/**
-	 * Reloads the log4j configuration from OpenMRS core and started modules
-	 * @param the list of module ids ($ means the main OpenMRS config)
+	 * Loads the given DOM document as a log4j configuration 
+	 * @param document the DOM document
+	 * @return true if loading was successful, else false
 	 */
-	public static void reloadConfiguration(String[] moduleIds) {
-		if (moduleIds == null)
-			return;
+	public static boolean loadConfiguration(Document document) {
 		
-		for (String moduleId : moduleIds) {
-			if (moduleId.equals("$")) {
-				// Load main OpenMRS log4j.xml
+		DOMConfigurator.configure(document.getDocumentElement());
+		
+		// Reloading the OpenMRS log4j.xml file may recreate the appender
+		// being used as the system appender, so reset the system appender
+		resetSystemAppender();
+		
+		log.debug("Loaded log4j configuration from DOM document");
+		
+		return false;
+	}
+	
+	/**
+	 * Reloads the log4j configuration from OpenMRS core and started modules
+	 * @param loadMain true if the main OpenMRS log4j.xml should be loaded
+	 * @param the list of module ids from which log4j configs should be loaded
+	 * @return true if all log4j files were loaded successfully
+	 */
+	public static boolean loadConfiguration(boolean loadMain, String[] moduleIds) {
+		boolean allSucceeded = true;
+		
+		if (loadMain) {
+			// Load main OpenMRS log4j.xml
+			try {
 				URL url = Log4jUtils.class.getResource("/log4j.xml");
-				DOMConfigurator.configure(url);
-				
-				// Reloading the OpenMRS log4j.xml file may recreate the appender
-				// being used as the system appender, so reset the system appender
-				resetSystemAppender();
+				InputStream input = url.openStream();
+				loadConfiguration(input);
+			} catch (Exception e) {
+				allSucceeded = false;
+				log.error("Unable to read OpenMRS log4j configuration document", e);
 			}
-			else {
-				try {
-					Module module = ModuleFactory.getModuleById(moduleId);
-					if (module.getLog4j() != null)
-						DOMConfigurator.configure(module.getLog4j().getDocumentElement());
-				} catch (Exception e) {
-					log.error(e.getMessage());
+		}
+		
+		// Load from each specified module
+		for (String moduleId : moduleIds) {
+			try {
+				Module module = ModuleFactory.getModuleById(moduleId);
+				Document log4jDoc = module.getLog4j();
+				if (module.getLog4j() != null) {
+					if (!loadConfiguration(log4jDoc))
+						allSucceeded = false;
 				}
+			} catch (Exception e) {
+				log.error(e.getMessage());
+				allSucceeded = false;
 			}
-		}	
+		}
+		
+		return allSucceeded;
 	}
 	
 	/**

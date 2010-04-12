@@ -16,30 +16,43 @@
 </style>
 
 <script type="text/javascript">
+function logmgr_isArray(obj) {
+	return (obj.length != undefined);
+}
+
 // Called when the user clicks the select all/none links
 function logmgr_onToggleSelectAll(state) {
 	boxes = document.configForm.configs;
-	for (i = 0; i < boxes.length; i++)
-		boxes[i].checked = state;
+	// Could be a single checkbox or an array of checkboxes.. oh javscript..
+	if (logmgr_isArray(boxes)) {
+		for (i = 0; i < boxes.length; i++)
+			boxes[i].checked = state;
+	} else {
+		boxes.checked = state;
+	}
 
+	document.configForm.configMain.checked = state;
 	document.configForm.reload.disabled = !state;	
 }
 
 // Called when the user clicks a config checkbox
-function logmgr_onClickConfig(state) {
+function logmgr_onClickConfig() {
 	someSelected = false;
 	boxes = document.configForm.configs;
-	// Could be a single checkbox or an array of checkboxes.. oh javscript..
-	if (boxes.length == undefined)
-		someSelected = boxes.checked;
-	else {
+	if (logmgr_isArray(boxes)) {
 		for (i = 0; i < boxes.length; i++) {
 			if (boxes[i].checked) {
 				someSelected = true;
 				break;
 			}
 		}
+	} else {
+		someSelected = boxes.checked;
 	}
+
+	if (document.configForm.configMain.checked)
+		someSelected = true;
+	
 	document.configForm.reload.disabled = !someSelected;
 }
 </script>
@@ -100,7 +113,18 @@ function logmgr_onClickConfig(state) {
 				</small>
 			</th>
 		</tr>
+		
+		<%------------- MAIN OPENMRS CONFIG ------------%>
+		
+		<tr class="oddRow">
+			<td align="left" colspan="2">
+				<input type="checkbox" name="configMain" value="1" onclick="logmgr_onClickConfig()" />
+				${mainDisplay}
+			</td>
+		</tr>
 	
+		<%--------------- MODULE CONFIGS ---------------%>
+		
 		<c:forEach var="log4jConfig" items="${log4jConfigs}" varStatus="rowStatus">
 			<tr class="<c:choose><c:when test="${rowStatus.index % 2 == 0}">evenRow</c:when><c:otherwise>oddRow</c:otherwise></c:choose>">
 				<td align="left">
