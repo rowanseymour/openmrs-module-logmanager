@@ -17,11 +17,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
+import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.springframework.web.servlet.view.AbstractView;
 import org.w3c.dom.Document;
 
@@ -38,14 +35,8 @@ public class DocumentXmlView extends AbstractView {
 	protected void renderMergedOutputModel(Map model, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		
-		// Get DOM source document from model
+		// Get DOM document from model
 		Document document = (Document)model.get(sourceKey);
-		DOMSource source = new DOMSource(document);
-		
-		// Create an identity transformer
-		TransformerFactory transformerFactory = TransformerFactory.newInstance();
-		Transformer transformer = transformerFactory.newTransformer();
-		transformer.setOutputProperty("indent", "yes");
 
 		// Set response headers
 		response.setContentType("text/xml");
@@ -56,9 +47,8 @@ public class DocumentXmlView extends AbstractView {
 		response.setDateHeader("Expires", 0);
 		response.setHeader("Cache-Control", "no-cache");
 		
-		// Output document XML
-		StreamResult result = new StreamResult(response.getOutputStream());
-		transformer.transform(source, result); 
+		// Write document XML to response stream
+		LogManagerUtils.writeDOMDocument(document, response.getWriter());
 	}
 
 	/**

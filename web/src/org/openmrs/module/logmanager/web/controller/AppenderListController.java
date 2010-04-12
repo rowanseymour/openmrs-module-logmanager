@@ -24,6 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.AppenderProxy;
+import org.openmrs.module.logmanager.Config;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.util.LogManagerUtils;
@@ -77,9 +78,14 @@ public class AppenderListController extends ParameterizableViewController {
 	private void deleteAppender(int appenderId, HttpServletRequest request) {
 		LogManagerService svc = Context.getService(LogManagerService.class);
 		
+		// Find appender and delete it
 		AppenderProxy appender = svc.getAppender(appenderId);
 		if (appender != null)
 			svc.deleteAppender(appender);
+		
+		// Save configuration if required
+		if (Config.getCurrent().isAutoSaveToExternalConfig())
+			svc.saveConfiguration();
 		
 		String name = appender.getName();
 		if (name == null || name.isEmpty())
@@ -96,9 +102,14 @@ public class AppenderListController extends ParameterizableViewController {
 	private void clearAppender(int appenderId, HttpServletRequest request) {
 		LogManagerService svc = Context.getService(LogManagerService.class);
 		
+		// Find appender and clear it
 		AppenderProxy appender = svc.getAppender(appenderId);
 		if (appender.isClearable())
 			appender.clear();
+		
+		// Save configuration if required
+		if (Config.getCurrent().isAutoSaveToExternalConfig())
+			svc.saveConfiguration();
 		
 		String name = appender.getName();
 		if (name == null || name.isEmpty())

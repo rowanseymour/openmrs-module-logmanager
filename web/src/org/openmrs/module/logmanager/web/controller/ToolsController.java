@@ -156,7 +156,7 @@ public class ToolsController extends ParameterizableViewController {
 		String[] configs = request.getParameterValues("configs");
 		boolean loadMain = request.getParameter("mainConfig") != null;
 		
-		Log4jUtils.loadConfiguration(loadMain, configs);
+		Log4jUtils.loadInternalConfiguration(loadMain, configs);
 		
 		WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools.reloadSuccess", null);
 	}

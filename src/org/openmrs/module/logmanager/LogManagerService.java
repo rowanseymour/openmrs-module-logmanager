@@ -60,6 +60,14 @@ public interface LogManagerService extends OpenmrsService {
 	public Collection<AppenderProxy> getAppenders(boolean sorted) throws APIException;
 	
 	/**
+	 * Adds the specified appender to the logging system
+	 * @param appender the appender
+	 * @param logger the logger (null means root)
+	 */
+	@Authorized( { Constants.PRIV_MANAGE_SERVER_LOG })
+	public void addAppender(AppenderProxy appender, String loggerName) throws APIException;
+	
+	/**
 	 * Deletes the specified appender from the logging system
 	 * @param appender the appender
 	 * @throws APIException
@@ -147,4 +155,12 @@ public interface LogManagerService extends OpenmrsService {
 	 */
 	@Authorized( { Constants.PRIV_MANAGE_SERVER_LOG })
 	public void deletePreset(Preset preset) throws APIException;
+	
+	/**
+	 * Saves the current logging configuration
+	 * @param preset the preset to delete
+	 * @throws APIException
+	 */
+	@Authorized( { Constants.PRIV_MANAGE_SERVER_LOG })
+	public void saveConfiguration() throws APIException;
 }

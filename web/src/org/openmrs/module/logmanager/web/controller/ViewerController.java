@@ -32,7 +32,7 @@ import org.openmrs.module.logmanager.Config;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.QueryField;
-import org.openmrs.module.logmanager.util.LogManagerUtils;
+import org.openmrs.module.logmanager.log4j.Log4jUtils;
 import org.openmrs.module.logmanager.util.PagingInfo;
 import org.openmrs.module.logmanager.web.util.IconFactory;
 import org.openmrs.module.logmanager.web.util.WebUtils;
@@ -60,7 +60,7 @@ public class ViewerController extends ParameterizableViewController {
 		// Ensure that the memory appender defined in OpenMRS's log4j.xml exists
 		// and configure it to be used as the system appender
 		if (Config.getCurrent().isAlwaysRecreateSystemAppender())
-			if (!LogManagerUtils.ensureSystemAppenderExists())
+			if (!Log4jUtils.ensureSystemAppenderExists())
 				WebUtils.setErrorMessage(request, Constants.MODULE_ID + ".viewer.systemAppenderRecreatedMsg", null);
 		
 		Map<String, Object> model = new HashMap<String, Object>();

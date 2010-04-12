@@ -44,6 +44,12 @@
 		<description>Log uncaught exceptions</description>
 	</globalProperty>
 	
+	<globalProperty>
+		<property>@MODULE_ID@.autoSaveToExternalConfig</property>
+		<defaultValue>true</defaultValue>
+		<description>Auto save configuration to external file</description>
+	</globalProperty>
+	
 	<filter>
 		<filter-name>logMgrRequestFilter</filter-name>
 		<filter-class>@MODULE_PACKAGE@.web.filter.RequestProviderFilter</filter-class>
