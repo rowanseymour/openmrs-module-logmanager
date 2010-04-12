@@ -85,6 +85,7 @@ public class ToolsController extends ParameterizableViewController {
 		
 		List<Map<String, Object>> log4jConfigs = getLog4jConfigs();
 		model.put("log4jConfigs", log4jConfigs);
+		model.put("mainDisplay", "Main (log4j.xml)");
 		
 		Logger profilingLogger = LogManager.exists(Constants.LOGGER_API_PROFILING);
 		Level profilingLoggerLevel = (profilingLogger != null) ? profilingLogger.getEffectiveLevel() : null;
@@ -136,7 +137,7 @@ public class ToolsController extends ParameterizableViewController {
 			
 			// Parse as an XML configuration
 			try {
-				if (Log4jUtils.parseConfiguration(importFile.getInputStream()))
+				if (Log4jUtils.loadConfiguration(importFile.getInputStream()))
 					WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools.importSuccess", new Object[] { filename });
 				else
 					WebUtils.setErrorMessage(request, Constants.MODULE_ID + ".error.invalidConfigurationFile", new Object[] { filename });
@@ -153,7 +154,10 @@ public class ToolsController extends ParameterizableViewController {
 	 */
 	private void reloadConfiguration(HttpServletRequest request) {
 		String[] configs = request.getParameterValues("configs");
-		Log4jUtils.reloadConfiguration(configs);
+		boolean loadMain = request.getParameter("mainConfig") != null;
+		
+		Log4jUtils.loadConfiguration(loadMain, configs);
+		
 		WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools.reloadSuccess", null);
 	}
 	
@@ -163,11 +167,6 @@ public class ToolsController extends ParameterizableViewController {
 	 */
 	private List<Map<String, Object>> getLog4jConfigs() {
 		List<Map<String, Object>> log4jConfigs = new ArrayList<Map<String, Object>>();
-		
-		Map<String, Object> mainConfig = new HashMap<String, Object>();
-		mainConfig.put("display", "Main (log4j.xml)");
-		mainConfig.put("moduleId", "$");
-		log4jConfigs.add(mainConfig);
 		
 		// Load log4j config files from each module if they exist
 		Collection<Module> modules = ModuleFactory.getLoadedModules();
