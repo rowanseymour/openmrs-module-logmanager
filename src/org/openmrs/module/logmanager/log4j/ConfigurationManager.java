@@ -14,14 +14,12 @@
 package org.openmrs.module.logmanager.log4j;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,6 +27,7 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.xml.DOMConfigurator;
+import org.apache.log4j.xml.Log4jEntityResolver;
 import org.openmrs.module.Module;
 import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.logmanager.AppenderProxy;
@@ -37,7 +36,6 @@ import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.openmrs.util.MemoryAppender;
 import org.openmrs.util.OpenmrsUtil;
-import org.openmrs.web.WebConstants;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -45,11 +43,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * Utility class for log4j specific functions
+ * Configuration management for log4j
  */
-public class Log4jUtils {
+public class ConfigurationManager {
 	
-	protected static final Log log = LogFactory.getLog(Log4jUtils.class);
+	protected static final Log log = LogFactory.getLog(ConfigurationManager.class);
 	
 	/**
 	 * Clears the log4j configuration
@@ -59,31 +57,10 @@ public class Log4jUtils {
 	}
 	
 	/**
-	 * Loads the given input stream as a log4j configuration 
-	 * @param input the input stream
-	 * @return true if loading was successful, else false
-	 */
-	public static boolean loadConfiguration(InputStream input) {
-		try {
-			// Parse as DOM document
-			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder = docBuilderFactory.newDocumentBuilder();
-			Document log4jDoc = builder.parse(input);
-	
-			return loadConfiguration(log4jDoc);
-			
-		} catch (Exception e) {
-			log.error("Unable to parse log4j configuration document", e);
-			return false;
-		}
-	}
-	
-	/**
 	 * Loads the given DOM document as a log4j configuration 
 	 * @param document the DOM document
-	 * @return true if loading was successful, else false
 	 */
-	public static boolean loadConfiguration(Document document) {
+	public static void parseConfiguration(Document document) {	
 		
 		DOMConfigurator.configure(document.getDocumentElement());
 		
@@ -91,68 +68,88 @@ public class Log4jUtils {
 		// being used as the system appender, so reset the system appender
 		resetSystemAppender();
 		
-		log.debug("Loaded log4j configuration from DOM document");
-		
-		return false;
+		log.debug("Parsed log4j configuration from DOM document");
 	}
 	
+	/**
+	 * Loads the internal log4j configuration from OpenMRS source
+	 * @return true if configuration was loaded successfully
+	 */
+	public static boolean loadInternalConfiguration() {
+		try {
+			URL url = ConfigurationManager.class.getResource("/" + Constants.INTERNAL_CONFIG_NAME);	
+			Reader reader = new InputStreamReader(url.openStream());			
+			Document document = LogManagerUtils.readDocument(reader, new Log4jEntityResolver());
+			parseConfiguration(document);
+			reader.close();
+		} catch (Exception e) {
+			log.error("Unable to open internal log4j configuration", e);
+			return false;
+		}
+		return true;
+	}
+
 	/**
 	 * Loads the external log4j configuration file used by this module
 	 * @return true if file was loaded successfully
 	 */
 	public static boolean loadExternalConfiguration() {
-		// Get full path to external file
-		String path = getExternalConfigurationPath();
-		
-		File f = new File(path);
-		if (f.exists()) {
-			try {
-				FileInputStream input = new FileInputStream(f);
-				boolean result = loadConfiguration(input);
-				input.close();
-				return result;
-				
-			} catch (Exception e) {
-				log.warn("External log4j.xml exists but is not readable");
+		String path = OpenmrsUtil.getApplicationDataDirectory() + File.separator + Constants.EXTERNAL_CONFIG_NAME;
+		File file = new File(path);
+		if (!file.exists())
+			return false;
+			
+		try {
+			Reader reader = new FileReader(file);
+			Document document = LogManagerUtils.readDocument(reader, new Log4jEntityResolver());
+			reader.close();		
+			if (document == null)
 				return false;
-			}
+			parseConfiguration(document);
+			
+		} catch (Exception e) {
+			log.warn("Unable to open external log4j configuration");
+			return false;
 		}
-		return false;
+			
+		return true;
 	}
 	
 	/**
-	 * Loads the internal log4j configuration from OpenMRS core and started modules
-	 * @param loadMain true if the main OpenMRS log4j.xml should be loaded
-	 * @param the list of module ids from which log4j configs should be loaded
+	 * Saves the log4j configuration to the external file used by this module
+	 */
+	public static void saveExternalConfiguration() {
+		try {
+			String path = OpenmrsUtil.getApplicationDataDirectory() + File.separator + Constants.EXTERNAL_CONFIG_NAME;
+			FileWriter writer = new FileWriter(path);
+
+			Document document = DOMConfigurationBuilder.currentConfiguration();
+			LogManagerUtils.writeDocument(document, writer);
+			
+			writer.close();
+			
+		} catch (IOException e) {
+			log.error(e);
+		}
+	}
+	
+	/**
+	 * Loads log4j configurations from specified modules
+	 * @param the list of module ids from which configurations should be loaded
 	 * @return true if all log4j files were loaded successfully
 	 */
-	public static boolean loadInternalConfiguration(boolean loadMain, String[] moduleIds) {
+	public static boolean loadModuleConfigurations(String[] moduleIds) {
 		boolean allSucceeded = true;
-		
-		if (loadMain) {
-			// Load main OpenMRS log4j.xml
-			try {
-				URL url = Log4jUtils.class.getResource("/log4j.xml");
-				InputStream input = url.openStream();
-				loadConfiguration(input);
-				input.close();
-			} catch (Exception e) {
-				allSucceeded = false;
-				log.error("Unable to read OpenMRS log4j configuration document", e);
-			}
-		}
 		
 		// Load from each specified module
 		for (String moduleId : moduleIds) {
 			try {
 				Module module = ModuleFactory.getModuleById(moduleId);
 				Document log4jDoc = module.getLog4j();
-				if (module.getLog4j() != null) {
-					if (!loadConfiguration(log4jDoc))
-						allSucceeded = false;
-				}
+				if (module.getLog4j() != null)
+					parseConfiguration(log4jDoc);
 			} catch (Exception e) {
-				log.error(e.getMessage());
+				log.error(e);
 				allSucceeded = false;
 			}
 		}
@@ -161,41 +158,17 @@ public class Log4jUtils {
 	}
 	
 	/**
-	 * Saves the log4j configuration to the external file used by this module
-	 */
-	public static void saveExternalConfiguration() {
-		// Get full path to external file
-		String path = getExternalConfigurationPath();
-		try {
-			FileWriter writer = new FileWriter(path);
-
-			Document document = DOMConfigurationBuilder.createConfiguration();
-			LogManagerUtils.writeDOMDocument(document, writer);
-			
-		} catch (IOException e) {
-			log.error(e);
-		}
-	}
-	
-	/**
-	 * Gets the path of the external configuration file
-	 * @return the path
-	 */
-	public static String getExternalConfigurationPath() {
-		return OpenmrsUtil.getApplicationDataDirectory()
-				+ File.separator
-				+ WebConstants.WEBAPP_NAME
-				+ "-log4j.xml";		
-	}
-	
-	/**
-	 * Resets the system appender after configuration changes
+	 * Resets the system appender after configuration changes, i.e. check if an
+	 * appender exists in the log4j system with the system appender name, and if 
+	 * so update the static member of AppenderProxy
 	 */
 	public static void resetSystemAppender() {
 		String sysAppName = Config.getCurrent().getSystemAppenderName();
 		MemoryAppender sysApp = (MemoryAppender)LogManager.getRootLogger().getAppender(sysAppName);
-		if (sysApp != null)
+		if (sysApp != null) {
 			AppenderProxy.setSystemAppender(new AppenderProxy(sysApp));
+			log.info("Reset system appender (" + sysAppName + ")");
+		}
 	}
 	
 	/**
@@ -218,6 +191,8 @@ public class Log4jUtils {
 			sysApp.activateOptions();
 			LogManager.getRootLogger().addAppender(sysApp);
 			existed = false;
+			
+			log.warn("System appender (" + sysAppName + ") had to be recreated. This may be due to another module modifying the root logger.");
 		}
 		
 		// Store as static member of AppenderProxy so it can't be lost

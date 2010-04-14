@@ -41,7 +41,7 @@ import org.openmrs.module.logmanager.LoggerProxy;
 import org.openmrs.module.logmanager.Preset;
 import org.openmrs.module.logmanager.QueryField;
 import org.openmrs.module.logmanager.db.LogManagerDAO;
-import org.openmrs.module.logmanager.log4j.Log4jUtils;
+import org.openmrs.module.logmanager.log4j.ConfigurationManager;
 import org.openmrs.module.logmanager.util.PagingInfo;
 
 /**
@@ -297,7 +297,7 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	 * @see org.openmrs.module.logmanager.LogManagerService#saveConfiguration()
 	 */
 	public void saveConfiguration() throws APIException {
-		Log4jUtils.saveExternalConfiguration();
+		ConfigurationManager.saveExternalConfiguration();
 	}
 
 	/**

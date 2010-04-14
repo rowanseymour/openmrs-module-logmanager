@@ -14,6 +14,9 @@
 package org.openmrs.module.logmanager.web.controller;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -28,13 +31,13 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.apache.log4j.xml.Log4jEntityResolver;
 import org.openmrs.module.Module;
 import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.logmanager.Constants;
-import org.openmrs.module.logmanager.log4j.DOMConfigurationBuilder;
-import org.openmrs.module.logmanager.log4j.Log4jUtils;
+import org.openmrs.module.logmanager.log4j.ConfigurationManager;
+import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.openmrs.module.logmanager.web.util.WebUtils;
-import org.openmrs.module.logmanager.web.view.DocumentXmlView;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -47,8 +50,6 @@ import org.w3c.dom.Document;
 public class ToolsController extends ParameterizableViewController {
 	
 	protected static final Log log = LogFactory.getLog(ToolsController.class);
-	
-	protected DocumentXmlView documentXmlView;
 	
 	/**
 	 * @see org.springframework.web.servlet.mvc.ParameterizableViewController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
@@ -64,14 +65,8 @@ public class ToolsController extends ParameterizableViewController {
 			clearConfiguration(request);
 		else if (request.getParameter("import") != null)	
 			importConfiguration(request);	
-		else if (request.getParameter("export") != null) {	
-			Document document = DOMConfigurationBuilder.createConfiguration();	
-			model.put(documentXmlView.getSourceKey(), document);
-			
-			return new ModelAndView(documentXmlView, model);
-		}
 		else if (request.getParameter("reload") != null)
-			reloadConfiguration(request);
+			reloadConfigurations(request);
 			
 		// Special logger switches
 		else if (request.getParameter("startAPIProfiling") != null)		
@@ -85,7 +80,8 @@ public class ToolsController extends ParameterizableViewController {
 		
 		List<Map<String, Object>> log4jConfigs = getLog4jConfigs();
 		model.put("log4jConfigs", log4jConfigs);
-		model.put("mainDisplay", "Main (log4j.xml)");
+		model.put("internalConfigName", "log4j.xml");
+		model.put("externalConfigName", Constants.EXTERNAL_CONFIG_NAME);
 		
 		Logger profilingLogger = LogManager.exists(Constants.LOGGER_API_PROFILING);
 		Level profilingLoggerLevel = (profilingLogger != null) ? profilingLogger.getEffectiveLevel() : null;
@@ -107,7 +103,7 @@ public class ToolsController extends ParameterizableViewController {
 	 * @param request the http request
 	 */
 	private void clearConfiguration(HttpServletRequest request) {
-		Log4jUtils.clearConfiguration();
+		ConfigurationManager.clearConfiguration();
 		WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools.clearSuccess", null);
 	}
 	
@@ -137,11 +133,21 @@ public class ToolsController extends ParameterizableViewController {
 			
 			// Parse as an XML configuration
 			try {
-				if (Log4jUtils.loadConfiguration(importFile.getInputStream()))
-					WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools.importSuccess", new Object[] { filename });
+				Reader reader = new InputStreamReader(importFile.getInputStream());
+				Document document = LogManagerUtils.readDocument(reader, new Log4jEntityResolver());
+				reader.close();
+				
+				StringWriter str = new StringWriter();
+				LogManagerUtils.writeDocument(document, str);
+				
+				log.warn(str.toString());
+				
+				if (document != null) {
+					ConfigurationManager.parseConfiguration(document);
+					WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools.importSuccess", new Object[] { filename });	
+				}
 				else
 					WebUtils.setErrorMessage(request, Constants.MODULE_ID + ".error.invalidConfigurationFile", new Object[] { filename });
-					
 			} catch (IOException e) {
 				log.error(e);
 			}
@@ -152,13 +158,23 @@ public class ToolsController extends ParameterizableViewController {
 	 * Handles an reload configuration request
 	 * @param request the http request
 	 */
-	private void reloadConfiguration(HttpServletRequest request) {
-		String[] configs = request.getParameterValues("configs");
-		boolean loadMain = request.getParameter("mainConfig") != null;
+	private void reloadConfigurations(HttpServletRequest request) {	
+		boolean succeeded = true;
 		
-		Log4jUtils.loadInternalConfiguration(loadMain, configs);
+		if (request.getParameter("internalConfig") != null)
+			if (!ConfigurationManager.loadInternalConfiguration())
+				succeeded = false;
 		
-		WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools.reloadSuccess", null);
+		if (request.getParameter("externalConfig") != null)
+			if (!ConfigurationManager.loadExternalConfiguration())
+				succeeded = false;
+		
+		String[] moduleConfigs = request.getParameterValues("moduleConfigs");
+		if (moduleConfigs != null)
+			if (!ConfigurationManager.loadModuleConfigurations(moduleConfigs))
+				succeeded = false;
+		
+		WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools." + (succeeded ? "reloadSuccess" : "reloadError"), null);
 	}
 	
 	/**
@@ -173,10 +189,9 @@ public class ToolsController extends ParameterizableViewController {
 		for (Module module : modules) {
 			if (module.getLog4j() != null) {
 				Map<String, Object> modConfig = new HashMap<String, Object>();
-				modConfig.put("display", "Module: " + module.getModuleId() + " (log4j.xml)");
 				modConfig.put("moduleId", module.getModuleId());
-				modConfig.put("usesRoot", Log4jUtils.isModuleModifyingRoot(module));
-				modConfig.put("outsideNS", Log4jUtils.isModuleModifyingLoggerOutsideNS(module));
+				modConfig.put("usesRoot", ConfigurationManager.isModuleModifyingRoot(module));
+				modConfig.put("outsideNS", ConfigurationManager.isModuleModifyingLoggerOutsideNS(module));
 				log4jConfigs.add(modConfig);
 			}
 		}
@@ -198,13 +213,5 @@ public class ToolsController extends ParameterizableViewController {
 	 */
 	private void setHibernateSQLLogging(boolean on) {
 		LogManager.getLogger("org.hibernate.SQL").setLevel(on ? Level.DEBUG : Level.OFF);
-	}
-
-	/**
-	 * Sets the document XML view used to export the log4j configuration
-	 * @param xsltView the xsltView to set
-	 */
-	public void setDocumentXmlView(DocumentXmlView documentXmlView) {
-		this.documentXmlView = documentXmlView;
 	}
 }

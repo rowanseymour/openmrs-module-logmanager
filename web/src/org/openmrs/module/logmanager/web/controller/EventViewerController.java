@@ -38,9 +38,9 @@ import org.springframework.web.servlet.mvc.ParameterizableViewController;
 /**
  * Controller for event view page
  */
-public class EventController extends ParameterizableViewController {
+public class EventViewerController extends ParameterizableViewController {
 	
-	protected static final Log log = LogFactory.getLog(EventController.class);
+	protected static final Log log = LogFactory.getLog(EventViewerController.class);
 	
 	protected EventReportView reportView;
 	
