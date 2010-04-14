@@ -13,6 +13,8 @@
  */
 package org.openmrs.module.logmanager;
 
+import org.openmrs.web.WebConstants;
+
 /**
  * Constants used by the log manager module
  */
@@ -42,6 +44,8 @@ public class Constants {
 	public static final int MAX_APPENDER_PORT = 65535;
 	public static final String DEF_APPENDER_SOURCE = "OpenMRS";
 	public static final int MAX_APPENDER_BUFFER_SIZE = 10000;
+	public static final String INTERNAL_CONFIG_NAME = "log4j.xml";
+	public static final String EXTERNAL_CONFIG_NAME = WebConstants.WEBAPP_NAME + "-log4j.xml";
 	
 	// Other constants
 	public static final int EVENT_REPORT_PREV_EVENTS = 5;

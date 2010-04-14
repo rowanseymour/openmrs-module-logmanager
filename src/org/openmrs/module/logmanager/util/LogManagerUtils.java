@@ -13,12 +13,15 @@
  */
 package org.openmrs.module.logmanager.util;
 
+import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -29,6 +32,8 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.Module;
 import org.openmrs.module.ModuleFactory;
 import org.w3c.dom.Document;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
 
 /**
  * Various utility methods
@@ -81,11 +86,37 @@ public class LogManagerUtils {
 	}
 	
 	/**
+	 * Reads a DOM document from the given reader
+	 * @param reader the reader to read from
+	 * @param resolver the entity resolver (may be null)
+	 * @return the document or null if document could not be read
+	 */
+	public static Document readDocument(Reader reader, EntityResolver resolver) {
+		try {
+			// Get input source
+			InputSource source = new InputSource(reader);
+			
+			// Read into parser
+			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = docBuilderFactory.newDocumentBuilder();
+			
+			// Optionally set the entity resolver
+			if (resolver != null)
+				builder.setEntityResolver(resolver); 
+
+			return builder.parse(source);
+		} catch (Exception e) {
+			log.error(e);
+			return null;
+		}
+	}
+	
+	/**
 	 * Writes the given DOM document as XML to the given writer
 	 * @param document the document to write
 	 * @param writer the writer to write to
 	 */
-	public static void writeDOMDocument(Document document, Writer writer) {	
+	public static void writeDocument(Document document, Writer writer) {	
 		try {
 			// Get DOM source
 			DOMSource source = new DOMSource(document);

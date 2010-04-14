@@ -23,7 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.logmanager.Config;
 import org.openmrs.module.logmanager.Constants;
-import org.openmrs.module.logmanager.log4j.Log4jUtils;
+import org.openmrs.module.logmanager.log4j.ConfigurationManager;
 import org.openmrs.module.logmanager.web.util.WebUtils;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
@@ -34,9 +34,9 @@ import org.springframework.web.servlet.view.RedirectView;
 /**
  * Controller for configuration page
  */
-public class ConfigController extends SimpleFormController {
+public class ModuleConfigController extends SimpleFormController {
 	
-	protected static final Log log = LogFactory.getLog(ConfigController.class);
+	protected static final Log log = LogFactory.getLog(ModuleConfigController.class);
 	
 	/**
 	 * @see org.springframework.web.servlet.mvc.SimpleFormController#onSubmit(javax.servlet.http.HttpServletRequest,
@@ -53,7 +53,7 @@ public class ConfigController extends SimpleFormController {
 		Config.setCurrent(config);
 			
 		// System appender name may have been changed
-		Log4jUtils.ensureSystemAppenderExists();
+		ConfigurationManager.ensureSystemAppenderExists();
 		
 		WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".config.saveSuccess", null);
 		

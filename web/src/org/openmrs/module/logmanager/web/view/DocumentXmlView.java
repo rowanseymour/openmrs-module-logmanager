@@ -27,32 +27,38 @@ import org.w3c.dom.Document;
  */
 public class DocumentXmlView extends AbstractView {
 	
-	protected String filename;
-	protected String sourceKey;
+	protected String filenameKey = "filename";
+	protected String sourceKey = "source";
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void renderMergedOutputModel(Map model, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		
-		// Get DOM document from model
-		Document document = (Document)model.get(sourceKey);
-
-		// Set response headers
-		response.setContentType("text/xml");
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
-		
 		// Disable caching
 		response.setHeader("Pragma", "No-cache");
 		response.setDateHeader("Expires", 0);
 		response.setHeader("Cache-Control", "no-cache");
 		
-		// Write document XML to response stream
-		LogManagerUtils.writeDOMDocument(document, response.getWriter());
+		// Get document and filename from model
+		Document document = (Document)model.get(sourceKey);
+		String filename = (String)model.get(filenameKey);
+
+		if (document != null) {
+			// Set response headers
+			response.setContentType("text/xml");
+			if (filename != null)
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+			
+			// Write document XML to response stream
+			LogManagerUtils.writeDocument(document, response.getWriter());
+		}
+		else
+			response.getWriter().write("ERROR: Document is null");
 	}
 
 	/**
-	 * Gets the source key used to access the source document in the model
+	 * Gets the key used to access the source document in the model
 	 * @return the source key
 	 */
 	public String getSourceKey() {
@@ -60,7 +66,7 @@ public class DocumentXmlView extends AbstractView {
 	}
 
 	/**
-	 * Sets the source key used to access the source document in the model
+	 * Sets the key used to access the source document in the model
 	 * @param sourceKey the source key
 	 */
 	public void setSourceKey(String sourceKey) {
@@ -68,20 +74,18 @@ public class DocumentXmlView extends AbstractView {
 	}
 
 	/**
-	 * Gets the filename of the XML response
-	 * @return the filename
+	 * Gets the key used to access the filename in the model
+	 * @return the filename key
 	 */
-	public String getFilename() {
-		return filename;
+	public String getFilenameKey() {
+		return filenameKey;
 	}
 
 	/**
-	 * Sets the filename of the XML response
-	 * @param filename the filename
+	 * Sets the key used to access the filename in the model
+	 * @param filenameKey the filename key
 	 */
-	public void setFilename(String filename) {
-		this.filename = filename;
+	public void setFilenameKey(String filenameKey) {
+		this.filenameKey = filenameKey;
 	}
-	
-	
 }

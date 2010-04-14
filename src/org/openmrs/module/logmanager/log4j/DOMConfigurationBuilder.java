@@ -59,13 +59,11 @@ public class DOMConfigurationBuilder {
 	}
 	
 	/**
-	 * Gets a DOM representation of the current logging configuration
-	 * @return the DOM document
+	 * Builds a document based on an empty configuration
+	 * @return the document
 	 */
-	public static Document createConfiguration() {	
-		LogManagerService svc = Context.getService(LogManagerService.class);
-		
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	public static Document emptyConfiguration() {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();	
 		try {
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = builder.newDocument();
@@ -75,28 +73,45 @@ public class DOMConfigurationBuilder {
 			documentElem.setPrefix(LOG4J_TAG_PREFIX);			
 			document.appendChild(documentElem);
 			
-			// Create appender elements
-			for (AppenderProxy appender : svc.getAppenders(false)) {
-				String appenderName = appender.getName();
-				// We can't save appenders with no name...
-				if (appenderName != null && !appenderName.isEmpty())
-					addAppenderElement(document, documentElem, appender);
-			}
-
-			// Create logger elements
-			for (LoggerProxy logger : svc.getLoggers(false))
-				addLoggerElement(document, documentElem, logger);
-
-			
-			// Create root logger element
-			addLoggerElement(document, documentElem, LoggerProxy.getRootLogger());
-
 			return document;
-			
 		} catch (ParserConfigurationException e) {
 			log.error(e);
+			return null;
+		}	
+	}
+	
+	/**
+	 * Gets a DOM representation of the current logging configuration
+	 * @return the DOM document
+	 */
+	public static Document currentConfiguration() {	
+		LogManagerService svc = Context.getService(LogManagerService.class);
+
+		// Build empty configuration document
+		Document document = emptyConfiguration();
+		if (document == null)
+			return null;
+	
+		// Get document element
+		Element documentElem = document.getDocumentElement();
+		
+		// Create appender elements
+		for (AppenderProxy appender : svc.getAppenders(false)) {
+			String appenderName = appender.getName();
+			// We can't save appenders with no name...
+			if (appenderName != null && !appenderName.isEmpty())
+				addAppenderElement(document, documentElem, appender);
 		}
-		return null;
+
+		// Create logger elements
+		for (LoggerProxy logger : svc.getLoggers(false))
+			addLoggerElement(document, documentElem, logger);
+
+		
+		// Create root logger element
+		addLoggerElement(document, documentElem, LoggerProxy.getRootLogger());
+
+		return document;
 	}
 	
 	/**

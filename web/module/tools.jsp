@@ -87,7 +87,10 @@ function logmgr_onClickConfig() {
 		</tr>
 		<tr>
 			<td>			
-				<input type="submit" name="export" class="switchButton" value="<spring:message code="${moduleId}.tools.export" />" />
+				<input type="button" name="export" class="switchButton"
+					value="<spring:message code="${moduleId}.tools.export" />"
+					onclick="location.href='configViewer.htm?src=current'"
+				/>
 			</td>
 			<td><spring:message code="${moduleId}.tools.exportMsg" /></td>
 		</tr>
@@ -114,12 +117,23 @@ function logmgr_onClickConfig() {
 			</th>
 		</tr>
 		
-		<%------------- MAIN OPENMRS CONFIG ------------%>
+		<%------------- INTERNAL OPENMRS CONFIG ------------%>
 		
 		<tr class="oddRow">
 			<td align="left" colspan="2">
-				<input type="checkbox" name="configMain" value="1" onclick="logmgr_onClickConfig()" />
-				${mainDisplay}
+				<input type="checkbox" name="internalConfig" value="1" onclick="logmgr_onClickConfig()" />
+				<spring:message code="${moduleId}.internal" />
+				(<a href="configViewer.htm?src=internal">${internalConfigName}</a>)
+			</td>
+		</tr>
+		
+		<%------------- EXTERNAL OPENMRS CONFIG ------------%>
+		
+		<tr class="oddRow">
+			<td align="left" colspan="2">
+				<input type="checkbox" name="externalConfig" value="1" onclick="logmgr_onClickConfig()" />
+				<spring:message code="${moduleId}.external" />
+				(<a href="configViewer.htm?src=external">${externalConfigName}</a>)
 			</td>
 		</tr>
 	
@@ -128,8 +142,10 @@ function logmgr_onClickConfig() {
 		<c:forEach var="log4jConfig" items="${log4jConfigs}" varStatus="rowStatus">
 			<tr class="<c:choose><c:when test="${rowStatus.index % 2 == 0}">evenRow</c:when><c:otherwise>oddRow</c:otherwise></c:choose>">
 				<td align="left">
-					<input type="checkbox" name="configs" value="${log4jConfig.moduleId}" onclick="logmgr_onClickConfig()" />
-					${log4jConfig.display}
+					<input type="checkbox" name="moduleConfigs" value="${log4jConfig.moduleId}" onclick="logmgr_onClickConfig()" />
+					<spring:message code="${moduleId}.module" />:
+					${log4jConfig.moduleId}
+					(<a href="configViewer.htm?src=${log4jConfig.moduleId}">${internalConfigName}</a>)
 				</td>
 				<td align="left">
 					<c:choose>

@@ -26,12 +26,13 @@
 				<prop key="module/@MODULE_ID@/logger.form">logMgrLoggerFormController</prop>
 				<prop key="module/@MODULE_ID@/appender.list">logMgrAppenderListController</prop>
 				<prop key="module/@MODULE_ID@/appender.form">logMgrAppenderFormController</prop>
-				<prop key="module/@MODULE_ID@/viewer.htm">logMgrViewerController</prop>
-				<prop key="module/@MODULE_ID@/event.htm">logMgrEventController</prop>
+				<prop key="module/@MODULE_ID@/viewer.htm">logMgrLogViewerController</prop>
+				<prop key="module/@MODULE_ID@/event.htm">logMgrEventViewerController</prop>
 				<prop key="module/@MODULE_ID@/tools.htm">logMgrToolsController</prop>
-				<prop key="module/@MODULE_ID@/config.htm">logMgrConfigController</prop>
+				<prop key="module/@MODULE_ID@/configViewer.htm">logMgrConfigViewerController</prop>
+				<prop key="module/@MODULE_ID@/config.htm">logMgrModuleConfigController</prop>
 				
-				<prop key="admin/maintenance/serverLog.form">logMgrViewerController</prop>
+				<prop key="admin/maintenance/serverLog.form">logMgrLogViewerController</prop>
 			</props>
 		</property>
 	</bean>
@@ -42,10 +43,7 @@
 	
 	<bean id="logMgrEventReportView" class="@MODULE_PACKAGE@.web.view.EventReportView" />
 	
-	<bean id="logMgrDocumentXmlView" class="@MODULE_PACKAGE@.web.view.DocumentXmlView">
-		<property name="filename"><value>log4j.xml</value></property>
-		<property name="sourceKey"><value>source</value></property>
-	</bean>
+	<bean id="logMgrDocumentXmlView" class="@MODULE_PACKAGE@.web.view.DocumentXmlView" />
 
 	<!-- ========================= Controllers ========================= -->
 	
@@ -79,7 +77,7 @@
 		</property>
 	</bean>
 	
-	<bean id="logMgrViewerController" class="@MODULE_PACKAGE@.web.controller.ViewerController">
+	<bean id="logMgrLogViewerController" class="@MODULE_PACKAGE@.web.controller.LogViewerController">
 		<property name="viewName">
 			<value>module/@MODULE_ID@/viewer</value>
 		</property>
@@ -88,7 +86,7 @@
 		</property>
 	</bean>
 	
-	<bean id="logMgrEventController" class="@MODULE_PACKAGE@.web.controller.EventController">
+	<bean id="logMgrEventViewerController" class="@MODULE_PACKAGE@.web.controller.EventViewerController">
 		<property name="viewName">
 			<value>module/@MODULE_ID@/event</value>
 		</property>
@@ -101,12 +99,9 @@
 		<property name="viewName">
 			<value>module/@MODULE_ID@/tools</value>
 		</property>
-		<property name="documentXmlView">
-			<ref bean="logMgrDocumentXmlView" />
-		</property>
 	</bean>
 	
-	<bean id="logMgrConfigController" class="@MODULE_PACKAGE@.web.controller.ConfigController">
+	<bean id="logMgrModuleConfigController" class="@MODULE_PACKAGE@.web.controller.ModuleConfigController">
 		<property name="commandName">
 			<value>config</value>
 		</property>
@@ -118,6 +113,12 @@
 		</property>
 		<property name="validator">
 			<bean class="@MODULE_PACKAGE@.validator.ConfigValidator" />
+		</property>
+	</bean>
+	
+	<bean id="logMgrConfigViewerController" class="@MODULE_PACKAGE@.web.controller.ConfigViewerController">
+		<property name="xmlView">
+			<ref bean="logMgrDocumentXmlView" />
 		</property>
 	</bean>
 

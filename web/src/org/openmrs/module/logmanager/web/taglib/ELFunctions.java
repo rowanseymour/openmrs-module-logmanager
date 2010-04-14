@@ -76,12 +76,12 @@ public class ELFunctions {
 	}
 	
 	/**
-	 * Formats a logging event message by replacing newlines and tabs
+	 * Formats a logging event message by replacing newlines and escaping HTML chars
 	 * @param the message
 	 * @return the formatted message string
-	 */
+	 */ 
 	public static String formatMessage(String msg) {
-		return msg.replace("\n", "<br/>");
+		return msg.replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br/>");
 	}
 	
 	/**

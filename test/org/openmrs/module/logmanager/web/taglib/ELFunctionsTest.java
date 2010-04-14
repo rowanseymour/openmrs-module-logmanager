@@ -58,10 +58,10 @@ public class ELFunctionsTest {
 	@Test
 	public void formatMessage() {
 		String res1 = ELFunctions.formatMessage("Hello World");
-		String res2 = ELFunctions.formatMessage("X\nX");
+		String res2 = ELFunctions.formatMessage("X\nX<X>X");
 		
 		Assert.assertEquals("Hello World", res1);
-		Assert.assertEquals("X<br/>X", res2);
+		Assert.assertEquals("X<br/>X&lt;X&gt;X", res2);
 	}
 	
 	@Test
