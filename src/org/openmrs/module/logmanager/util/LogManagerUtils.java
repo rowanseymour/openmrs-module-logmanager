@@ -13,6 +13,7 @@
  */
 package org.openmrs.module.logmanager.util;
 
+import java.io.File;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Field;
@@ -153,5 +154,25 @@ public class LogManagerUtils {
 	public static void injectEvent(String loggerName, Level level, String message) {	
 		LoggerProxy logger = LoggerProxy.getLogger(loggerName, true);
 		logger.log(level, message);	
+	}
+	
+	/**
+	 * Checks whether a path is writable by the current process, even if it doesn't exist
+	 * Thanks to a bug in Windows/Java http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6203387
+	 * this won't check NTFS ACLs so may return incorrect result on Windows
+	 * @param path the path to check
+	 * @return true if file is writable, else false
+	 */
+	public static boolean isPathWritable(String path) {
+		if (path == null || path.isEmpty())
+			return false;
+		
+		File file = new File(path);
+		if (file.exists())
+			return file.canWrite();
+		else if (file.getParentFile() != null)
+			return file.getParentFile().canWrite();
+		else
+			return false;
 	}
 }

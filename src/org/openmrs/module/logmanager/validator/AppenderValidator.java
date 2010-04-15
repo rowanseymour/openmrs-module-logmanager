@@ -21,6 +21,7 @@ import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.log4j.AppenderProxy;
 import org.openmrs.module.logmanager.log4j.LayoutProxy;
 import org.openmrs.module.logmanager.log4j.LayoutType;
+import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -98,11 +99,16 @@ public class AppenderValidator implements Validator {
 	 * @param errors the errors
 	 */
 	private void validateFileAppender(AppenderProxy appender, Errors errors) {	
-		// TODO check if file is writable
-		validateStringPropertyNotEmpty(appender, "file", errors);
+		// Check if file is writable
+		String file = (String)appender.getProperty("file");
 		
-		validatePropertyRange(appender, "bufferSize",
-				1, Constants.MAX_FILE_APPENDER_BUFFER_SIZE, errors);
+		// Check if file path is not empty
+		if (file == null || file.isEmpty())
+			errors.rejectValue("properties.file", Constants.MODULE_ID + ".error.empty");
+		else if (!LogManagerUtils.isPathWritable(file))
+			errors.rejectValue("properties.file", Constants.MODULE_ID + ".error.fileNotWritable");
+		
+		validatePropertyRange(appender, "bufferSize", 1, Constants.MAX_FILE_APPENDER_BUFFER_SIZE, errors);
 	}
 	
 	/**
