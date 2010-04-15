@@ -24,10 +24,10 @@ public class Options {
 	
 	protected static Options config;
 	
+	protected boolean loadExternalConfigOnStartup;
 	protected String systemAppenderName;
 	protected boolean alwaysRecreateSystemAppender;
 	protected boolean logUncaughtExceptions;
-	protected boolean autoSaveToExternalConfig;
 	
 	/**
 	 * The default constructor
@@ -58,22 +58,38 @@ public class Options {
 	 * Loads the configuration from global properties
 	 */
 	public void load() {
+		loadExternalConfigOnStartup = loadBooleanOption(Constants.PROP_LOAD_EXTERNAL_CONFIG_ON_STARTUP, Constants.DEF_LOAD_EXTERNAL_CONFIG_ON_STARTUP);
 		systemAppenderName = loadStringOption(Constants.PROP_SYSTEM_APPENDER_NAME, Constants.DEF_SYSTEM_APPENDER_NAME);
 		alwaysRecreateSystemAppender = loadBooleanOption(Constants.PROP_ALWAYS_RECREATE_SYSTEM_APPENDER, Constants.DEF_ALWAYS_RECREATE_SYSTEM_APPENDER);
 		logUncaughtExceptions = loadBooleanOption(Constants.PROP_LOG_UNCAUGHT_EXCEPTIONS, Constants.DEF_LOG_UNCAUGHT_EXCEPTIONS);
-		autoSaveToExternalConfig = loadBooleanOption(Constants.PROP_AUTO_SAVE_TO_EXTERNAL_CONFIG, Constants.DEF_AUTO_SAVE_TO_EXTERNAL_CONFIG);
 	}
 	
 	/**
 	 * Saves the configuration to global properties
 	 */
 	public void save() {
+		saveOption(Constants.PROP_LOAD_EXTERNAL_CONFIG_ON_STARTUP, loadExternalConfigOnStartup);
 		saveOption(Constants.PROP_SYSTEM_APPENDER_NAME, systemAppenderName);
 		saveOption(Constants.PROP_ALWAYS_RECREATE_SYSTEM_APPENDER, alwaysRecreateSystemAppender);
 		saveOption(Constants.PROP_LOG_UNCAUGHT_EXCEPTIONS, logUncaughtExceptions);
-		saveOption(Constants.PROP_AUTO_SAVE_TO_EXTERNAL_CONFIG, autoSaveToExternalConfig);
 	}
 	
+	/**
+	 * Gets whether the external configuration should be loaded on module startup
+	 * @return true if configuration should be loaded
+	 */
+	public boolean isLoadExternalConfigOnStartup() {
+		return loadExternalConfigOnStartup;
+	}
+
+	/**
+	 * Sets whether the external configuration should be loaded on module startup
+	 * @param loadExternalConfigOnStartup true if configuration should be loaded
+	 */
+	public void setLoadExternalConfigOnStartup(boolean loadExternalConfigOnStartup) {
+		this.loadExternalConfigOnStartup = loadExternalConfigOnStartup;
+	}
+
 	/**
 	 * Gets the name of the system appender
 	 * @return the system appender name
@@ -120,22 +136,6 @@ public class Options {
 	 */
 	public void setLogUncaughtExceptions(boolean logUncaughtExceptions) {
 		this.logUncaughtExceptions = logUncaughtExceptions;
-	}
-
-	/**
-	 * Sets whether should auto save config to external file
-	 * @return true if auto save should occur
-	 */
-	public boolean isAutoSaveToExternalConfig() {
-		return autoSaveToExternalConfig;
-	}
-
-	/**
-	 * Gets whether should auto save config to external file
-	 * @param autoSaveToExternalConfig true if auto save should occur
-	 */
-	public void setAutoSaveToExternalConfig(boolean autoSaveToExternalConfig) {
-		this.autoSaveToExternalConfig = autoSaveToExternalConfig;
 	}
 
 	/**

@@ -30,18 +30,17 @@ public class ModuleActivator implements Activator {
 	 * @see org.openmrs.module.Activator#startup()
 	 */
 	public void startup() {
-		log.info("Starting log manager module");
+		log.info("Starting log manager module...");
 		
 		// Look for external log4j.xml to load
-		ConfigurationManager.loadExternalConfiguration();
+		if (Options.getCurrent().isLoadExternalConfigOnStartup())
+			ConfigurationManager.loadExternalConfiguration();
 		
 		// Ensure that the memory appender defined in OpenMRS's log4j.xml exists
 		// and configure it to be used as the system appender
 		if (Options.getCurrent().isAlwaysRecreateSystemAppender())
-			ConfigurationManager.ensureSystemAppenderExists();
-				
+			ConfigurationManager.ensureSystemAppenderExists();			
 	}
-	
 
 	/**
 	 * @see org.openmrs.module.Activator#shutdown()

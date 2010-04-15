@@ -300,7 +300,15 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	 * @see org.openmrs.module.logmanager.LogManagerService#saveConfiguration()
 	 */
 	public void saveConfiguration() throws APIException {
-		ConfigurationManager.saveExternalConfiguration();
+		if (!ConfigurationManager.saveExternalConfiguration())
+			throw new APIException("Unable to save configuration");
+	}
+	
+	/**
+	 * @see org.openmrs.module.logmanager.LogManagerService#saveConfiguration()
+	 */
+	public void clearConfiguration() throws APIException {
+		ConfigurationManager.clearConfiguration();
 	}
 
 	/**

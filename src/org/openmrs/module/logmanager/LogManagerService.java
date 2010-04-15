@@ -159,10 +159,16 @@ public interface LogManagerService extends OpenmrsService {
 	public void deletePreset(Preset preset) throws APIException;
 	
 	/**
-	 * Saves the current logging configuration
-	 * @param preset the preset to delete
+	 * Saves the current logging configuration to the external file
 	 * @throws APIException
 	 */
 	@Authorized( { Constants.PRIV_MANAGE_SERVER_LOG })
 	public void saveConfiguration() throws APIException;
+	
+	/**
+	 * Clears the current logging configuration
+	 * @throws APIException
+	 */
+	@Authorized( { Constants.PRIV_MANAGE_SERVER_LOG })
+	public void clearConfiguration() throws APIException;
 }

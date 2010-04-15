@@ -67,6 +67,14 @@ function logmgr_onClickConfig() {
 	<table cellpadding="2" cellspacing="0" width="100%">
 		<tr>
 			<td width="150">			
+				<input type="submit" name="save" class="switchButton"
+					value="<spring:message code="general.save" />" 
+				/>
+			</td>
+			<td><spring:message code="${moduleId}.config.saveMsg" arguments="${externalConfigPath}" /></td>
+		</tr>
+		<tr>
+			<td>			
 				<input type="submit" name="clear" class="switchButton"
 					value="<spring:message code="${moduleId}.config.clear" />" 
 					onclick="return confirm('<spring:message code="${moduleId}.config.confirmClear" />')"

@@ -27,6 +27,12 @@
 	</privilege>
 	
 	<globalProperty>
+		<property>@MODULE_ID@.loadExternalConfigOnStartup</property>
+		<defaultValue>true</defaultValue>
+		<description>Load external configuration on startup</description>
+	</globalProperty>
+	
+	<globalProperty>
 		<property>@MODULE_ID@.systemAppenderName</property>
 		<defaultValue>MEMORY_APPENDER</defaultValue>
 		<description>System appender name</description>
@@ -42,12 +48,6 @@
 		<property>@MODULE_ID@.logUncaughtExceptions</property>
 		<defaultValue>true</defaultValue>
 		<description>Log uncaught exceptions</description>
-	</globalProperty>
-	
-	<globalProperty>
-		<property>@MODULE_ID@.autoSaveToExternalConfig</property>
-		<defaultValue>true</defaultValue>
-		<description>Auto save configuration to external file</description>
 	</globalProperty>
 	
 	<filter>

@@ -11,7 +11,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.spi.OptionHandler;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.logmanager.Options;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.log4j.AppenderProxy;
@@ -97,10 +96,6 @@ public class AppenderFormController extends SimpleFormController {
 			
 			svc.addAppender(appender, attachTo.equals("0") ? null : attachTo);
 		}
-		
-		// Save configuration if required
-		if (Options.getCurrent().isAutoSaveToExternalConfig())
-			svc.saveConfiguration();
 		
 		WebUtils.setInfoMessage(request, 
 				Constants.MODULE_ID + ".appenders." + (exists ? "editSuccess" : "createSuccess"), 
