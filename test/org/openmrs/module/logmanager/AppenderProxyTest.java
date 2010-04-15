@@ -18,6 +18,8 @@ import junit.framework.Assert;
 import org.apache.log4j.ConsoleAppender;
 import org.junit.Before;
 import org.junit.Test;
+import org.openmrs.module.logmanager.log4j.AppenderProxy;
+import org.openmrs.module.logmanager.log4j.AppenderType;
 
 /**
  * Test cases for the class AppenderProxy

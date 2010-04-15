@@ -34,14 +34,14 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
 import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
-import org.openmrs.module.logmanager.AppenderProxy;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
-import org.openmrs.module.logmanager.LoggerProxy;
 import org.openmrs.module.logmanager.Preset;
 import org.openmrs.module.logmanager.QueryField;
 import org.openmrs.module.logmanager.db.LogManagerDAO;
+import org.openmrs.module.logmanager.log4j.AppenderProxy;
 import org.openmrs.module.logmanager.log4j.ConfigurationManager;
+import org.openmrs.module.logmanager.log4j.LoggerProxy;
 import org.openmrs.module.logmanager.util.PagingInfo;
 
 /**
@@ -140,7 +140,7 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	}
 	
 	/**
-	 * @see org.openmrs.module.logmanager.LogManagerService#addAppender(org.openmrs.module.logmanager.AppenderProxy, java.lang.String)
+	 * @see org.openmrs.module.logmanager.LogManagerService#addAppender(org.openmrs.module.logmanager.log4j.AppenderProxy, java.lang.String)
 	 */
 	public void addAppender(AppenderProxy appender, String loggerName)
 			throws APIException {
@@ -209,7 +209,7 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	}
 	
 	/**
-	 * @see org.openmrs.module.logmanager.LogManagerService#getAppenderEvent(org.openmrs.module.logmanager.AppenderProxy, int)
+	 * @see org.openmrs.module.logmanager.LogManagerService#getAppenderEvent(org.openmrs.module.logmanager.log4j.AppenderProxy, int)
 	 */
 	public LoggingEvent getAppenderEvent(AppenderProxy appender, int id) {
 		return getAppenderEvent(appender, id, null, 0);

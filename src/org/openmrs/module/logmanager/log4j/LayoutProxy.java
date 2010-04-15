@@ -11,7 +11,7 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.module.logmanager;
+package org.openmrs.module.logmanager.log4j;
 
 import org.apache.log4j.HTMLLayout;
 import org.apache.log4j.Layout;
@@ -19,6 +19,8 @@ import org.apache.log4j.PatternLayout;
 import org.apache.log4j.SimpleLayout;
 import org.apache.log4j.TTCCLayout;
 import org.apache.log4j.xml.XMLLayout;
+import org.openmrs.module.logmanager.AbstractProxy;
+import org.openmrs.module.logmanager.Constants;
 
 public class LayoutProxy extends AbstractProxy<Layout> {
 	

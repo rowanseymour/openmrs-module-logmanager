@@ -11,7 +11,7 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.module.logmanager;
+package org.openmrs.module.logmanager.log4j;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -25,6 +25,7 @@ import org.apache.log4j.Category;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.openmrs.module.logmanager.AbstractProxy;
 
 /**
  * This class contains the parameters required to create a logger and is used

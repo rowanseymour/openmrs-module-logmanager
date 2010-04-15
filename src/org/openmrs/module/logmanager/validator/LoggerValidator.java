@@ -14,7 +14,7 @@
 package org.openmrs.module.logmanager.validator;
 
 import org.openmrs.module.logmanager.Constants;
-import org.openmrs.module.logmanager.LoggerProxy;
+import org.openmrs.module.logmanager.log4j.LoggerProxy;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 

@@ -21,6 +21,8 @@ import org.apache.log4j.spi.LoggingEvent;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
+import org.openmrs.module.logmanager.log4j.AppenderProxy;
+import org.openmrs.module.logmanager.log4j.LoggerProxy;
 import org.openmrs.module.logmanager.util.PagingInfo;
 import org.springframework.transaction.annotation.Transactional;
 

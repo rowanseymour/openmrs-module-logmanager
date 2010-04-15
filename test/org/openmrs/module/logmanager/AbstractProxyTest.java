@@ -19,6 +19,8 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.LogManager;
 import org.junit.Before;
 import org.junit.Test;
+import org.openmrs.module.logmanager.log4j.AppenderProxy;
+import org.openmrs.module.logmanager.log4j.AppenderType;
 
 /**
  * Test cases for the class AbstractProxy
