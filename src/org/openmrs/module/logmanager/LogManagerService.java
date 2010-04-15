@@ -25,6 +25,7 @@ import org.openmrs.module.logmanager.log4j.AppenderProxy;
 import org.openmrs.module.logmanager.log4j.LoggerProxy;
 import org.openmrs.module.logmanager.util.PagingInfo;
 import org.springframework.transaction.annotation.Transactional;
+import org.w3c.dom.Document;
 
 /**
  * The log manager service
@@ -159,6 +160,13 @@ public interface LogManagerService extends OpenmrsService {
 	public void deletePreset(Preset preset) throws APIException;
 	
 	/**
+	 * Clears the current logging configuration
+	 * @throws APIException
+	 */
+	@Authorized( { Constants.PRIV_MANAGE_SERVER_LOG })
+	public void clearConfiguration() throws APIException;
+	
+	/**
 	 * Saves the current logging configuration to the external file
 	 * @throws APIException
 	 */
@@ -166,9 +174,32 @@ public interface LogManagerService extends OpenmrsService {
 	public void saveConfiguration() throws APIException;
 	
 	/**
-	 * Clears the current logging configuration
+	 * Loads the configuration from the external file
 	 * @throws APIException
 	 */
 	@Authorized( { Constants.PRIV_MANAGE_SERVER_LOG })
-	public void clearConfiguration() throws APIException;
+	public void loadConfiguration() throws APIException;
+	
+	/**
+	 * Loads a configuration document
+	 * @param document the document to load
+	 * @throws APIException
+	 */
+	@Authorized( { Constants.PRIV_MANAGE_SERVER_LOG })
+	public void loadConfiguration(Document document) throws APIException;
+	
+	/**
+	 * Loads the configuration document from the source code
+	 * @throws APIException
+	 */
+	@Authorized( { Constants.PRIV_MANAGE_SERVER_LOG })
+	public void loadConfigurationFromSource() throws APIException;
+	
+	/**
+	 * Loads configuration documents from the specified modules
+	 * @param document the document to load
+	 * @throws APIException
+	 */
+	@Authorized( { Constants.PRIV_MANAGE_SERVER_LOG })
+	public void loadConfigurationFromModules(String[] moduleIds) throws APIException;
 }
