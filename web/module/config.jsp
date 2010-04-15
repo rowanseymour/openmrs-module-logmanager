@@ -61,28 +61,28 @@ function logmgr_onClickConfig() {
 </script>
 
 <b class="boxHeader">
-	<spring:message code="${moduleId}.tools.log4jConfiguration" />
+	<spring:message code="${moduleId}.config.log4jConfiguration" />
 </b>
 <form method="post" class="box" name="configForm" enctype="multipart/form-data">
 	<table cellpadding="2" cellspacing="0" width="100%">
 		<tr>
 			<td width="150">			
 				<input type="submit" name="clear" class="switchButton"
-					value="<spring:message code="${moduleId}.tools.clear" />" 
-					onclick="return confirm('<spring:message code="${moduleId}.tools.confirmClear" />')"
+					value="<spring:message code="${moduleId}.config.clear" />" 
+					onclick="return confirm('<spring:message code="${moduleId}.config.confirmClear" />')"
 				/>
 			</td>
-			<td><spring:message code="${moduleId}.tools.clearMsg" /></td>
+			<td><spring:message code="${moduleId}.config.clearMsg" /></td>
 		</tr>
 		<tr>
 			<td>			
 				<input type="submit" name="import" id="importButton" class="switchButton"
-					value="<spring:message code="${moduleId}.tools.import" />"
+					value="<spring:message code="${moduleId}.config.import" />"
 					disabled="disabled"
 				/>		
 			</td>
 			<td>
-				<spring:message code="${moduleId}.tools.importMsg" />
+				<spring:message code="${moduleId}.config.importMsg" />
 				<input type="file" id="importFile" name="importFile" accept="text/xml"
 					onchange="document.configForm.import.disabled = (this.value == '')"
 				/>
@@ -91,20 +91,20 @@ function logmgr_onClickConfig() {
 		<tr>
 			<td>			
 				<input type="button" name="export" class="switchButton"
-					value="<spring:message code="${moduleId}.tools.export" />"
+					value="<spring:message code="${moduleId}.config.export" />"
 					onclick="location.href='config.form?src=current'"
 				/>
 			</td>
-			<td><spring:message code="${moduleId}.tools.exportMsg" /></td>
+			<td><spring:message code="${moduleId}.config.exportMsg" /></td>
 		</tr>
 		<tr>
 			<td>
 				<input type="submit" name="reload" class="switchButton"
-					value="<spring:message code="${moduleId}.tools.reload" />" 
+					value="<spring:message code="${moduleId}.config.reload" />" 
 					disabled="disabled"
 				/>
 			</td>
-			<td><spring:message code="${moduleId}.tools.reloadMsg" /></td>
+			<td><spring:message code="${moduleId}.config.reloadMsg" /></td>
 		</tr>
 	</table>
 	

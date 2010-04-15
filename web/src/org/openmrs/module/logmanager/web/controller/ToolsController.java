@@ -25,6 +25,9 @@ import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openmrs.module.logmanager.Constants;
+import org.openmrs.module.logmanager.util.LogManagerUtils;
+import org.openmrs.module.logmanager.web.util.WebUtils;
+import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
@@ -43,7 +46,14 @@ public class ToolsController extends ParameterizableViewController {
 			HttpServletResponse response) throws Exception {
 		
 		Map<String, Object> model = new HashMap<String, Object>();
-			
+		
+		String injectLoggerName = ServletRequestUtils.getStringParameter(request, "injectLoggerName", Constants.MODULE_PACKAGE);
+		Level injectLevel = Level.toLevel(ServletRequestUtils.getIntParameter(request, "injectLevel", Level.INFO_INT));
+		String injectMessage = request.getParameter("injectMessage");
+		model.put("injectLoggerName", injectLoggerName);	
+		model.put("injectLevel", injectLevel);
+		model.put("injectMessage", injectMessage);
+		
 		// Special logger switches
 		if (request.getParameter("startAPIProfiling") != null)		
 			setProfilingLogging(true);
@@ -53,6 +63,17 @@ public class ToolsController extends ParameterizableViewController {
 			setHibernateSQLLogging(true);
 		else if (request.getParameter("stopHibernateSQL") != null)		
 			setHibernateSQLLogging(false);
+		
+		else if (request.getParameter("inject") != null) {
+			if (!LogManagerUtils.isValidLoggerName(injectLoggerName))
+				model.put("loggerNameError", true);
+			else {	
+				LogManagerUtils.injectEvent(injectLoggerName, injectLevel, injectMessage);
+				WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools.injectSuccess", null);
+				// Clear message
+				model.put("injectMessage", "");
+			}		
+		}
 		
 		Logger profilingLogger = LogManager.exists(Constants.LOGGER_API_PROFILING);
 		Level profilingLoggerLevel = (profilingLogger != null) ? profilingLogger.getEffectiveLevel() : null;

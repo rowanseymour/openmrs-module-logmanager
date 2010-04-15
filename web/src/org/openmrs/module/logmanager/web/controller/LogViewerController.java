@@ -27,7 +27,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.logmanager.Config;
+import org.openmrs.module.logmanager.Options;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.QueryField;
@@ -59,7 +59,7 @@ public class LogViewerController extends ParameterizableViewController {
 		
 		// Ensure that the memory appender defined in OpenMRS's log4j.xml exists
 		// and configure it to be used as the system appender
-		if (Config.getCurrent().isAlwaysRecreateSystemAppender())
+		if (Options.getCurrent().isAlwaysRecreateSystemAppender())
 			if (!ConfigurationManager.ensureSystemAppenderExists())
 				WebUtils.setErrorMessage(request, Constants.MODULE_ID + ".viewer.systemAppenderRecreatedMsg", null);
 		

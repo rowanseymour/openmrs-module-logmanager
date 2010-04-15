@@ -3,19 +3,19 @@
 
 <logmgr_tag:modulePage />
 
-<openmrs:require privilege="Manage Server Log" otherwise="/login.htm" redirect="/module/logmanager/config.htm" />
+<openmrs:require privilege="Manage Server Log" otherwise="/login.htm" redirect="/module/logmanager/options.htm" />
 
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="/WEB-INF/view/admin/maintenance/localHeader.jsp"%>
 <%@ include file="template/localHeader.jsp"%>
 
 <b class="boxHeader">
-	<spring:message code="${moduleId}.config.options" />
+	<spring:message code="${moduleId}.options.moduleOptions" />
 </b>
-<logmgr_form:form commandName="config" cssClass="box" action="config.htm">
+<logmgr_form:form commandName="options" cssClass="box" action="options.htm">
 	<table cellpadding="2" cellspacing="0" width="100%">
 		<tr>
-			<td  width="30%" nowrap="nowrap"><spring:message code="${moduleId}.config.systemAppenderName"/></td>
+			<td  width="30%" nowrap="nowrap"><spring:message code="${moduleId}.options.systemAppenderName"/></td>
 			<td>
 				<logmgr_form:input cssStyle="width: 300px" path="systemAppenderName" />
 				<logmgr_form:errors path="systemAppenderName" cssClass="error" />
@@ -25,19 +25,19 @@
 			</td>
 		</tr>
 		<tr>
-			<td><spring:message code="${moduleId}.config.alwaysRecreateSystemAppender"/></td>
+			<td><spring:message code="${moduleId}.options.alwaysRecreateSystemAppender"/></td>
 			<td>
 				<logmgr_form:checkbox path="alwaysRecreateSystemAppender" />
 			</td>
 		</tr>
 		<tr>
-			<td><spring:message code="${moduleId}.config.logUncaughtExceptions"/></td>
+			<td><spring:message code="${moduleId}.options.logUncaughtExceptions"/></td>
 			<td>
 				<logmgr_form:checkbox path="logUncaughtExceptions" />
 			</td>
 		</tr>
 		<tr>
-			<td><spring:message code="${moduleId}.config.autoSaveToExternalConfig"/></td>
+			<td><spring:message code="${moduleId}.options.autoSaveToExternalConfig"/></td>
 			<td>
 				<logmgr_form:checkbox path="autoSaveToExternalConfig" />
 			</td>

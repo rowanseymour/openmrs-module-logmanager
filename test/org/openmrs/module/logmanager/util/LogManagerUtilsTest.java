@@ -45,4 +45,12 @@ public class LogManagerUtilsTest {
 		Assert.assertEquals(AppenderType.CONSOLE, LogManagerUtils.getPrivateField(app, "type"));
 		Assert.assertEquals("Test Appender", LogManagerUtils.getPrivateField(app, "name"));
 	}
+	
+	@Test 
+	public void isValidLoggerName() {
+		Assert.assertTrue(LogManagerUtils.isValidLoggerName("org.openmrs.api"));
+		Assert.assertTrue(LogManagerUtils.isValidLoggerName("test"));
+		Assert.assertFalse(LogManagerUtils.isValidLoggerName("org!"));
+		Assert.assertFalse(LogManagerUtils.isValidLoggerName("@penmrs"));
+	}
 }

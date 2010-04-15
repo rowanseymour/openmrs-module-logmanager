@@ -22,7 +22,7 @@
 <logmgr_form:form commandName="logger" cssClass="box">
 	<table cellpadding="2" cellspacing="2" width="100%">
 		<tr>
-			<th width="150"><spring:message code="${moduleId}.loggers.name"/></th>
+			<th width="150"><spring:message code="general.name"/></th>
 			<td>
 				<c:choose>
 					<c:when test="${logger.root}">
@@ -39,7 +39,7 @@
 			</td>
 		</tr>
 		<tr>
-			<th><spring:message code="${moduleId}.loggers.level"/></th>
+			<th><spring:message code="${moduleId}.level"/></th>
 			<td>
 				<spring:bind path="logger.level">
 					<logmgr_tag:levelList name="${status.expression}" value="${logmgr:levelToInt(logger.effectiveLevel)}" showALL="true" showOFF="true" showInherit="false" />

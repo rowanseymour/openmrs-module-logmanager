@@ -51,4 +51,38 @@
 	</table>
 </form>
 
+<br/>
+
+<b class="boxHeader">
+	<spring:message code="${moduleId}.tools.injectEvent" />
+</b>
+<form method="post" class="box" id="injectForm">
+	<table cellpadding="2" cellspacing="2" width="100%">
+		<tr>
+			<th width="150"><spring:message code="${moduleId}.logger"/></th>
+			<td>
+				<input type="text" name="logger" value="${injectLoggerName}" style="width: 300px" />
+				<c:if test="${loggerNameError}">
+					<span class="error"><spring:message code="${moduleId}.error.invalidName" /></span>
+				</c:if>
+			</td>
+			<td rowspan="3" align="right" valign="top">
+				<input type="submit" name="inject" value="<spring:message code="${moduleId}.tools.inject"/>" />
+			</td>
+		</tr>
+		<tr>
+			<th><spring:message code="${moduleId}.level"/></th>
+			<td>
+				<logmgr_tag:levelList name="level" value="${logmgr:levelToInt(injectLevel)}" showALL="false" showOFF="false" showInherit="false" />
+			</td>
+		</tr>
+		<tr>
+			<th><spring:message code="${moduleId}.tools.message"/></th>
+			<td>
+				<textarea name="injectMessage" style="width: 300px" rows="3">${injectMessage}</textarea>
+			</td>
+		</tr>
+	</table>
+</form>
+
 <%@ include file="/WEB-INF/template/footer.jsp"%>

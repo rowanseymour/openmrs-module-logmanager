@@ -29,8 +29,10 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Level;
 import org.openmrs.module.Module;
 import org.openmrs.module.ModuleFactory;
+import org.openmrs.module.logmanager.log4j.LoggerProxy;
 import org.w3c.dom.Document;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -131,5 +133,25 @@ public class LogManagerUtils {
 		} catch (Exception e) {
 			log.error(e);
 		}
+	}
+	
+	/**
+	 * Checks the given string to see if it is a valid logger name
+	 * @param name the logger name to check
+	 * @return true if name is valid, else false
+	 */
+	public static boolean isValidLoggerName(String name) {
+		return (name != null) && name.matches("[a-zA-Z0-9\\.]+");
+	}
+	
+	/**
+	 * Injects an event into the logging system
+	 * @param loggerName the name of the logger
+	 * @param level the event level
+	 * @param message the event message
+	 */
+	public static void injectEvent(String loggerName, Level level, String message) {	
+		LoggerProxy logger = LoggerProxy.getLogger(loggerName, true);
+		logger.log(level, message);	
 	}
 }

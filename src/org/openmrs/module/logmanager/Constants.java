@@ -21,6 +21,7 @@ import org.openmrs.web.WebConstants;
 public class Constants {
 	// Module properties
 	public static final String MODULE_ID = "logmanager";
+	public static final String MODULE_PACKAGE = "org.openmrs.module." + MODULE_ID;
 	
 	// Privileges
 	public static final String PRIV_VIEW_SERVER_LOG = "View Server Log";

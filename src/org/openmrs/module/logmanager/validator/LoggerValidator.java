@@ -15,6 +15,7 @@ package org.openmrs.module.logmanager.validator;
 
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.log4j.LoggerProxy;
+import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -38,7 +39,7 @@ public class LoggerValidator implements Validator {
 		LoggerProxy logger = (LoggerProxy)obj;
 		
 		// General validation
-		if (!logger.getName().matches("[a-zA-Z0-9\\.]+"))
+		if (!LogManagerUtils.isValidLoggerName(logger.getName()))
 			errors.rejectValue("name", Constants.MODULE_ID + ".error.name");
 	}
 }

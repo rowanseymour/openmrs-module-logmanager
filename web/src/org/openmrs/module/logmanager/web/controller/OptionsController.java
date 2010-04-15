@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.module.logmanager.Config;
+import org.openmrs.module.logmanager.Options;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.log4j.ConfigurationManager;
 import org.openmrs.module.logmanager.web.util.WebUtils;
@@ -48,9 +48,9 @@ public class OptionsController extends SimpleFormController {
             BindException errors) throws Exception {
 		
 		// Persist the config's settings and make current
-		Config config = (Config)command;
+		Options config = (Options)command;
 		config.save();
-		Config.setCurrent(config);
+		Options.setCurrent(config);
 			
 		// System appender name may have been changed
 		ConfigurationManager.ensureSystemAppenderExists();
@@ -65,7 +65,7 @@ public class OptionsController extends SimpleFormController {
 	 */
 	@Override
 	protected Object formBackingObject(HttpServletRequest request) throws Exception {
-		return new Config();
+		return new Options();
 	}
 	
 	/**

@@ -72,7 +72,6 @@ public class ConfigViewerController extends AbstractController {
 		}
 		else if (source.equals("external")) {
 			String path = OpenmrsUtil.getApplicationDataDirectory() + File.separator + Constants.EXTERNAL_CONFIG_NAME;
-			log.warn(path);
 			File file = new File(path);
 			if (file.exists()) {
 				Reader reader = new FileReader(file);

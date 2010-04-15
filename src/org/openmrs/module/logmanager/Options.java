@@ -20,9 +20,9 @@ import org.openmrs.api.context.Context;
 /**
  * Holds the configuration options for this module
  */
-public class Config {
+public class Options {
 	
-	protected static Config config;
+	protected static Options config;
 	
 	protected String systemAppenderName;
 	protected boolean alwaysRecreateSystemAppender;
@@ -32,7 +32,7 @@ public class Config {
 	/**
 	 * The default constructor
 	 */
-	public Config() {
+	public Options() {
 		load(); 
 	}
 	
@@ -40,9 +40,9 @@ public class Config {
 	 * Gets the singleton instance of this class
 	 * @return the config instance
 	 */
-	public static Config getCurrent() {
+	public static Options getCurrent() {
 		if (config == null)
-			config = new Config();
+			config = new Options();
 		return config;
 	}
 	
@@ -50,8 +50,8 @@ public class Config {
 	 * Sets the singleton instance of this class
 	 * @param config the config instance
 	 */
-	public static void setCurrent(Config config) {
-		Config.config = config;
+	public static void setCurrent(Options config) {
+		Options.config = config;
 	}
 	
 	/**
