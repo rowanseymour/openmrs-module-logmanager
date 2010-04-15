@@ -26,7 +26,7 @@ import org.springframework.web.servlet.view.AbstractView;
 public class EventReportView extends AbstractView {
 
 	protected static final SimpleDateFormat dfFilename = new SimpleDateFormat("yyyyMMdd-HHmm");
-	protected static final PatternLayout layout = new PatternLayout(Constants.DEF_LAYOUT_PATTERN);
+	protected static final PatternLayout layout = new PatternLayout(Constants.DEF_LAYOUT_CONVERSION_PATTERN);
 	
 	/**
 	 * Gets the filename of the response

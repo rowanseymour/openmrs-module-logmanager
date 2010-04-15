@@ -147,10 +147,10 @@ public class AppenderFormController extends SimpleFormController {
 		// Override some properties which are empty by default
 		if (type == AppenderType.SOCKET) {
 			appender.setProperty("remoteHost", request.getRemoteAddr());
-			appender.setProperty("application", Constants.DEF_APPENDER_SOURCE);
+			appender.setProperty("application", Constants.DEF_NT_EVENT_LOG_APPENDER_SOURCE);
 		}
 		else if (type == AppenderType.NT_EVENT_LOG)
-			appender.setProperty("source", Constants.DEF_APPENDER_SOURCE);
+			appender.setProperty("source", Constants.DEF_NT_EVENT_LOG_APPENDER_SOURCE);
 		
 		return appender;
 	}

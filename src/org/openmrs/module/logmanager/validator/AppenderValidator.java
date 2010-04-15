@@ -59,6 +59,15 @@ public class AppenderValidator implements Validator {
 		case MEMORY:
 			validateMemoryAppender(appender, errors);
 			break;
+		case FILE:
+			validateFileAppender(appender, errors);
+			break;
+		case ROLLING_FILE:
+			validateRollingFileAppender(appender, errors);
+			break;
+		case DAILY_ROLLING_FILE:
+			validateDailyRollingFileAppender(appender, errors);
+			break;
 		case SOCKET:
 			validateSocketAppender(appender, errors);
 			break;
@@ -79,11 +88,49 @@ public class AppenderValidator implements Validator {
 	 * @param errors the errors
 	 */
 	private void validateMemoryAppender(AppenderProxy appender, Errors errors) {
-		int bufferSize = (Integer)appender.getProperty("bufferSize");
+		validatePropertyRange(appender, "bufferSize",
+				1, Constants.MAX_MEMORY_APPENDER_BUFFER_SIZE, errors);
+	}
+	
+	/**
+	 * Validation specific to file appenders
+	 * @param appender the appender to validate
+	 * @param errors the errors
+	 */
+	private void validateFileAppender(AppenderProxy appender, Errors errors) {	
+		// TODO check if file is writable
+		validateStringPropertyNotEmpty(appender, "file", errors);
 		
-		if (bufferSize < 1 || bufferSize > Constants.MAX_APPENDER_BUFFER_SIZE)
-			errors.rejectValue("properties.bufferSize", Constants.MODULE_ID + ".error.bufferSize",
-				new Object[]{ Constants.MAX_APPENDER_BUFFER_SIZE }, "");
+		validatePropertyRange(appender, "bufferSize",
+				1, Constants.MAX_FILE_APPENDER_BUFFER_SIZE, errors);
+	}
+	
+	/**
+	 * Validation specific to rolling file appenders
+	 * @param appender the appender to validate
+	 * @param errors the errors
+	 */
+	private void validateRollingFileAppender(AppenderProxy appender, Errors errors) {	
+		// Validate superclass
+		validateFileAppender(appender, errors);
+		
+		validatePropertyRange(appender, "maximumFileSize",
+				0l, Constants.MAX_ROLLING_FILE_APPENDER_MAX_FILE_SIZE, errors);
+		
+		validatePropertyRange(appender, "maxBackupIndex",
+				0, Constants.MAX_ROLLING_FILE_APPENDER_MAX_BACKUP_INDEX, errors);
+	}
+	
+	/**
+	 * Validation specific to daily rolling file appenders
+	 * @param appender the appender to validate
+	 * @param errors the errors
+	 */
+	private void validateDailyRollingFileAppender(AppenderProxy appender, Errors errors) {	
+		// Validate superclass
+		validateFileAppender(appender, errors);
+		
+		validateStringPropertyNotEmpty(appender, "datePattern", errors);
 	}
 	
 	/**
@@ -91,18 +138,13 @@ public class AppenderValidator implements Validator {
 	 * @param appender the appender to validate
 	 * @param errors the errors
 	 */
-	private void validateSocketAppender(AppenderProxy appender, Errors errors) {
-		String remoteHost = (String)appender.getProperty("remoteHost");
-		int port = (Integer)appender.getProperty("port");
+	private void validateSocketAppender(AppenderProxy appender, Errors errors) {	
+		validateStringPropertyNotEmpty(appender, "remoteHost", errors);
+		
+		validatePropertyRange(appender, "port", Constants.MIN_SOCKET_APPENDER_PORT,
+				Constants.MAX_SOCKET_APPENDER_PORT, errors);
+		
 		int reconnectionDelay = (Integer)appender.getProperty("reconnectionDelay");
-		
-		if (remoteHost == null || remoteHost.isEmpty())
-			errors.rejectValue("properties.remoteHost", Constants.MODULE_ID + ".error.host");
-		
-		if (port < Constants.MIN_APPENDER_PORT || port > Constants.MAX_APPENDER_PORT)
-			errors.rejectValue("properties.port", Constants.MODULE_ID + ".error.port",
-				new Object[]{ Constants.MIN_APPENDER_PORT, Constants.MAX_APPENDER_PORT }, "");
-		
 		if (reconnectionDelay < 0)
 			errors.rejectValue("properties.reconnectionDelay", Constants.MODULE_ID + ".error.reconnectionDelay");
 	}
@@ -113,10 +155,37 @@ public class AppenderValidator implements Validator {
 	 * @param errors the errors
 	 */
 	private void validateNTEventLogAppender(AppenderProxy appender, Errors errors) {
-		String source = (String)appender.getProperty("source");
 		
-		if (source == null || source.isEmpty())
-			errors.rejectValue("source", Constants.MODULE_ID + ".error.source");
+		validateStringPropertyNotEmpty(appender, "source", errors);
+	}
+	
+	/**
+	 * Validates a specific integer property
+	 * @param appender the appender
+	 * @param name the property name
+	 * @param errors the errors
+	 */
+	private void validateStringPropertyNotEmpty(AppenderProxy appender, String name, Errors errors) {
+		String value = (String)appender.getProperty(name);
+		
+		if (value == null || value.isEmpty())
+			errors.rejectValue("properties." + name, Constants.MODULE_ID + ".error.empty");
+	}
+	
+	/**
+	 * Validates a specific integer property
+	 * @param appender the appender
+	 * @param name the property name
+	 * @param min the minimum value (inclusive)
+	 * @param max the maximum value (inclusive)
+	 * @param errors the errors
+	 */
+	@SuppressWarnings("unchecked")
+	private <T extends Comparable<T>> void validatePropertyRange(AppenderProxy appender, String name, T min, T max, Errors errors) {
+		T value = (T)appender.getProperty(name);
+		
+		if (value.compareTo(min) < 0 || value.compareTo(max) > 0)
+			errors.rejectValue("properties." + name, Constants.MODULE_ID + ".error.range", new Object[]{ min, max }, "");
 	}
 	
 	/**

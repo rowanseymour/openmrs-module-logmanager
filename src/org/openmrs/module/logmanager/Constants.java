@@ -40,11 +40,15 @@ public class Constants {
 	public static final boolean DEF_AUTO_SAVE_TO_EXTERNAL_CONFIG = true;
 	
 	// Appender defaults / limits
-	public static final String DEF_LAYOUT_PATTERN = "%p - %C{1}.%M(%L) |%d{ISO8601}| %m%n";
-	public static final int MIN_APPENDER_PORT = 1024;
-	public static final int MAX_APPENDER_PORT = 65535;
-	public static final String DEF_APPENDER_SOURCE = "OpenMRS";
-	public static final int MAX_APPENDER_BUFFER_SIZE = 10000;
+	public static final String DEF_LAYOUT_CONVERSION_PATTERN = "%p - %C{1}.%M(%L) |%d{ISO8601}| %m%n";
+	public static final int MAX_MEMORY_APPENDER_BUFFER_SIZE = 10000;				// # events
+	public static final int MAX_FILE_APPENDER_BUFFER_SIZE = 1048576; 				// 1 MiB
+	public static final long MAX_ROLLING_FILE_APPENDER_MAX_FILE_SIZE = 104857600; 	// 100 MiB
+	public static final int MAX_ROLLING_FILE_APPENDER_MAX_BACKUP_INDEX = 100; 		// # files
+	public static final int MIN_SOCKET_APPENDER_PORT = 1024;
+	public static final int MAX_SOCKET_APPENDER_PORT = 65535;
+	public static final String DEF_NT_EVENT_LOG_APPENDER_SOURCE = "OpenMRS";
+	
 	public static final String INTERNAL_CONFIG_NAME = "log4j.xml";
 	public static final String EXTERNAL_CONFIG_NAME = WebConstants.WEBAPP_NAME + "-log4j.xml";
 	

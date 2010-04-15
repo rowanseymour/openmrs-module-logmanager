@@ -35,14 +35,7 @@ function clearAppender(id) {
 		<tr>
 			<th><spring:message code="${moduleId}.appenders.type"/></th>
 			<td>
-				<select name="newType">
-					<option value="<%= AppenderType.CONSOLE.getOrdinal() %>"><%= AppenderType.CONSOLE %></option>
-					<option value="<%= AppenderType.MEMORY.getOrdinal() %>"><%= AppenderType.MEMORY %></option>
-					<option value="<%= AppenderType.SOCKET.getOrdinal() %>"><%= AppenderType.SOCKET %></option>
-					<c:if test="${isWindows}">
-						<option value="<%= AppenderType.NT_EVENT_LOG.getOrdinal() %>"><%= AppenderType.NT_EVENT_LOG %></option>
-					</c:if>
-				</select>
+				<logmgr_tag:appenderTypeList name="newType" showUnknown="false" showNTEventLog="${isWindows}" />
 			</td>
 		</tr>
 	</table>

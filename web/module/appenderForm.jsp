@@ -56,7 +56,7 @@ function onChangeLayoutType(value) {
 						<i>${appender.target.class.simpleName}</i>
 					</c:otherwise>
 				</c:choose>
-				<c:if test="${appender.type.ordinal == 4}">
+				<c:if test="${appender.type.ordinal == 7}">
 					<p style="font-style: italic">
 						<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/icon_warn.png" />
 						<spring:message code="${moduleId}.appenders.ntEventLogWarning" arguments="http://logging.apache.org/log4j/1.2/index.html" />
@@ -118,8 +118,67 @@ function onChangeLayoutType(value) {
 				</td>		
 			</tr>
 		</c:if>
+		<%------------------ FILE fields ------------------%>
+		<c:if test="${appender.type.ordinal == 3 || appender.type.ordinal == 4 || appender.type.ordinal == 5}">		
+			<tr>
+				<th><spring:message code="${moduleId}.appenders.file"/></th>
+				<td>
+					<logmgr_form:input path="properties.file" cssStyle="width: 300px" />
+					<logmgr_form:errors path="properties.file" cssClass="error" />
+				</td>
+			</tr>
+			<tr>
+				<th rowspan="2" valign="top"><spring:message code="${moduleId}.appenders.options"/></th>
+				<td>
+					<logmgr_form:checkbox path="properties.append" />
+					<spring:message code="${moduleId}.appenders.appendToFileContents"/>
+				</td>		
+			</tr>
+			<tr>
+				<td>
+					<logmgr_form:checkbox path="properties.bufferedIO" />
+					<spring:message code="${moduleId}.appenders.bufferedIO"/>
+				</td>		
+			</tr>
+			<tr>
+				<th><spring:message code="${moduleId}.appenders.bufferSize"/></th>
+				<td>
+					<logmgr_form:input path="properties.bufferSize" size="8" />
+					<spring:message code="${moduleId}.bytes"/>
+					<logmgr_form:errors path="properties.bufferSize" cssClass="error" />
+				</td>		
+			</tr>
+		</c:if>
+		<%------------------ ROLLING FILE fields ------------------%>
+		<c:if test="${appender.type.ordinal == 4}">		
+			<tr>
+				<th><spring:message code="${moduleId}.appenders.maximumFileSize"/></th>
+				<td>
+					<logmgr_form:input path="properties.maximumFileSize" size="8" />
+					<spring:message code="${moduleId}.bytes"/>
+					<logmgr_form:errors path="properties.maximumFileSize" cssClass="error" />
+				</td>
+			</tr>
+			<tr>
+				<th><spring:message code="${moduleId}.appenders.maxBackupIndex"/></th>
+				<td>
+					<logmgr_form:input path="properties.maxBackupIndex" />
+					<logmgr_form:errors path="properties.maxBackupIndex" cssClass="error" />
+				</td>
+			</tr>
+		</c:if>
+		<%------------------ DAILY ROLLING FILE fields ------------------%>
+		<c:if test="${appender.type.ordinal == 5}">		
+			<tr>
+				<th><spring:message code="${moduleId}.appenders.datePattern"/></th>
+				<td>
+					<logmgr_form:input path="properties.datePattern" />
+					<logmgr_form:errors path="properties.datePattern" cssClass="error" />
+				</td>
+			</tr>
+		</c:if>
 		<%------------------ SOCKET fields ------------------%>
-		<c:if test="${appender.type.ordinal == 3}">
+		<c:if test="${appender.type.ordinal == 6}">
 			<tr>
 				<th><spring:message code="${moduleId}.appenders.host"/></th>
 				<td>
@@ -154,7 +213,7 @@ function onChangeLayoutType(value) {
 			</tr>
 		</c:if>
 		<%------------------ NT EVENT LOG fields ------------------%>
-		<c:if test="${appender.type.ordinal == 4}">
+		<c:if test="${appender.type.ordinal == 7}">
 			<tr>
 				<th><spring:message code="${moduleId}.appenders.source"/></th>
 				<td>

@@ -58,7 +58,7 @@ public class EventsExportView extends AbstractView {
 		String format = (String)model.get("format");
 		Layout layout = null;
 		if (format.equals("txt")) {
-			layout = new PatternLayout(Constants.DEF_LAYOUT_PATTERN);
+			layout = new PatternLayout(Constants.DEF_LAYOUT_CONVERSION_PATTERN);
 			response.setContentType("text/plain");
 		}
 		else {

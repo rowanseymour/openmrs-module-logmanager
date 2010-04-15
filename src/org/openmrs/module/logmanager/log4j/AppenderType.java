@@ -15,6 +15,9 @@ package org.openmrs.module.logmanager.log4j;
 
 import org.apache.log4j.Appender;
 import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.DailyRollingFileAppender;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.RollingFileAppender;
 import org.apache.log4j.net.SocketAppender;
 import org.apache.log4j.nt.NTEventLogAppender;
 import org.openmrs.util.MemoryAppender;
@@ -26,6 +29,9 @@ public enum AppenderType {
 	UNKNOWN,
 	CONSOLE,
 	MEMORY,
+	FILE,
+	ROLLING_FILE,
+	DAILY_ROLLING_FILE,
 	SOCKET,
 	NT_EVENT_LOG;
 	
@@ -46,10 +52,16 @@ public enum AppenderType {
 			return "Console";
 		case MEMORY:
 			return "Memory";
+		case FILE:
+			return "File";	
+		case ROLLING_FILE:
+			return "Rolling file";
+		case DAILY_ROLLING_FILE:
+			return "Daily rolling file";
 		case SOCKET:
 			return "Socket";
 		case NT_EVENT_LOG:
-			return "NT Event Log";
+			return "NT event log";
 		}
 		return "Unknown";
 	}
@@ -64,6 +76,12 @@ public enum AppenderType {
 			return CONSOLE;
 		else if (appender instanceof MemoryAppender)
 			return MEMORY;
+		else if (appender instanceof DailyRollingFileAppender)
+			return DAILY_ROLLING_FILE;
+		else if (appender instanceof RollingFileAppender)
+			return ROLLING_FILE;
+		else if (appender instanceof FileAppender)
+			return FILE;	
 		else if (appender instanceof SocketAppender)
 			return SOCKET;
 		else if (appender instanceof NTEventLogAppender)
