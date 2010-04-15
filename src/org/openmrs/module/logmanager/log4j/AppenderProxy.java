@@ -18,6 +18,9 @@ import java.util.Collection;
 import org.apache.commons.collections.buffer.CircularFifoBuffer;
 import org.apache.log4j.Appender;
 import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.DailyRollingFileAppender;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.RollingFileAppender;
 import org.apache.log4j.net.SocketAppender;
 import org.apache.log4j.nt.NTEventLogAppender;
 import org.apache.log4j.spi.LoggingEvent;
@@ -39,6 +42,9 @@ public class AppenderProxy extends AbstractProxy<Appender> {
 	
 	protected static final String[] PROPS_CONSOLE = { "target", "follow" };
 	protected static final String[] PROPS_MEMORY = { "bufferSize" };
+	protected static final String[] PROPS_FILE = { "append", "bufferedIO", "bufferSize", "file" };
+	protected static final String[] PROPS_ROLLING_FILE = { "append", "bufferedIO", "bufferSize", "file", "maximumFileSize", "maxBackupIndex" };
+	protected static final String[] PROPS_DAILY_ROLLING_FILE = { "append", "bufferedIO", "bufferSize", "file", "datePattern" };
 	protected static final String[] PROPS_SOCKET = { "application", "locationInfo", "reconnectionDelay", "remoteHost", "port" };
 	protected static final String[] PROPS_NT_EVENT_LOG = { "source" };
 	
@@ -59,6 +65,15 @@ public class AppenderProxy extends AbstractProxy<Appender> {
 			break;
 		case MEMORY: 
 			target = new MemoryAppender();
+			break;
+		case FILE: 
+			target = new FileAppender();
+			break;
+		case ROLLING_FILE: 
+			target = new RollingFileAppender();
+			break;
+		case DAILY_ROLLING_FILE: 
+			target = new DailyRollingFileAppender();
 			break;
 		case SOCKET:		
 			target = new SocketAppender();
@@ -97,6 +112,15 @@ public class AppenderProxy extends AbstractProxy<Appender> {
 		case MEMORY: 
 			copyPropertesFromTarget(PROPS_MEMORY);
 			break;
+		case FILE: 
+			copyPropertesFromTarget(PROPS_FILE);
+			break;
+		case ROLLING_FILE: 
+			copyPropertesFromTarget(PROPS_ROLLING_FILE);
+			break;
+		case DAILY_ROLLING_FILE: 
+			copyPropertesFromTarget(PROPS_DAILY_ROLLING_FILE);
+			break;
 		case SOCKET:		
 			copyPropertesFromTarget(PROPS_SOCKET);
 			break;
@@ -125,6 +149,15 @@ public class AppenderProxy extends AbstractProxy<Appender> {
 			break;
 		case MEMORY: 
 			updatePropertiesOnTarget(PROPS_MEMORY);
+			break;
+		case FILE: 
+			updatePropertiesOnTarget(PROPS_FILE);
+			break;
+		case ROLLING_FILE: 
+			updatePropertiesOnTarget(PROPS_ROLLING_FILE);
+			break;
+		case DAILY_ROLLING_FILE: 
+			updatePropertiesOnTarget(PROPS_DAILY_ROLLING_FILE);
 			break;
 		case SOCKET:		
 			updatePropertiesOnTarget(PROPS_SOCKET);

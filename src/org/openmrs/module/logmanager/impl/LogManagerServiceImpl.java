@@ -167,6 +167,9 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 			Logger logger = loggersEnum.nextElement();
 			logger.removeAppender(appender.getTarget());
 		}
+		
+		// Close appender to release resources
+		appender.getTarget().close();
 	}
 	
 	/**

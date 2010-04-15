@@ -61,7 +61,7 @@
 		<tr>
 			<th width="150"><spring:message code="${moduleId}.logger"/></th>
 			<td>
-				<input type="text" name="logger" value="${injectLoggerName}" style="width: 300px" />
+				<input type="text" name="injectLoggerName" value="${injectLoggerName}" style="width: 300px" />
 				<c:if test="${loggerNameError}">
 					<span class="error"><spring:message code="${moduleId}.error.invalidName" /></span>
 				</c:if>
@@ -73,7 +73,7 @@
 		<tr>
 			<th><spring:message code="${moduleId}.level"/></th>
 			<td>
-				<logmgr_tag:levelList name="level" value="${logmgr:levelToInt(injectLevel)}" showALL="false" showOFF="false" showInherit="false" />
+				<logmgr_tag:levelList name="injectLevel" value="${logmgr:levelToInt(injectLevel)}" showALL="false" showOFF="false" showInherit="false" />
 			</td>
 		</tr>
 		<tr>
