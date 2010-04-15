@@ -13,6 +13,7 @@
  */
 package org.openmrs.module.logmanager.web.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -29,12 +30,15 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.xml.Log4jEntityResolver;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.Module;
 import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.logmanager.Constants;
+import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.log4j.ConfigurationManager;
 import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.openmrs.module.logmanager.web.util.WebUtils;
+import org.openmrs.util.OpenmrsUtil;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -58,7 +62,9 @@ public class ConfigController extends ParameterizableViewController {
 		Map<String, Object> model = new HashMap<String, Object>();
 		
 		// Log4j configuration operations
-		if (request.getParameter("clear") != null)
+		if (request.getParameter("save") != null)
+			saveConfiguration(request);
+		else if (request.getParameter("clear") != null)
 			clearConfiguration(request);
 		else if (request.getParameter("import") != null)	
 			importConfiguration(request);	
@@ -69,8 +75,20 @@ public class ConfigController extends ParameterizableViewController {
 		model.put("log4jConfigs", log4jConfigs);
 		model.put("internalConfigName", "log4j.xml");
 		model.put("externalConfigName", Constants.EXTERNAL_CONFIG_NAME);
+		model.put("externalConfigPath", OpenmrsUtil.getApplicationDataDirectory() + File.separator + Constants.EXTERNAL_CONFIG_NAME);
 		
 		return new ModelAndView(getViewName(), model);
+	}
+	
+	/**
+	 * Handles a save configuration request
+	 * @param request the http request
+	 */
+	private void saveConfiguration(HttpServletRequest request) {
+		LogManagerService svc = Context.getService(LogManagerService.class);
+		svc.saveConfiguration();
+		
+		WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".config.saveSuccess", null);
 	}
 	
 	/**
@@ -78,8 +96,10 @@ public class ConfigController extends ParameterizableViewController {
 	 * @param request the http request
 	 */
 	private void clearConfiguration(HttpServletRequest request) {
-		ConfigurationManager.clearConfiguration();
-		WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools.clearSuccess", null);
+		LogManagerService svc = Context.getService(LogManagerService.class);	
+		svc.clearConfiguration();
+		
+		WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".config.clearSuccess", null);
 	}
 	
 	/**
@@ -119,7 +139,7 @@ public class ConfigController extends ParameterizableViewController {
 				
 				if (document != null) {
 					ConfigurationManager.parseConfiguration(document);
-					WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools.importSuccess", new Object[] { filename });	
+					WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".config.importSuccess", new Object[] { filename });	
 				}
 				else
 					WebUtils.setErrorMessage(request, Constants.MODULE_ID + ".error.invalidConfigurationFile", new Object[] { filename });
@@ -149,7 +169,7 @@ public class ConfigController extends ParameterizableViewController {
 			if (!ConfigurationManager.loadModuleConfigurations(moduleConfigs))
 				succeeded = false;
 		
-		WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools." + (succeeded ? "reloadSuccess" : "reloadError"), null);
+		WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".config." + (succeeded ? "reloadSuccess" : "reloadError"), null);
 	}
 	
 	/**

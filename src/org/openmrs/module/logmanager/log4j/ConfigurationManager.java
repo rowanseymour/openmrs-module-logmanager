@@ -116,8 +116,9 @@ public class ConfigurationManager {
 	
 	/**
 	 * Saves the log4j configuration to the external file used by this module
+	 * @return true if save was successful else false
 	 */
-	public static void saveExternalConfiguration() {
+	public static boolean saveExternalConfiguration() {
 		try {
 			String path = OpenmrsUtil.getApplicationDataDirectory() + File.separator + Constants.EXTERNAL_CONFIG_NAME;
 			FileWriter writer = new FileWriter(path);
@@ -126,9 +127,11 @@ public class ConfigurationManager {
 			LogManagerUtils.writeDocument(document, writer);
 			
 			writer.close();
+			return true;
 			
 		} catch (IOException e) {
 			log.error(e);
+			return false;
 		}
 	}
 	

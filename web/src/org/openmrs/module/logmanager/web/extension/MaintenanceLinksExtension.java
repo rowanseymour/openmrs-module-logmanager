@@ -30,7 +30,7 @@ public class MaintenanceLinksExtension extends Extension {
 	 */
 	public Map<String, String> getLinks() {
 		Map<String, String> links = new HashMap<String, String>();
-		links.put("module/" + Constants.MODULE_ID + "/logger.list", Constants.MODULE_ID + ".admin.link");
+		links.put("module/" + Constants.MODULE_ID + "/config.list", Constants.MODULE_ID + ".admin.link");
 		return links;
 	}
 
