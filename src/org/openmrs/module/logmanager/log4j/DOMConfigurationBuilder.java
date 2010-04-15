@@ -24,11 +24,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.logmanager.AppenderProxy;
-import org.openmrs.module.logmanager.LayoutProxy;
-import org.openmrs.module.logmanager.LayoutType;
 import org.openmrs.module.logmanager.LogManagerService;
-import org.openmrs.module.logmanager.LoggerProxy;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

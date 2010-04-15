@@ -15,8 +15,8 @@ package org.openmrs.module.logmanager.web.util;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openmrs.module.logmanager.AppenderType;
 import org.openmrs.module.logmanager.QueryField;
+import org.openmrs.module.logmanager.log4j.AppenderType;
 import org.openmrs.module.logmanager.web.util.WebUtils;
 import org.springframework.mock.web.MockHttpServletRequest;
 

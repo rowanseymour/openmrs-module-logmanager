@@ -16,11 +16,11 @@ package org.openmrs.module.logmanager.validator;
 import java.util.Collection;
 
 import org.openmrs.api.context.Context;
-import org.openmrs.module.logmanager.AppenderProxy;
 import org.openmrs.module.logmanager.Constants;
-import org.openmrs.module.logmanager.LayoutProxy;
-import org.openmrs.module.logmanager.LayoutType;
 import org.openmrs.module.logmanager.LogManagerService;
+import org.openmrs.module.logmanager.log4j.AppenderProxy;
+import org.openmrs.module.logmanager.log4j.LayoutProxy;
+import org.openmrs.module.logmanager.log4j.LayoutType;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 

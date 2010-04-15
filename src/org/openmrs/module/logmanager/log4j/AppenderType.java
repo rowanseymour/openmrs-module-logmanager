@@ -11,25 +11,23 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.module.logmanager;
+package org.openmrs.module.logmanager.log4j;
 
-import org.apache.log4j.HTMLLayout;
-import org.apache.log4j.Layout;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.SimpleLayout;
-import org.apache.log4j.TTCCLayout;
-import org.apache.log4j.xml.XMLLayout;
+import org.apache.log4j.Appender;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.net.SocketAppender;
+import org.apache.log4j.nt.NTEventLogAppender;
+import org.openmrs.util.MemoryAppender;
 
 /**
- * The types of layout supported
+ * Different types of appender
  */
-public enum LayoutType {
+public enum AppenderType {
 	UNKNOWN,
-	SIMPLE,
-	TTCC,
-	PATTERN,
-	HTML,
-	XML;
+	CONSOLE,
+	MEMORY,
+	SOCKET,
+	NT_EVENT_LOG;
 	
 	/**
 	 * Bean-property wrapper for the ordinal method so it can be used in EL
@@ -44,36 +42,32 @@ public enum LayoutType {
 	@Override
 	public String toString() {
 		switch (this) {
-		case SIMPLE:
-			return "Simple";
-		case TTCC:
-			return "TTCC";
-		case PATTERN:
-			return "Pattern";
-		case HTML:
-			return "HTML";
-		case XML:
-			return "XML";
+		case CONSOLE:
+			return "Console";
+		case MEMORY:
+			return "Memory";
+		case SOCKET:
+			return "Socket";
+		case NT_EVENT_LOG:
+			return "NT Event Log";
 		}
 		return "Unknown";
 	}
 	
 	/**
-	 * Gets the type of the specified layout
+	 * Gets the type of the specified appender
 	 * @param appender the appender whose type to return
 	 * @return the type
 	 */
-	public static LayoutType fromLayout(Layout layout) {
-		if (layout instanceof SimpleLayout)
-			return SIMPLE;
-		else if (layout instanceof TTCCLayout)
-			return TTCC;
-		else if (layout instanceof PatternLayout)
-			return PATTERN;
-		else if (layout instanceof HTMLLayout)
-			return HTML;
-		else if (layout instanceof XMLLayout)
-			return XML;
+	public static AppenderType fromAppender(Appender appender) {
+		if (appender instanceof ConsoleAppender)
+			return CONSOLE;
+		else if (appender instanceof MemoryAppender)
+			return MEMORY;
+		else if (appender instanceof SocketAppender)
+			return SOCKET;
+		else if (appender instanceof NTEventLogAppender)
+			return NT_EVENT_LOG;
 		else
 			return UNKNOWN;
 	}

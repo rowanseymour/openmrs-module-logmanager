@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.module.logmanager.AppenderType;
 import org.openmrs.module.logmanager.QueryField;
+import org.openmrs.module.logmanager.log4j.AppenderType;
 import org.openmrs.web.WebConstants;
 
 /**

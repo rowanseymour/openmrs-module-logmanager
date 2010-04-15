@@ -15,7 +15,7 @@ package org.openmrs.module.logmanager.propertyeditor;
 
 import java.beans.PropertyEditorSupport;
 
-import org.openmrs.module.logmanager.LayoutType;
+import org.openmrs.module.logmanager.log4j.LayoutType;
 
 /**
  * Used to edit the layout type property of an appender... Spring 3.0 has lovely

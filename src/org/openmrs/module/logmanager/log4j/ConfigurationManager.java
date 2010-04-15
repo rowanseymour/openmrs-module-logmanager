@@ -30,7 +30,6 @@ import org.apache.log4j.xml.DOMConfigurator;
 import org.apache.log4j.xml.Log4jEntityResolver;
 import org.openmrs.module.Module;
 import org.openmrs.module.ModuleFactory;
-import org.openmrs.module.logmanager.AppenderProxy;
 import org.openmrs.module.logmanager.Config;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.util.LogManagerUtils;
