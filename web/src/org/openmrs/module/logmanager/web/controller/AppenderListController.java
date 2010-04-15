@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.logmanager.Config;
+import org.openmrs.module.logmanager.Options;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.log4j.AppenderProxy;
@@ -84,7 +84,7 @@ public class AppenderListController extends ParameterizableViewController {
 			svc.deleteAppender(appender);
 		
 		// Save configuration if required
-		if (Config.getCurrent().isAutoSaveToExternalConfig())
+		if (Options.getCurrent().isAutoSaveToExternalConfig())
 			svc.saveConfiguration();
 		
 		String name = appender.getName();
@@ -108,7 +108,7 @@ public class AppenderListController extends ParameterizableViewController {
 			appender.clear();
 		
 		// Save configuration if required
-		if (Config.getCurrent().isAutoSaveToExternalConfig())
+		if (Options.getCurrent().isAutoSaveToExternalConfig())
 			svc.saveConfiguration();
 		
 		String name = appender.getName();

@@ -64,7 +64,7 @@ public class LoggerListController extends ParameterizableViewController {
 		// so that it will be effectively ignored
 		String delLogger = request.getParameter("deleteLogger");
 		if (delLogger != null) {
-			LoggerProxy logToRemove = LoggerProxy.getLogger(delLogger);
+			LoggerProxy logToRemove = LoggerProxy.getLogger(delLogger, false);
 			if (logToRemove != null)
 				logToRemove.makeImplicit(true);
 		}

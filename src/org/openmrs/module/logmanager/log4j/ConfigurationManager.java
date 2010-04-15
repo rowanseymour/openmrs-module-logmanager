@@ -30,7 +30,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 import org.apache.log4j.xml.Log4jEntityResolver;
 import org.openmrs.module.Module;
 import org.openmrs.module.ModuleFactory;
-import org.openmrs.module.logmanager.Config;
+import org.openmrs.module.logmanager.Options;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.openmrs.util.MemoryAppender;
@@ -162,7 +162,7 @@ public class ConfigurationManager {
 	 * so update the static member of AppenderProxy
 	 */
 	public static void resetSystemAppender() {
-		String sysAppName = Config.getCurrent().getSystemAppenderName();
+		String sysAppName = Options.getCurrent().getSystemAppenderName();
 		MemoryAppender sysApp = (MemoryAppender)LogManager.getRootLogger().getAppender(sysAppName);
 		if (sysApp != null) {
 			AppenderProxy.setSystemAppender(new AppenderProxy(sysApp));
@@ -178,7 +178,7 @@ public class ConfigurationManager {
 	public static boolean ensureSystemAppenderExists() {
 		boolean existed = true;
 		
-		String sysAppName = Config.getCurrent().getSystemAppenderName();
+		String sysAppName = Options.getCurrent().getSystemAppenderName();
 		
 		MemoryAppender sysApp = (MemoryAppender)LogManager.getRootLogger().getAppender(sysAppName);
 		

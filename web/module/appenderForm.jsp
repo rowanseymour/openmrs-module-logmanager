@@ -36,7 +36,7 @@ function onChangeLayoutType(value) {
 <logmgr_form:form commandName="appender" cssClass="box">
 	<table cellpadding="2" cellspacing="2" width="100%">
 		<tr>
-			<th width="150"><spring:message code="${moduleId}.appenders.name"/></th>
+			<th width="150"><spring:message code="general.name"/></th>
 			<td>
 				<logmgr_form:input path="name" cssStyle="width: 300px" disabled="${appender.systemAppender}" />
 				<logmgr_form:errors path="name" cssClass="error" />

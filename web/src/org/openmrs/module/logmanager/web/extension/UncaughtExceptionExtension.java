@@ -9,7 +9,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openmrs.module.Extension;
 //import org.openmrs.module.logmanager.web.util.ContextProvider;
-import org.openmrs.module.logmanager.Config;
+import org.openmrs.module.logmanager.Options;
 import org.openmrs.module.logmanager.web.util.ContextProvider;
 
 /**
@@ -28,7 +28,7 @@ public class UncaughtExceptionExtension extends Extension {
 		// Get exception object
 		HttpServletRequest request = ContextProvider.getServletRequest();
 		
-		if (Config.getCurrent().isLogUncaughtExceptions()) {
+		if (Options.getCurrent().isLogUncaughtExceptions()) {
 			Exception exception = (Exception)request.getAttribute("javax.servlet.error.exception");
 			String className = "";
 			if (exception != null && exception.getStackTrace().length > 0)

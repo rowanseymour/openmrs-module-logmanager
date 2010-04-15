@@ -13,7 +13,7 @@
  */
 package org.openmrs.module.logmanager.validator;
 
-import org.openmrs.module.logmanager.Config;
+import org.openmrs.module.logmanager.Options;
 import org.openmrs.module.logmanager.Constants;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -28,14 +28,14 @@ public class OptionsValidator implements Validator {
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean supports(Class clazz) {
-		return Config.class.isAssignableFrom(clazz);
+		return Options.class.isAssignableFrom(clazz);
 	}
 
 	/**
 	 * @see org.springframework.validation.Validator#validate(Object, Errors)
 	 */
 	public void validate(Object obj, Errors errors) {
-		Config config = (Config)obj;
+		Options config = (Options)obj;
 		
 		if (!config.getSystemAppenderName().matches("[\\w\\.\\- ]+"))
 			errors.rejectValue("systemAppenderName", Constants.MODULE_ID + ".error.name");

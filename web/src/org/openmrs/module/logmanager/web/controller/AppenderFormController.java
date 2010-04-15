@@ -11,7 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.spi.OptionHandler;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.logmanager.Config;
+import org.openmrs.module.logmanager.Options;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.log4j.AppenderProxy;
@@ -19,6 +19,7 @@ import org.openmrs.module.logmanager.log4j.AppenderType;
 import org.openmrs.module.logmanager.log4j.LayoutType;
 import org.openmrs.module.logmanager.log4j.LoggerProxy;
 import org.openmrs.module.logmanager.propertyeditor.LayoutTypeEditor;
+import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.openmrs.module.logmanager.web.util.WebUtils;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
@@ -56,7 +57,8 @@ public class AppenderFormController extends SimpleFormController {
 		// Check logger to attach appender to
 		String attachTo = request.getParameter("attachTo");
 		String attachToOther = request.getParameter("attachToOther");
-		if (attachTo != null && attachTo.isEmpty() && attachToOther.isEmpty())
+		if (attachTo != null && attachTo.isEmpty()
+				&& (attachToOther.isEmpty() || !LogManagerUtils.isValidLoggerName(attachToOther)))
 			errors.rejectValue("attachTo", Constants.MODULE_ID + ".error.attachTo");
 		
 		return super.processFormSubmission(request, response, command, errors);
@@ -97,7 +99,7 @@ public class AppenderFormController extends SimpleFormController {
 		}
 		
 		// Save configuration if required
-		if (Config.getCurrent().isAutoSaveToExternalConfig())
+		if (Options.getCurrent().isAutoSaveToExternalConfig())
 			svc.saveConfiguration();
 		
 		WebUtils.setInfoMessage(request, 

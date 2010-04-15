@@ -65,9 +65,13 @@ public class LoggerProxy extends AbstractProxy<Logger> {
 	/**
 	 * Gets a proxy of the specified logger
 	 * @param name the logger name
+	 * @param force forces logger creation if it doesn't exist
 	 * @return the proxy logger or null if logger doesn't exist
 	 */
-	public static LoggerProxy getLogger(String name) {
+	public static LoggerProxy getLogger(String name, boolean force) {
+		if (force)
+			return new LoggerProxy(LogManager.getLogger(name));
+		
 		Logger target = LogManager.exists(name);	
 		return (target != null) ? new LoggerProxy(target) : null;
 	}
@@ -248,5 +252,14 @@ public class LoggerProxy extends AbstractProxy<Logger> {
 			if (removeAppenders)
 				target.removeAllAppenders();
 		}
+	}
+	
+	/**
+	 * Sends a logging event through this logger
+	 * @param level the level
+	 * @param message the message
+	 */
+	public void log(Level level, String message) {
+		target.log(level, message);
 	}
 }

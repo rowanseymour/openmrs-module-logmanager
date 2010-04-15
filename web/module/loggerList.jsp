@@ -144,8 +144,8 @@ function onSavePreset() {
 	<table cellpadding="3" cellspacing="0" width="100%">
 		<tr>
 			<th>&nbsp;</th>
-			<th><spring:message code="${moduleId}.loggers.name"/></th>
-			<th><spring:message code="${moduleId}.loggers.level"/></th>
+			<th><spring:message code="general.name"/></th>
+			<th><spring:message code="${moduleId}.level"/></th>
 			<th><spring:message code="${moduleId}.loggers.appenders"/></th>
 			<th>&nbsp;</th>
 		</tr>

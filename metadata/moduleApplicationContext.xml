@@ -116,7 +116,7 @@
 	
 	<bean id="logMgrOptionsController" class="@MODULE_PACKAGE@.web.controller.OptionsController">
 		<property name="commandName">
-			<value>config</value>
+			<value>options</value>
 		</property>
 		<property name="formView">
 			<value>module/@MODULE_ID@/options</value>
