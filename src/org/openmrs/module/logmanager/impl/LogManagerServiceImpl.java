@@ -13,6 +13,12 @@
  */
 package org.openmrs.module.logmanager.impl;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -32,8 +38,11 @@ import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
+import org.apache.log4j.xml.Log4jEntityResolver;
 import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
+import org.openmrs.module.Module;
+import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.Preset;
@@ -41,8 +50,12 @@ import org.openmrs.module.logmanager.QueryField;
 import org.openmrs.module.logmanager.db.LogManagerDAO;
 import org.openmrs.module.logmanager.log4j.AppenderProxy;
 import org.openmrs.module.logmanager.log4j.ConfigurationManager;
+import org.openmrs.module.logmanager.log4j.DOMConfigurationBuilder;
 import org.openmrs.module.logmanager.log4j.LoggerProxy;
+import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.openmrs.module.logmanager.util.PagingInfo;
+import org.openmrs.util.OpenmrsUtil;
+import org.w3c.dom.Document;
 
 /**
  * Implementation of the log manager service
@@ -299,16 +312,79 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	/**
 	 * @see org.openmrs.module.logmanager.LogManagerService#saveConfiguration()
 	 */
-	public void saveConfiguration() throws APIException {
-		if (!ConfigurationManager.saveExternalConfiguration())
-			throw new APIException("Unable to save configuration");
+	public void clearConfiguration() throws APIException {
+		ConfigurationManager.clearConfiguration();
 	}
 	
 	/**
 	 * @see org.openmrs.module.logmanager.LogManagerService#saveConfiguration()
 	 */
-	public void clearConfiguration() throws APIException {
-		ConfigurationManager.clearConfiguration();
+	public void saveConfiguration() throws APIException {
+		try {
+			String path = OpenmrsUtil.getApplicationDataDirectory() + File.separator + Constants.EXTERNAL_CONFIG_NAME;
+			FileWriter writer = new FileWriter(path);
+
+			Document document = DOMConfigurationBuilder.currentConfiguration();
+			LogManagerUtils.writeDocument(document, writer);
+			
+			writer.close();
+			
+		} catch (IOException e) {
+			throw new APIException("Unable to save external logging configuration", e);
+		}
+	}
+
+	/**
+	 * @see org.openmrs.module.logmanager.LogManagerService#loadConfiguration()
+	 */
+	public void loadConfiguration() throws APIException {
+		String path = OpenmrsUtil.getApplicationDataDirectory() + File.separator + Constants.EXTERNAL_CONFIG_NAME;
+		
+		Document document = ConfigurationManager.readConfiguration(path);	
+		if (document != null) 
+			ConfigurationManager.parseConfiguration(document);	
+	}
+
+	/**
+	 * @see org.openmrs.module.logmanager.LogManagerService#loadConfiguration(org.w3c.dom.Document)
+	 */
+	public void loadConfiguration(Document document) throws APIException {
+		ConfigurationManager.parseConfiguration(document);
+	}
+
+	/**
+	 * @see org.openmrs.module.logmanager.LogManagerService#loadConfigurationFromSource()
+	 */
+	public void loadConfigurationFromSource() throws APIException {
+		try {
+			URL url = LogManagerServiceImpl.class.getResource("/" + Constants.INTERNAL_CONFIG_NAME);	
+			
+			// Read as document
+			Reader reader = new InputStreamReader(url.openStream());			
+			Document document = LogManagerUtils.readDocument(reader, new Log4jEntityResolver());
+			reader.close();
+			
+			ConfigurationManager.parseConfiguration(document);
+		} catch (Exception e) {
+			throw new APIException("Unable to read internal logging configuration", e);
+		}
+	}
+
+	/**
+	 * @see org.openmrs.module.logmanager.LogManagerService#loadConfigurationFromModules(java.lang.String[])
+	 */
+	public void loadConfigurationFromModules(String[] moduleIds) throws APIException {
+		// Load from each specified module
+		for (String moduleId : moduleIds) {
+			try {
+				Module module = ModuleFactory.getModuleById(moduleId);
+				Document log4jDoc = module.getLog4j();
+				if (module.getLog4j() != null)
+					ConfigurationManager.parseConfiguration(log4jDoc);
+			} catch (Exception e) {
+				log.error(e);
+			}
+		}
 	}
 
 	/**

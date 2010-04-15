@@ -35,6 +35,10 @@ import org.openmrs.module.Module;
 import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.logmanager.log4j.LoggerProxy;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
@@ -174,5 +178,35 @@ public class LogManagerUtils {
 			return file.getParentFile().canWrite();
 		else
 			return false;
+	}
+	
+	/**
+	 * Checks to see if the given module is modifying log4j's root logger
+	 * @param module the module to check
+	 * @return true if root logger is being modified
+	 */
+	public static boolean isModuleModifyingRoot(Module module) {
+		Element log4jDocElm = module.getLog4j().getDocumentElement();
+		NodeList roots = log4jDocElm.getElementsByTagName("root");
+		return roots.getLength() > 0;
+	}
+	
+	/**
+	 * Checks to see if the given module is modifying loggers outside of its namespace
+	 * @param module the module to check
+	 * @return true if loggers are being modified
+	 */
+	public static boolean isModuleModifyingLoggerOutsideNS(Module module) {
+		String moduleNS = "org.openmrs.module." + module.getModuleId();
+		
+		Element log4jDocElm = module.getLog4j().getDocumentElement();
+		NodeList loggers = log4jDocElm.getElementsByTagName("logger");
+		for (int n = 0; n < loggers.getLength(); n++) {
+			NamedNodeMap attrs = loggers.item(n).getAttributes();
+			Node nameNode = attrs.getNamedItem("name");
+			if (!nameNode.getNodeValue().startsWith(moduleNS))
+				return true;
+		}
+		return false;
 	}
 }

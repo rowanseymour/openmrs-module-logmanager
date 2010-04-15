@@ -35,7 +35,6 @@ import org.openmrs.module.Module;
 import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
-import org.openmrs.module.logmanager.log4j.ConfigurationManager;
 import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.openmrs.module.logmanager.web.util.WebUtils;
 import org.openmrs.util.OpenmrsUtil;
@@ -71,7 +70,7 @@ public class ConfigController extends ParameterizableViewController {
 		else if (request.getParameter("reload") != null)
 			reloadConfigurations(request);
 		
-		List<Map<String, Object>> log4jConfigs = getLog4jConfigs();
+		List<Map<String, Object>> log4jConfigs = getModuleConfigs();
 		model.put("log4jConfigs", log4jConfigs);
 		model.put("internalConfigName", "log4j.xml");
 		model.put("externalConfigName", Constants.EXTERNAL_CONFIG_NAME);
@@ -128,6 +127,7 @@ public class ConfigController extends ParameterizableViewController {
 			
 			// Parse as an XML configuration
 			try {
+				LogManagerService svc = Context.getService(LogManagerService.class);
 				Reader reader = new InputStreamReader(importFile.getInputStream());
 				Document document = LogManagerUtils.readDocument(reader, new Log4jEntityResolver());
 				reader.close();
@@ -138,7 +138,8 @@ public class ConfigController extends ParameterizableViewController {
 				log.warn(str.toString());
 				
 				if (document != null) {
-					ConfigurationManager.parseConfiguration(document);
+					svc.loadConfiguration(document);
+					
 					WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".config.importSuccess", new Object[] { filename });	
 				}
 				else
@@ -154,29 +155,27 @@ public class ConfigController extends ParameterizableViewController {
 	 * @param request the http request
 	 */
 	private void reloadConfigurations(HttpServletRequest request) {	
+		LogManagerService svc = Context.getService(LogManagerService.class);
 		boolean succeeded = true;
 		
 		if (request.getParameter("internalConfig") != null)
-			if (!ConfigurationManager.loadInternalConfiguration())
-				succeeded = false;
+			svc.loadConfigurationFromSource();
 		
 		if (request.getParameter("externalConfig") != null)
-			if (!ConfigurationManager.loadExternalConfiguration())
-				succeeded = false;
+			svc.loadConfiguration();
 		
 		String[] moduleConfigs = request.getParameterValues("moduleConfigs");
 		if (moduleConfigs != null)
-			if (!ConfigurationManager.loadModuleConfigurations(moduleConfigs))
-				succeeded = false;
+			svc.loadConfigurationFromModules(moduleConfigs);
 		
 		WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".config." + (succeeded ? "reloadSuccess" : "reloadError"), null);
 	}
 	
 	/**
 	 * Gets a list of log4j config sources
-	 * @return
+	 * @return the list of maps
 	 */
-	private List<Map<String, Object>> getLog4jConfigs() {
+	private List<Map<String, Object>> getModuleConfigs() {
 		List<Map<String, Object>> log4jConfigs = new ArrayList<Map<String, Object>>();
 		
 		// Load log4j config files from each module if they exist
@@ -185,8 +184,8 @@ public class ConfigController extends ParameterizableViewController {
 			if (module.getLog4j() != null) {
 				Map<String, Object> modConfig = new HashMap<String, Object>();
 				modConfig.put("moduleId", module.getModuleId());
-				modConfig.put("usesRoot", ConfigurationManager.isModuleModifyingRoot(module));
-				modConfig.put("outsideNS", ConfigurationManager.isModuleModifyingLoggerOutsideNS(module));
+				modConfig.put("usesRoot", LogManagerUtils.isModuleModifyingRoot(module));
+				modConfig.put("outsideNS", LogManagerUtils.isModuleModifyingLoggerOutsideNS(module));
 				log4jConfigs.add(modConfig);
 			}
 		}
