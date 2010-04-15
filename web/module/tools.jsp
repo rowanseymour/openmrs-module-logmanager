@@ -22,7 +22,7 @@ function logmgr_isArray(obj) {
 
 // Called when the user clicks the select all/none links
 function logmgr_onToggleSelectAll(state) {
-	boxes = document.configForm.configs;
+	boxes = document.configForm.moduleConfigs;
 	// Could be a single checkbox or an array of checkboxes.. oh javscript..
 	if (logmgr_isArray(boxes)) {
 		for (i = 0; i < boxes.length; i++)
@@ -31,14 +31,15 @@ function logmgr_onToggleSelectAll(state) {
 		boxes.checked = state;
 	}
 
-	document.configForm.configMain.checked = state;
+	document.configForm.internalConfig.checked = state;
+	document.configForm.externalConfig.checked = state;
 	document.configForm.reload.disabled = !state;	
 }
 
 // Called when the user clicks a config checkbox
 function logmgr_onClickConfig() {
 	someSelected = false;
-	boxes = document.configForm.configs;
+	boxes = document.configForm.moduleConfigs;
 	if (logmgr_isArray(boxes)) {
 		for (i = 0; i < boxes.length; i++) {
 			if (boxes[i].checked) {
@@ -50,7 +51,9 @@ function logmgr_onClickConfig() {
 		someSelected = boxes.checked;
 	}
 
-	if (document.configForm.configMain.checked)
+	if (document.configForm.internalConfig.checked)
+		someSelected = true;
+	else if (document.configForm.externalConfig.checked)
 		someSelected = true;
 	
 	document.configForm.reload.disabled = !someSelected;
