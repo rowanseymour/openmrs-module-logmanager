@@ -79,14 +79,15 @@ public class AppenderListController extends ParameterizableViewController {
 		
 		// Find appender and delete it
 		AppenderProxy appender = svc.getAppender(appenderId);
-		if (appender != null)
+		if (appender != null) {
 			svc.deleteAppender(appender);
-		
-		String name = appender.getName();
-		if (name == null || name.isEmpty())
-			name = ContextProvider.getMessage(Constants.MODULE_ID + ".anonymous");
-		WebUtils.setInfoMessage(request, 
-				Constants.MODULE_ID + ".appenders.deleteSuccess", new Object[] { name });
+				
+			String name = appender.getName();
+			if (name == null || name.isEmpty())
+				name = ContextProvider.getMessage(Constants.MODULE_ID + ".anonymous");
+			WebUtils.setInfoMessage(request, 
+					Constants.MODULE_ID + ".appenders.deleteSuccess", new Object[] { name });
+		}
 	}
 	
 	/**

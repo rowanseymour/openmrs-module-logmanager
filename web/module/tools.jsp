@@ -61,7 +61,7 @@
 		<tr>
 			<th width="150"><spring:message code="${moduleId}.logger"/></th>
 			<td>
-				<input type="text" name="injectLoggerName" value="${injectLoggerName}" style="width: 300px" />
+				<input type="text" name="injectLoggerName" value="${injectLoggerName}" style="width: 400px" />
 				<c:if test="${loggerNameError}">
 					<span class="error"><spring:message code="${moduleId}.error.invalidName" /></span>
 				</c:if>
@@ -79,7 +79,7 @@
 		<tr>
 			<th><spring:message code="${moduleId}.tools.message"/></th>
 			<td>
-				<textarea name="injectMessage" style="width: 300px" rows="3">${injectMessage}</textarea>
+				<textarea name="injectMessage" style="width: 400px" rows="2">${injectMessage}</textarea>
 			</td>
 		</tr>
 	</table>
