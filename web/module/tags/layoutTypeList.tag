@@ -1,4 +1,4 @@
-<%@ tag language="java" pageEncoding="UTF-8" import="org.openmrs.module.logmanager.LayoutType" %>
+<%@ tag language="java" pageEncoding="UTF-8" import="org.openmrs.module.logmanager.log4j.LayoutType" %>
 <%@ taglib prefix="c" uri="/WEB-INF/taglibs/c-rt.tld" %>
 
 <%@ attribute name="name" required="true" %>

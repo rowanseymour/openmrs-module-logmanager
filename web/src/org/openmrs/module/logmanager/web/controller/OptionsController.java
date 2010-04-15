@@ -34,9 +34,9 @@ import org.springframework.web.servlet.view.RedirectView;
 /**
  * Controller for configuration page
  */
-public class ModuleConfigController extends SimpleFormController {
+public class OptionsController extends SimpleFormController {
 	
-	protected static final Log log = LogFactory.getLog(ModuleConfigController.class);
+	protected static final Log log = LogFactory.getLog(OptionsController.class);
 	
 	/**
 	 * @see org.springframework.web.servlet.mvc.SimpleFormController#onSubmit(javax.servlet.http.HttpServletRequest,
