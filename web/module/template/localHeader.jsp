@@ -22,7 +22,12 @@
 	</li>
 	
 	<li <c:if test='<%= request.getRequestURI().contains("/config") %>'>class="active"</c:if>>
-		<a href="${pageContext.request.contextPath}/module/logmanager/config.htm">
-			<spring:message code="logmanager.menu.config"/></a>
+		<a href="${pageContext.request.contextPath}/module/logmanager/config.list">
+			<spring:message code="logmanager.menu.configuration"/></a>
+	</li>
+	
+	<li <c:if test='<%= request.getRequestURI().contains("/options") %>'>class="active"</c:if>>
+		<a href="${pageContext.request.contextPath}/module/logmanager/options.htm">
+			<spring:message code="logmanager.menu.options"/></a>
 	</li>
 </ul>

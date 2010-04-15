@@ -22,15 +22,16 @@
 		</property>
 		<property name="mappings">
 			<props>
+				<prop key="module/@MODULE_ID@/viewer.htm">logMgrLogViewerController</prop>
+				<prop key="module/@MODULE_ID@/event.htm">logMgrEventViewerController</prop>
 				<prop key="module/@MODULE_ID@/logger.list">logMgrLoggerListController</prop>
 				<prop key="module/@MODULE_ID@/logger.form">logMgrLoggerFormController</prop>
 				<prop key="module/@MODULE_ID@/appender.list">logMgrAppenderListController</prop>
 				<prop key="module/@MODULE_ID@/appender.form">logMgrAppenderFormController</prop>
-				<prop key="module/@MODULE_ID@/viewer.htm">logMgrLogViewerController</prop>
-				<prop key="module/@MODULE_ID@/event.htm">logMgrEventViewerController</prop>
 				<prop key="module/@MODULE_ID@/tools.htm">logMgrToolsController</prop>
-				<prop key="module/@MODULE_ID@/configViewer.htm">logMgrConfigViewerController</prop>
-				<prop key="module/@MODULE_ID@/config.htm">logMgrModuleConfigController</prop>
+				<prop key="module/@MODULE_ID@/config.list">logMgrConfigController</prop>
+				<prop key="module/@MODULE_ID@/config.form">logMgrConfigViewerController</prop>
+				<prop key="module/@MODULE_ID@/options.htm">logMgrOptionsController</prop>
 				
 				<prop key="admin/maintenance/serverLog.form">logMgrLogViewerController</prop>
 			</props>
@@ -46,7 +47,25 @@
 	<bean id="logMgrDocumentXmlView" class="@MODULE_PACKAGE@.web.view.DocumentXmlView" />
 
 	<!-- ========================= Controllers ========================= -->
+
+	<bean id="logMgrLogViewerController" class="@MODULE_PACKAGE@.web.controller.LogViewerController">
+		<property name="viewName">
+			<value>module/@MODULE_ID@/viewer</value>
+		</property>
+		<property name="exportView">
+			<ref bean="logMgrEventsExportView" />
+		</property>
+	</bean>
 	
+	<bean id="logMgrEventViewerController" class="@MODULE_PACKAGE@.web.controller.EventViewerController">
+		<property name="viewName">
+			<value>module/@MODULE_ID@/event</value>
+		</property>
+		<property name="reportView">
+			<ref bean="logMgrEventReportView" />
+		</property>
+	</bean>
+		
 	<bean id="logMgrLoggerListController" class="@MODULE_PACKAGE@.web.controller.LoggerListController">
 		<property name="viewName">
 			<value>module/@MODULE_ID@/loggerList</value>
@@ -77,48 +96,36 @@
 		</property>
 	</bean>
 	
-	<bean id="logMgrLogViewerController" class="@MODULE_PACKAGE@.web.controller.LogViewerController">
-		<property name="viewName">
-			<value>module/@MODULE_ID@/viewer</value>
-		</property>
-		<property name="exportView">
-			<ref bean="logMgrEventsExportView" />
-		</property>
-	</bean>
-	
-	<bean id="logMgrEventViewerController" class="@MODULE_PACKAGE@.web.controller.EventViewerController">
-		<property name="viewName">
-			<value>module/@MODULE_ID@/event</value>
-		</property>
-		<property name="reportView">
-			<ref bean="logMgrEventReportView" />
-		</property>
-	</bean>
-	
 	<bean id="logMgrToolsController" class="@MODULE_PACKAGE@.web.controller.ToolsController">
 		<property name="viewName">
 			<value>module/@MODULE_ID@/tools</value>
 		</property>
 	</bean>
 	
-	<bean id="logMgrModuleConfigController" class="@MODULE_PACKAGE@.web.controller.ModuleConfigController">
-		<property name="commandName">
-			<value>config</value>
-		</property>
-		<property name="formView">
+	<bean id="logMgrConfigController" class="@MODULE_PACKAGE@.web.controller.ConfigController">
+		<property name="viewName">
 			<value>module/@MODULE_ID@/config</value>
-		</property>
-		<property name="successView">
-			<value>config.htm</value>
-		</property>
-		<property name="validator">
-			<bean class="@MODULE_PACKAGE@.validator.ConfigValidator" />
 		</property>
 	</bean>
 	
 	<bean id="logMgrConfigViewerController" class="@MODULE_PACKAGE@.web.controller.ConfigViewerController">
 		<property name="xmlView">
 			<ref bean="logMgrDocumentXmlView" />
+		</property>
+	</bean>
+	
+	<bean id="logMgrOptionsController" class="@MODULE_PACKAGE@.web.controller.OptionsController">
+		<property name="commandName">
+			<value>config</value>
+		</property>
+		<property name="formView">
+			<value>module/@MODULE_ID@/options</value>
+		</property>
+		<property name="successView">
+			<value>options.htm</value>
+		</property>
+		<property name="validator">
+			<bean class="@MODULE_PACKAGE@.validator.OptionsValidator" />
 		</property>
 	</bean>
 

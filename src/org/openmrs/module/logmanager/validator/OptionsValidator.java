@@ -21,7 +21,7 @@ import org.springframework.validation.Validator;
 /**
  * Validator for config objects
  */
-public class ConfigValidator implements Validator {
+public class OptionsValidator implements Validator {
 
 	/**
 	 * @see org.springframework.validation.Validator#supports(Class)
