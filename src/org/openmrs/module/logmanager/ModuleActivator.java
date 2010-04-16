@@ -13,14 +13,11 @@
  */
 package org.openmrs.module.logmanager;
 
-import java.io.File;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.Activator;
+import org.openmrs.module.logmanager.impl.LogManagerServiceImpl;
 import org.openmrs.module.logmanager.log4j.ConfigurationManager;
-import org.openmrs.util.OpenmrsUtil;
-import org.w3c.dom.Document;
 
 /**
  * This class contains the logic that is run every time this module is either
@@ -36,13 +33,17 @@ public class ModuleActivator implements Activator {
 	public void startup() {
 		log.info("Starting log manager module...");
 		
-		// Look for external log4j.xml to load
-		if (Options.getCurrent().isLoadExternalConfigOnStartup()) {
-			String path = OpenmrsUtil.getApplicationDataDirectory() + File.separator + Constants.EXTERNAL_CONFIG_NAME;	
-			Document document = ConfigurationManager.readConfiguration(path);	
-			if (document != null) 
-				ConfigurationManager.parseConfiguration(document);
-		}
+		// Create a dummy service as the real service in the application
+		// context won't have been created yet. Works for the methods that
+		// don't use the DAO layer
+		LogManagerService svc = new LogManagerServiceImpl();
+		
+		// Load external log4j.xml if it exists
+		if (Options.getCurrent().isLoadExternalConfigOnStartup())
+			svc.loadConfiguration();
+		
+		// Save to external log4j.xml
+		svc.saveConfiguration();
 		
 		// Ensure that the memory appender defined in OpenMRS's log4j.xml exists
 		// and configure it to be used as the system appender

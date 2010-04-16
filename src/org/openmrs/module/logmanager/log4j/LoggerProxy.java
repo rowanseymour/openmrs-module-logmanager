@@ -79,14 +79,6 @@ public class LoggerProxy extends AbstractProxy<Logger> {
 	}
 	
 	/**
-	 * Gets a proxy of the root logger
-	 * @return the proxy root logger
-	 */
-	public static LoggerProxy getRootLogger() {
-		return new LoggerProxy(LogManager.getRootLogger());
-	}
-	
-	/**
 	 * Returns true if proxy references the root logger
 	 * @return true if this logger is root
 	 */
