@@ -89,13 +89,18 @@ function submitViewForm(format) {
 			</td>
 			
 			<td align="right" nowrap="nowrap">
-				<input type="checkbox" name="profiler" value="1" ${profiler ? 'checked="checked"' : ''} />
-				<spring:message code="${moduleId}.viewer.showProfilerView" />
+				<!-- Causes profiler=0 to be sent when checkbox is unchecked -->
+				<input type="hidden" name="profiler" value="${profiler ? 1 : 0}" />
+				<input type="checkbox" onclick="this.form.profiler.value=this.checked?1:0" ${profiler ? 'checked="checked"' : ''} />
+				
+				<spring:message code="${moduleId}.viewer.showProfilerView" />	
+				
 				&nbsp;
 				<a class="formatLink" href="javascript:submitViewForm('txt')">TXT</a>
 				<a class="formatLink" href="javascript:submitViewForm('xml')">XML</a>
 				&nbsp;
 				&nbsp;
+				
 				<input type="button" onclick="submitViewForm('')" value="<spring:message code="general.refresh"/>" />
 			</td>
 		</tr>

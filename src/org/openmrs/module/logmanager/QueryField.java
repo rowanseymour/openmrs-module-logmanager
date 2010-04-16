@@ -27,4 +27,13 @@ public enum QueryField {
 	public int getOrdinal() {
 		return ordinal();
 	}
+	
+	/**
+	 * Gets the equivalent enum value of the specified integer
+	 * @param value the integer value
+	 * @return the enum value
+	 */
+	public static QueryField fromOrdinal(int value) {
+		return QueryField.values()[value];
+	}
 }

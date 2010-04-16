@@ -89,4 +89,13 @@ public enum AppenderType {
 		else
 			return UNKNOWN;
 	}
+	
+	/**
+	 * Gets the equivalent enum value of the specified integer
+	 * @param value the integer value
+	 * @return the enum value
+	 */
+	public static AppenderType fromOrdinal(int value) {
+		return AppenderType.values()[value];
+	}
 }

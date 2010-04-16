@@ -14,12 +14,12 @@
 package org.openmrs.module.logmanager.web.util;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.module.logmanager.QueryField;
-import org.openmrs.module.logmanager.log4j.AppenderType;
 import org.openmrs.web.WebConstants;
+import org.springframework.web.bind.ServletRequestUtils;
 
 /**
  * Utility methods for the web front end
@@ -27,45 +27,32 @@ import org.openmrs.web.WebConstants;
 public class WebUtils {
 	
 	protected static final Log log = LogFactory.getLog(WebUtils.class);
-			
-	/**
-	 * Utility method to get a parsed appender type parameter
-	 * @param request the HTTP request object
-	 * @param name the name of the parameter
-	 * @param def the default value if parameter doesn't exist or is invalid
-	 * @return the appender type value
-	 */
-	public static AppenderType getAppenderTypeParameter(HttpServletRequest request, String name, AppenderType def) {
-		String str = request.getParameter(name);
-		if (str != null) {
-			try {
-				int i = Integer.parseInt(str);
-				return AppenderType.values()[i];
-			} catch (Exception ex) {
-				log.warn("Invalid appender type value: " + str);
-			}
-		}
-		return def;
-	}
 	
 	/**
-	 * Utility method to get a parsed query field parameter
-	 * @param request the HTTP request object
+	 * Gets an int parameter from the request that is being "remembered" in the session
+	 * @param request the http request
 	 * @param name the name of the parameter
-	 * @param def the default value if parameter doesn't exist or is invalid
-	 * @return the query field value
+	 * @param def the default value of the parameter
+	 * @param sessionPrefix the prefix to generate session attribute from parameter name
+	 * @return the parameter value
 	 */
-	public static QueryField getQueryFieldParameter(HttpServletRequest request, String name, QueryField def) {
-		String str = request.getParameter(name);
-		if (str != null) {
-			try {
-				int i = Integer.parseInt(str);
-				return QueryField.values()[i];
-			} catch (Exception ex) {
-				log.warn("Invalid query field value: " + str);
-			}
+	public static int getSessionedIntParameter(HttpServletRequest request, String name, int def, String sessionPrefix) {
+		HttpSession session = request.getSession();
+		int val = def;
+		
+		// If specified in request, read that and store in session
+		if (request.getParameter(name) != null) {
+			val = ServletRequestUtils.getIntParameter(request, name, def);
+			session.setAttribute(sessionPrefix + name, val);
 		}
-		return def;
+		// Otherwise look for a matching attribute in the session
+		else {
+			Integer sessionVal = (Integer)session.getAttribute(sessionPrefix + name);
+			if (sessionVal != null)
+				val = sessionVal;
+		}
+		
+		return val;
 	}
 	
 	/**
