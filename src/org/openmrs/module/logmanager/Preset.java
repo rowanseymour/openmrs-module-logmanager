@@ -52,7 +52,7 @@ public class Preset {
 	 * @param id the id
 	 */
 	public void setPresetId(int presetId) {
-		this.presetId =presetId;
+		this.presetId = presetId;
 	}
 
 	/**
