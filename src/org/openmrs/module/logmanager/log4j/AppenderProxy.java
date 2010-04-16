@@ -26,6 +26,7 @@ import org.apache.log4j.nt.NTEventLogAppender;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.OptionHandler;
 import org.openmrs.module.logmanager.AbstractProxy;
+import org.openmrs.module.logmanager.AppenderTypeException;
 import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.openmrs.util.MemoryAppender;
 
@@ -225,12 +226,13 @@ public class AppenderProxy extends AbstractProxy<Appender> {
 	
 	/**
 	 * Activates this appender by calling the target's activateOptions method
+	 * @throws AppenderTypeException if appender is not activatable
 	 */
 	public void activate() {
 		if (target instanceof OptionHandler)
 			((OptionHandler)target).activateOptions();
 		else
-			throw new RuntimeException("Attempted to activate a non-activatable appender");
+			throw new AppenderTypeException("Cannot activate a non-activatable appender");
 	}
 	
 	/**
@@ -270,11 +272,12 @@ public class AppenderProxy extends AbstractProxy<Appender> {
 	/**
 	 * Gets logging events from a memory appender
 	 * @return the list of logging events
+	 * @throws AppenderTypeException if appender is not viewable
 	 */
 	@SuppressWarnings("unchecked")
 	public Collection<LoggingEvent> getLoggingEvents() {
 		if (!isViewable())
-			throw new RuntimeException("Attemped to get events from a non-viewable appender");
+			throw new AppenderTypeException("Cannot access events on a non-viewable appender");
 		
 		// Buffer is a private field in the MemoryAppender class
 		CircularFifoBuffer buffer = (CircularFifoBuffer)LogManagerUtils.getPrivateField(target, "buffer");
@@ -292,10 +295,11 @@ public class AppenderProxy extends AbstractProxy<Appender> {
 	
 	/**
 	 * Clears the events from this appender
+	 * @throws AppenderTypeException if appender is not clearable
 	 */
 	public void clear() {
 		if (!isClearable())
-			throw new RuntimeException("Attemped to clear events on a non-clearable appender");
+			throw new AppenderTypeException("Cannot clear events on a non-clearable appender");
 		
 		// Buffer is a private field in the MemoryAppender class
 		CircularFifoBuffer buffer = (CircularFifoBuffer)LogManagerUtils.getPrivateField(target, "buffer");
