@@ -116,13 +116,11 @@ public interface LogManagerService extends OpenmrsService {
 	public LoggingEvent getAppenderEvent(AppenderProxy appender, int id, List<LoggingEvent> contextEvents, int contextCount) throws APIException;
 	
 	/**
-	 * Gets the version of MySQL being used by OpenMRS
-	 * @return the version string
-	 * @throws APIException
+	 * Updates the specified appender
+	 * @param appender the appender to update
 	 */
-	@Authorized( { Constants.PRIV_VIEW_SERVER_LOG })
-	@Transactional(readOnly=true)
-	public String getMySQLVersion() throws APIException;
+	@Authorized( { Constants.PRIV_MANAGE_SERVER_LOG })
+	public void updateAppender(AppenderProxy appender);
 	
 	/**
 	 * Gets the preset with the given id
@@ -202,4 +200,13 @@ public interface LogManagerService extends OpenmrsService {
 	 */
 	@Authorized( { Constants.PRIV_MANAGE_SERVER_LOG })
 	public void loadConfigurationFromModules(String[] moduleIds) throws APIException;
+	
+	/**
+	 * Gets the version of MySQL being used by OpenMRS
+	 * @return the version string
+	 * @throws APIException
+	 */
+	@Authorized( { Constants.PRIV_VIEW_SERVER_LOG })
+	@Transactional(readOnly=true)
+	public String getMySQLVersion() throws APIException;
 }

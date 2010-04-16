@@ -219,8 +219,18 @@ public class AppenderProxy extends AbstractProxy<Appender> {
 	 * its properties
 	 * @return true if appender must be restarted
 	 */
-	public boolean isRestartOnUpdateRequired() {
+	public boolean isActivationRequired() {
 		return target instanceof OptionHandler;
+	}
+	
+	/**
+	 * Activates this appender by calling the target's activateOptions method
+	 */
+	public void activate() {
+		if (target instanceof OptionHandler)
+			((OptionHandler)target).activateOptions();
+		else
+			throw new RuntimeException("Attempted to activate a non-activatable appender");
 	}
 	
 	/**
@@ -229,7 +239,7 @@ public class AppenderProxy extends AbstractProxy<Appender> {
 	 * viewer page does
 	 * @return true if it requires a layout
 	 */
-	public boolean isRequiresLayout() {
+	public boolean isLayoutRequired() {
 		return target.requiresLayout();
 	}
 	
