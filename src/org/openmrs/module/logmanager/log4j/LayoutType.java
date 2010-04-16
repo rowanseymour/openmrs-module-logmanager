@@ -77,4 +77,13 @@ public enum LayoutType {
 		else
 			return UNKNOWN;
 	}
+	
+	/**
+	 * Gets the equivalent enum value of the specified integer
+	 * @param value the integer value
+	 * @return the enum value
+	 */
+	public static LayoutType fromOrdinal(int value) {
+		return LayoutType.values()[value];
+	}
 }

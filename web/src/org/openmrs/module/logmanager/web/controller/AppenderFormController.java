@@ -122,7 +122,7 @@ public class AppenderFormController extends SimpleFormController {
 		
 		// Create new appender from parameters passed from appender list page
 		String name = request.getParameter("newName");
-		AppenderType type = WebUtils.getAppenderTypeParameter(request, "newType", AppenderType.CONSOLE);
+		AppenderType type = AppenderType.fromOrdinal(ServletRequestUtils.getIntParameter(request, "newType", AppenderType.CONSOLE.getOrdinal()));
 		
 		// Create the appender object based on the requested type
 		AppenderProxy appender = new AppenderProxy(type, name);

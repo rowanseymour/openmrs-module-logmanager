@@ -48,6 +48,8 @@ public class LogViewerController extends ParameterizableViewController {
 	
 	protected static final Log log = LogFactory.getLog(LogViewerController.class);
 	
+	protected static final String SESSION_ATTR_PREFIX = Constants.MODULE_ID + ".viewer.";
+	
 	protected View exportView;
 	
 	/**
@@ -72,7 +74,7 @@ public class LogViewerController extends ParameterizableViewController {
 		Level level = Level.toLevel(ServletRequestUtils.getIntParameter(request, "level", Level.ALL_INT));
 		model.put("level", level.toInt());
 		
-		QueryField queryField = WebUtils.getQueryFieldParameter(request, "queryField", QueryField.CLASS_NAME);
+		QueryField queryField = QueryField.fromOrdinal(ServletRequestUtils.getIntParameter(request, "queryField", QueryField.CLASS_NAME.getOrdinal()));
 		String queryValue = request.getParameter("queryValue");
 		if (queryValue != null) {
 			queryValue = queryValue.trim();
@@ -125,7 +127,7 @@ public class LogViewerController extends ParameterizableViewController {
 			return new ModelAndView(getExportView(), model);
 		}
 		
-		boolean profiler = ServletRequestUtils.getIntParameter(request, "profiler", 0) == 1;
+		boolean profiler = WebUtils.getSessionedIntParameter(request, "profiler", 0, SESSION_ATTR_PREFIX) == 1;
 		model.put("profiler", profiler);
 		
 		// Calc time diffs for profiling
