@@ -17,17 +17,17 @@
 
 <script type="text/javascript">
 function logmgr_isArray(obj) {
-	return (obj.length != undefined);
+	return (obj != undefined && obj.length != undefined);
 }
 
 // Called when the user clicks the select all/none links
 function logmgr_onToggleSelectAll(state) {
 	boxes = document.configForm.moduleConfigs;
-	// Could be a single checkbox or an array of checkboxes.. oh javscript..
+	// Could be a single checkbox or an array of checkboxes.. or nothing.. oh javscript..
 	if (logmgr_isArray(boxes)) {
 		for (i = 0; i < boxes.length; i++)
 			boxes[i].checked = state;
-	} else {
+	} else if (boxes != undefined) {
 		boxes.checked = state;
 	}
 
@@ -47,7 +47,7 @@ function logmgr_onClickConfig() {
 				break;
 			}
 		}
-	} else {
+	} else if (boxes != undefined) {
 		someSelected = boxes.checked;
 	}
 
