@@ -23,8 +23,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.api.context.Context;
-import org.openmrs.module.logmanager.LogManagerService;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -81,8 +79,6 @@ public class DOMConfigurationBuilder {
 	 * @return the DOM document
 	 */
 	public static Document currentConfiguration() {	
-		LogManagerService svc = Context.getService(LogManagerService.class);
-
 		// Build empty configuration document
 		Document document = emptyConfiguration();
 		if (document == null)
@@ -92,20 +88,19 @@ public class DOMConfigurationBuilder {
 		Element documentElem = document.getDocumentElement();
 		
 		// Create appender elements
-		for (AppenderProxy appender : svc.getAppenders(false)) {
+		for (AppenderProxy appender : LogManagerProxy.getAppenders()) {
 			String appenderName = appender.getName();
 			// We can't save appenders with no name...
 			if (appenderName != null && !appenderName.isEmpty())
 				addAppenderElement(document, documentElem, appender);
 		}
 
-		// Create logger elements
-		for (LoggerProxy logger : svc.getLoggers(false))
+		// Create logger elements	
+		for (LoggerProxy logger : LogManagerProxy.getLoggers(false))
 			addLoggerElement(document, documentElem, logger);
-
 		
 		// Create root logger element
-		addLoggerElement(document, documentElem, LoggerProxy.getRootLogger());
+		addLoggerElement(document, documentElem, LogManagerProxy.getRootLogger());
 
 		return document;
 	}

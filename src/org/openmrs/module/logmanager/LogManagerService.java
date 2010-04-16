@@ -56,7 +56,7 @@ public interface LogManagerService extends OpenmrsService {
 	/**
 	 * Gets all the appenders currently attached to a logger
 	 * @param sorted true if method should return a sorted list, otherwise returns a set
-	 * @return the set of appenders
+	 * @return the set or list of appenders
 	 */
 	@Authorized( { Constants.PRIV_VIEW_SERVER_LOG })
 	@Transactional(readOnly=true)

@@ -15,6 +15,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.log4j.AppenderProxy;
+import org.openmrs.module.logmanager.log4j.LogManagerProxy;
 import org.openmrs.module.logmanager.log4j.LoggerProxy;
 import org.openmrs.module.logmanager.propertyeditor.LevelEditor;
 import org.openmrs.module.logmanager.web.util.WebUtils;
@@ -121,7 +122,7 @@ public class LoggerFormController extends SimpleFormController {
 		}
 		// Else if root is specified get it
 		else if (request.getParameter("root") != null)
-			return LoggerProxy.getRootLogger();
+			return LogManagerProxy.getRootLogger();
 	
 		// Else create new logger with given name
 		return new LoggerProxy(name, Level.INFO);

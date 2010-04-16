@@ -26,6 +26,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.Preset;
+import org.openmrs.module.logmanager.log4j.LogManagerProxy;
 import org.openmrs.module.logmanager.log4j.LoggerProxy;
 import org.openmrs.module.logmanager.web.util.IconFactory;
 import org.openmrs.module.logmanager.web.util.WebUtils;
@@ -71,7 +72,7 @@ public class LoggerListController extends ParameterizableViewController {
 		
 		model.put("presets", svc.getPresets());
 		model.put("loggers", svc.getLoggers(false));
-		model.put("rootLogger", LoggerProxy.getRootLogger());
+		model.put("rootLogger", LogManagerProxy.getRootLogger());
 		model.put("levelLabels", IconFactory.getLevelLabelMap());
 		model.put("levelNullLabel", "<i>&lt;Inherit&gt;</i>");
 		model.put("levelIcons", IconFactory.getLevelIconMap());
@@ -133,7 +134,7 @@ public class LoggerListController extends ParameterizableViewController {
 			
 			// Check for root logger
 			if (name.equals("ROOT")) {
-				LoggerProxy rootLogger = LoggerProxy.getRootLogger();
+				LoggerProxy rootLogger = LogManagerProxy.getRootLogger();
 				rootLogger.setLevel(level);
 				rootLogger.updateTarget();
 			} else {

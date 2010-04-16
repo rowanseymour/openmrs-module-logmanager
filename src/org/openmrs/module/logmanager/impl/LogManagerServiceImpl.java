@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,6 +50,7 @@ import org.openmrs.module.logmanager.db.LogManagerDAO;
 import org.openmrs.module.logmanager.log4j.AppenderProxy;
 import org.openmrs.module.logmanager.log4j.ConfigurationManager;
 import org.openmrs.module.logmanager.log4j.DOMConfigurationBuilder;
+import org.openmrs.module.logmanager.log4j.LogManagerProxy;
 import org.openmrs.module.logmanager.log4j.LoggerProxy;
 import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.openmrs.module.logmanager.util.PagingInfo;
@@ -77,65 +77,23 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	/**
 	 * @see org.openmrs.module.logmanager.LogManagerService#getLoggers(boolean)
 	 */
-	@SuppressWarnings("unchecked")
 	public List<LoggerProxy> getLoggers(boolean incImplicit) {
-		Enumeration<Logger> loggersEnum = (Enumeration<Logger>)LogManager.getCurrentLoggers();
-		
-		// Convert enum to a list
-		List<Logger> loggers = incImplicit ? Collections.list(loggersEnum) : getExplicitLoggersFromEnum(loggersEnum);
-		
-		// Sort list by logger name
-		Collections.sort(loggers, new Comparator<Logger>() {
-			public int compare(Logger log1, Logger log2) {
-				return log1.getName().compareTo(log2.getName());
-			}
-		});
-		
-		// Convert to proxy objects
-		List<LoggerProxy> proxies = new ArrayList<LoggerProxy>();
-		for (Logger logger : loggers)
-			proxies.add(new LoggerProxy(logger));
-		
-		return proxies;
+		return LogManagerProxy.getLoggers(incImplicit);
 	}
 	
 	/**
 	 * @see org.openmrs.module.logmanager.LogManagerService#getAppender(int)
 	 */
 	public AppenderProxy getAppender(int id) throws APIException {
-		Collection<AppenderProxy> appenders = getAppenders(false);
-		for (AppenderProxy appender : appenders)
-			if (appender.getId() == id)
-				return appender;
-		return null;
+		return LogManagerProxy.getAppender(id);
 	}
 	
 	/**
 	 * @see org.openmrs.module.logmanager.LogManagerService#getAppenders()
 	 */
-	@SuppressWarnings("unchecked")
 	public Collection<AppenderProxy> getAppenders(boolean sorted) {
-		Set<AppenderProxy> appenders = new HashSet<AppenderProxy>();
-		
-		// Add system appender
-		if (AppenderProxy.getSystemAppender() != null)
-			appenders.add(AppenderProxy.getSystemAppender());
-		
-		// Add appenders attached to the root logger
-		Enumeration<Appender> rootAppenders = LogManager.getRootLogger().getAllAppenders();
-		while (rootAppenders.hasMoreElements())
-			appenders.add(new AppenderProxy(rootAppenders.nextElement()));
-		
-		// Search for appenders on all other loggers
-		Enumeration<Logger> loggersEnum = LogManager.getCurrentLoggers();
-		while (loggersEnum.hasMoreElements()) {
-			Logger logger = loggersEnum.nextElement();
-			Enumeration<Appender> appendersEnum = logger.getAllAppenders();
+		Set<AppenderProxy> appenders = LogManagerProxy.getAppenders();
 			
-			while (appendersEnum.hasMoreElements())
-				appenders.add(new AppenderProxy(appendersEnum.nextElement()));
-		}
-		
 		// Optionally sort into a list
 		if (sorted) {
 			List<AppenderProxy> appenderList = new ArrayList<AppenderProxy>(appenders);
@@ -296,7 +254,7 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 		loggerMap.clear();
 		
 		// Add root logger to map
-		LoggerProxy rootLogger = LoggerProxy.getRootLogger();
+		LoggerProxy rootLogger = LogManagerProxy.getRootLogger();
 		loggerMap.put("ROOT", rootLogger.getLevelInt());
 		
 		// Add all other loggers
@@ -397,23 +355,6 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	 */
 	public String getMySQLVersion() throws APIException {
 		return dao.getMySQLVersion();
-	}
-
-	/**
-	 * Gets all loggers with explicit level or appenders from an enumeration of loggers
-	 * @param loggersEnum the enumeration of loggers
-	 * @return the list of loggers
-	 */
-	private static List<Logger> getExplicitLoggersFromEnum(Enumeration<Logger> loggersEnum) {
-		List<Logger> loggers = new ArrayList<Logger>();
-		
-		while (loggersEnum.hasMoreElements()) {
-			Logger logger = loggersEnum.nextElement();
-			if (logger.getLevel() != null || logger.getAllAppenders().hasMoreElements())
-				loggers.add(logger);
-		}
-		
-		return loggers;
 	}
 	
 	/**
