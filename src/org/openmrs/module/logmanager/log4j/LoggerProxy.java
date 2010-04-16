@@ -13,8 +13,10 @@
  */
 package org.openmrs.module.logmanager.log4j;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
@@ -105,11 +107,20 @@ public class LoggerProxy extends AbstractProxy<Logger> {
 		
 		// For some unknown reason... calling removeAllAppenders() on the
 		// the root logger breaks it, but this is fine
-		List<Appender> apps = Collections.list(target.getAllAppenders());
-		for (Appender appender : apps)
+		List<Appender> currentAppenders = Collections.list(target.getAllAppenders());
+		for (Appender appender : currentAppenders)
 			target.removeAppender(appender);
 		
-		for (AppenderProxy appender : appenders)
+		// Before adding appenders back, sort them to put socket appenders first which gets around
+		// this bug in Apache Chainsaw http://marc.info/?l=log4j-user&m=110954014907716&w=2
+		List<AppenderProxy> sortedApps = new ArrayList<AppenderProxy>(appenders);
+		Collections.sort(sortedApps, new Comparator<AppenderProxy>() {
+			public int compare(AppenderProxy o1, AppenderProxy o2) {		
+				return (o1.getType() == AppenderType.SOCKET) ? -1 : 0;
+			}	
+		});
+		
+		for (AppenderProxy appender : sortedApps)
 			target.addAppender(appender.getTarget());
 	}
 	
