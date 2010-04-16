@@ -77,17 +77,8 @@ public class AppenderFormController extends SimpleFormController {
 		AppenderProxy appender = (AppenderProxy)command;
 		boolean exists = appender.isExisting();
 		
-		// Some appenders require initialising after options have been loaded. 
-		// However, closing a console appender will crash log4j...
-		if (exists && appender.getType() != AppenderType.CONSOLE && appender.isRestartOnUpdateRequired())
-			appender.getTarget().close();
-		
-		// Ensure appender exists and is synced with proxy
-		appender.updateTarget();
-		
-		// Some appenders require initialising after options have been loaded
-		if (appender.isRestartOnUpdateRequired())
-			((OptionHandler)appender.getTarget()).activateOptions();
+		// Update and activate appender
+		svc.updateAppender(appender);
 		
 		if (!exists) {
 			String attachTo = request.getParameter("attachTo");

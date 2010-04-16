@@ -261,12 +261,17 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 		}
 		return null;
 	}
-
+	
 	/**
-	 * @see org.openmrs.module.logmanager.LogManagerService#getMySQLVersion()
+	 * @see org.openmrs.module.logmanager.LogManagerService#updateAppender(AppenderProxy)
 	 */
-	public String getMySQLVersion() throws APIException {
-		return dao.getMySQLVersion();
+	public void updateAppender(AppenderProxy appender) {
+		// Ensure appender exists and is synced with proxy
+		appender.updateTarget();
+		
+		// Some appenders require initialising after options have been loaded
+		if (appender.isActivationRequired())
+			appender.activate();
 	}
 	
 	/**
@@ -385,6 +390,13 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 				log.error(e);
 			}
 		}
+	}
+	
+	/**
+	 * @see org.openmrs.module.logmanager.LogManagerService#getMySQLVersion()
+	 */
+	public String getMySQLVersion() throws APIException {
+		return dao.getMySQLVersion();
 	}
 
 	/**

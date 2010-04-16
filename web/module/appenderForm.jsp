@@ -65,7 +65,7 @@ function onChangeLayoutType(value) {
 			</td>
 		</tr>
 		<%------------------ Layout fields ------------------%>
-		<c:if test="${appender.requiresLayout}">
+		<c:if test="${appender.layoutRequired}">
 			<tr>
 				<th valign="top"><spring:message code="${moduleId}.appenders.layout"/></th>
 				<td>
