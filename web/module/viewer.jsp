@@ -9,7 +9,7 @@
 <%@ include file="/WEB-INF/view/admin/maintenance/localHeader.jsp"%>
 <%@ include file="template/localHeader.jsp"%>
 
-<c:set var="level_ERROR" value="<%= org.apache.log4j.Level.ERROR_INT %>" />
+<c:set var="level_ERROR" value="<%= org.openmrs.module.logmanager.log4j.LevelProxy.ERROR %>" />
 
 <style type="text/css">
 #eventsTable td {
@@ -120,12 +120,12 @@ function submitViewForm(format) {
 	
 		<c:forEach var="event" items="${events}" varStatus="rowStatus">
 			<tr
-				class="rowLink <c:choose><c:when test="${logmgr:levelToInt(event.level) >= level_ERROR}">errorLevel</c:when><c:when test="${rowStatus.index % 2 == 0}">evenRow</c:when><c:otherwise>oddRow</c:otherwise></c:choose>"
-				onclick="location.href='${pageContext.request.contextPath}/module/logmanager/event.htm?appId=${appender.id}&amp;eventId=${logmgr:hashCode(event)}'"
+				class="rowLink <c:choose><c:when test="${event.level.intValue >= level_ERROR.intValue}">errorLevel</c:when><c:when test="${rowStatus.index % 2 == 0}">evenRow</c:when><c:otherwise>oddRow</c:otherwise></c:choose>"
+				onclick="location.href='${pageContext.request.contextPath}/module/logmanager/event.htm?appId=${appender.id}&amp;eventId=${event.id}'"
 			>
 				<td width="16">
 					<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/${levelIcons[event.level]}"
-						title="${levelLabels[event.level]}"
+						title="<spring:message code="${moduleId}.level.${event.level.label}" />"
 						width="16" height="16" />
 				</td>
 				<td nowrap="nowrap">
@@ -145,14 +145,14 @@ function submitViewForm(format) {
 					</td>
 				</c:if>
 				<td>
-					<span title="${event.locationInformation.className}">
-						${logmgr:formatLocInfo(event.locationInformation)}
+					<span title="${event.className}">
+						${logmgr:formatLocInfo(event)}
 					</span>
 				</td>
 				<td>
 					${logmgr:formatMessage(event.message)}
 					
-					<c:if test="${event.throwableInformation != null}">
+					<c:if test="${event.throwableAttached}">
 						<div class="throwable">
 							<spring:message code="${moduleId}.viewer.throwableAttached"/>...
 						</div>

@@ -21,6 +21,10 @@ public class AppenderTypeException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Constructs an appender type exception
+	 * @param message the error message
+	 */
 	public AppenderTypeException(String message) {
 		super(message);
 	}

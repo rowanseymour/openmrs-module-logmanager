@@ -70,7 +70,7 @@
 		<tr>
 			<th><spring:message code="${moduleId}.level"/></th>
 			<td>
-				<logmgr_tag:levelList name="injectLevel" value="${logmgr:levelToInt(injectLevel)}" showALL="false" showOFF="false" showInherit="false" />
+				<logmgr_tag:levelList name="injectLevel" value="${injectLevel}" showALL="false" showOFF="false" showInherit="false" />
 			</td>
 		</tr>
 		<tr>

@@ -11,12 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.PatternLayout;
-import org.apache.log4j.spi.LoggingEvent;
 import org.openmrs.ImplementationId;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
+import org.openmrs.module.logmanager.log4j.EventProxy;
 import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.springframework.web.servlet.view.AbstractView;
 
@@ -84,13 +84,13 @@ public class EventReportView extends AbstractView {
 		
 		// Output event 
 		out.println("=================== LOG EVENT =====================");
-		LoggingEvent event = (LoggingEvent)model.get("event");	
+		EventProxy event = (EventProxy)model.get("event");	
 		printEvent(out, event);
 		
 		// Add finally the previous N events
 		out.println("================ PREVIOUS EVENTS ==================");
-		List<LoggingEvent> prevEvents = (List<LoggingEvent>)model.get("contextEvents");
-		for (LoggingEvent e : prevEvents)
+		List<EventProxy> prevEvents = (List<EventProxy>)model.get("contextEvents");
+		for (EventProxy e : prevEvents)
 			printEvent(out, e);
 	}
 	
@@ -99,11 +99,11 @@ public class EventReportView extends AbstractView {
 	 * @param out the print writer
 	 * @param event the event
 	 */
-	public void printEvent(PrintWriter out, LoggingEvent event) {
-		out.print(layout.format(event));
+	public void printEvent(PrintWriter out, EventProxy event) {
+		out.print(layout.format(event.getTarget()));
 		
-		if (event.getThrowableStrRep() != null) {
-			for (String line : event.getThrowableStrRep())
+		if (event.isThrowableAttached()) {
+			for (String line : event.getThrowableLines())
 				out.println(line);
 		}
 		

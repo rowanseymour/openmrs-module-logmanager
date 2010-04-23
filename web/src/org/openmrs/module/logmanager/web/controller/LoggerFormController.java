@@ -8,13 +8,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.log4j.AppenderProxy;
+import org.openmrs.module.logmanager.log4j.LevelProxy;
 import org.openmrs.module.logmanager.log4j.LogManagerProxy;
 import org.openmrs.module.logmanager.log4j.LoggerProxy;
 import org.openmrs.module.logmanager.propertyeditor.LevelEditor;
@@ -39,7 +39,7 @@ public class LoggerFormController extends SimpleFormController {
 	@Override
 	protected void initBinder(HttpServletRequest request,
 			ServletRequestDataBinder binder) throws Exception {
-		binder.registerCustomEditor(Level.class, new LevelEditor());
+		binder.registerCustomEditor(LevelProxy.class, new LevelEditor());
 		super.initBinder(request, binder);
 	}
 
@@ -125,7 +125,7 @@ public class LoggerFormController extends SimpleFormController {
 			return LogManagerProxy.getRootLogger();
 	
 		// Else create new logger with given name
-		return new LoggerProxy(name, Level.INFO);
+		return new LoggerProxy(name, LevelProxy.INFO);
 	}
 
 }

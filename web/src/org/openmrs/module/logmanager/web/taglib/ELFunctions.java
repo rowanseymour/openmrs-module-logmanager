@@ -18,8 +18,7 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.spi.LocationInfo;
+import org.openmrs.module.logmanager.log4j.EventProxy;
 
 /**
  * Functions for use in EL
@@ -59,20 +58,20 @@ public class ELFunctions {
 	}
 	
 	/**
-	 * Formats a location info from a logging event
-	 * @param locInfo the location info
+	 * Formats the location info from a logging event
+	 * @param event the event
 	 * @return the formatted location string
 	 */
-	public static String formatLocInfo(LocationInfo locInfo) {
-		if (locInfo.getClassName().equals("?") || locInfo.getMethodName().equals("?"))
+	public static String formatLocInfo(EventProxy event) {
+		if (event.getClassName().equals("?") || event.getMethodName().equals("?"))
 			return "Unknown";
 		
-		String clazz = locInfo.getClassName();
+		String clazz = event.getClassName();
 		int lastPeriod = clazz.lastIndexOf('.');
 		if (lastPeriod >= 0)
 			clazz = clazz.substring(lastPeriod + 1);
 		
-		return clazz + "." + locInfo.getMethodName() + "(" + locInfo.getLineNumber() + ")";
+		return clazz + "." + event.getMethodName() + "(" + event.getLineNumber() + ")";
 	}
 	
 	/**
@@ -82,23 +81,5 @@ public class ELFunctions {
 	 */ 
 	public static String formatMessage(String msg) {
 		return msg.replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br/>");
-	}
-	
-	/**
-	 * Converts a log4j level to an integer value
-	 * @param level the log4j level
-	 * @return the integer value
-	 */
-	public static Integer levelToInt(Level level) {
-		return level != null ? level.toInt() : null;
-	}
-	
-	/**
-	 * Gets the hash code of the specified object
-	 * @param obj the object
-	 * @return the hash code
-	 */
-	public static Integer hashCode(Object obj) {
-		return obj != null ? obj.hashCode() : null;
 	}
 }
