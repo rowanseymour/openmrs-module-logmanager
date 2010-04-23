@@ -17,12 +17,12 @@
 		<tr>
 			<td align="left">
 				<input type="button"
-					onclick="location.href='event.htm?appId=${appender.id}&amp;eventId=${logmgr:hashCode(contextEvents[0])}'"
+					onclick="location.href='event.htm?appId=${appender.id}&amp;eventId=${contextEvents[0].id}'"
 					value="<spring:message code="general.previous"/>"
 					${contextEvents[0] == null ? 'disabled="disabled"' : ''}
 				/>
 				<input type="button"
-					onclick="location.href='event.htm?appId=${appender.id}&amp;eventId=${logmgr:hashCode(contextEvents[1])}'"
+					onclick="location.href='event.htm?appId=${appender.id}&amp;eventId=${contextEvents[1].id}'"
 					value="<spring:message code="general.next"/>"
 					${contextEvents[1] == null ? 'disabled="disabled"' : ''}
 				/>
@@ -39,7 +39,11 @@
 	<table cellpadding="2" cellspacing="2" width="100%">
 		<tr>
 			<th valign="top" width="150"><spring:message code="${moduleId}.viewer.level" /></th>
-			<td><img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/${levelIcons[event.level]}" /> ${levelLabels[event.level]}</td>	
+			<td>
+				<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/${levelIcons[event.level]}" />
+				
+				<spring:message code="${moduleId}.level.${event.level.label}" />
+			</td>	
 		</tr>
 		<tr>
 			<th valign="top"><spring:message code="${moduleId}.viewer.logger" /></th>
@@ -63,15 +67,15 @@
 		</tr>
 		<tr>
 			<th valign="top"><spring:message code="${moduleId}.viewer.class" /></th>
-			<td>${event.locationInformation.className}</td>	
+			<td>${event.className}</td>	
 		</tr>
 		<tr>
 			<th valign="top"><spring:message code="${moduleId}.viewer.method" /></th>
-			<td>${event.locationInformation.methodName}</td>	
+			<td>${event.methodName}</td>	
 		</tr>
 		<tr>
 			<th valign="top"><spring:message code="${moduleId}.viewer.file" /></th>
-			<td>${event.locationInformation.fileName} (<spring:message code="${moduleId}.viewer.line" /> ${event.locationInformation.lineNumber})</td>	
+			<td>${event.fileName} (<spring:message code="${moduleId}.viewer.line" /> ${event.lineNumber})</td>	
 		</tr>
 		<tr>
 			<th valign="top"><spring:message code="${moduleId}.viewer.properties" /></th>
@@ -80,8 +84,8 @@
 		<tr>
 			<th valign="top"><spring:message code="${moduleId}.viewer.throwable" /></th>
 			<td>
-				<c:forEach items="${event.throwableStrRep}" var="throwableMsg">
-					<c:out value="${throwableMsg}" />
+				<c:forEach items="${event.throwableLines}" var="throwableLine">
+					<c:out value="${throwableLine}" />
 					<br/>
 				</c:forEach>
 			</td>	

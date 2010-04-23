@@ -25,6 +25,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Appender;
+import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -111,6 +112,31 @@ public class LogManagerProxy {
 	 */
 	public static LoggerProxy getRootLogger() {
 		return new LoggerProxy(LogManager.getRootLogger());
+	}
+	
+	/**
+	 * Gets the specified logger
+	 * @param name the logger name
+	 * @param force forces logger creation if it doesn't exist
+	 * @return the logger or null if logger doesn't exist
+	 */
+	public static LoggerProxy getLogger(String name, boolean force) {
+		if (force)
+			return new LoggerProxy(LogManager.getLogger(name));
+		
+		Logger target = LogManager.exists(name);	
+		return (target != null) ? new LoggerProxy(target) : null;
+	}
+	
+	/**
+	 * Logs an event in the logging system
+	 * @param loggerName the name of the logger
+	 * @param level the event level
+	 * @param message the event message
+	 */
+	public static void logEvent(String loggerName, LevelProxy level, String message) {	
+		LoggerProxy logger = getLogger(loggerName, true);
+		logger.log(Level.toLevel(level.getIntValue()), message);	
 	}
 	
 	/**

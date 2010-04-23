@@ -193,9 +193,11 @@ public class DOMConfigurationBuilder {
 			element.setAttribute("name", logger.getName());
 		
 		// Create level element
-		Element levelElem = document.createElement("level");
-		levelElem.setAttribute("value", logger.getLevel().toString());	
-		element.appendChild(levelElem);
+		if (logger.getLevel() != null) {
+			Element levelElem = document.createElement("level");
+			levelElem.setAttribute("value", logger.getLevel().toString());	
+			element.appendChild(levelElem);
+		}
 		
 		// Create appender-ref elements
 		for (AppenderProxy appender : logger.getAppenders()) {

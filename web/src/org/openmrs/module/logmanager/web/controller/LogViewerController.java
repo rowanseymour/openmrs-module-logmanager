@@ -24,8 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.Level;
-import org.apache.log4j.spi.LoggingEvent;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.Options;
 import org.openmrs.module.logmanager.Constants;
@@ -33,6 +31,8 @@ import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.QueryField;
 import org.openmrs.module.logmanager.log4j.AppenderProxy;
 import org.openmrs.module.logmanager.log4j.ConfigurationManager;
+import org.openmrs.module.logmanager.log4j.EventProxy;
+import org.openmrs.module.logmanager.log4j.LevelProxy;
 import org.openmrs.module.logmanager.util.PagingInfo;
 import org.openmrs.module.logmanager.web.util.IconFactory;
 import org.openmrs.module.logmanager.web.util.WebUtils;
@@ -71,8 +71,8 @@ public class LogViewerController extends ParameterizableViewController {
 		// Get viewing filters
 		int levelOp = ServletRequestUtils.getIntParameter(request, "levelOp", 0);
 		model.put("levelOp", levelOp);
-		Level level = Level.toLevel(ServletRequestUtils.getIntParameter(request, "level", Level.ALL_INT));
-		model.put("level", level.toInt());
+		LevelProxy level = new LevelProxy(ServletRequestUtils.getIntParameter(request, "level", LevelProxy.ALL.getIntValue()));
+		model.put("level", level);
 		
 		QueryField queryField = QueryField.fromOrdinal(ServletRequestUtils.getIntParameter(request, "queryField", QueryField.CLASS_NAME.getOrdinal()));
 		String queryValue = request.getParameter("queryValue");
@@ -106,7 +106,7 @@ public class LogViewerController extends ParameterizableViewController {
 		else
 			appender = AppenderProxy.getSystemAppender();
 		
-		List<LoggingEvent> events = new ArrayList<LoggingEvent>();
+		List<EventProxy> events = new ArrayList<EventProxy>();
 		if (appender != null) {
 			if (appender.isViewable())
 				events = svc.getAppenderEvents(appender, level, levelOp, queryField, queryValue, paging);
@@ -144,7 +144,6 @@ public class LogViewerController extends ParameterizableViewController {
 		}
 		
 		model.put("levelIcons", IconFactory.getLevelIconMap());	
-		model.put("levelLabels", IconFactory.getLevelLabelMap());	
 		return new ModelAndView(getViewName(), model);
 	}
 

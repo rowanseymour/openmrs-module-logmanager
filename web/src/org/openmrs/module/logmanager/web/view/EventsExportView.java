@@ -24,9 +24,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Layout;
 import org.apache.log4j.PatternLayout;
-import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.xml.XMLLayout;
 import org.openmrs.module.logmanager.Constants;
+import org.openmrs.module.logmanager.log4j.EventProxy;
 import org.springframework.web.servlet.view.AbstractView;
 
 /**
@@ -77,7 +77,7 @@ public class EventsExportView extends AbstractView {
 		PrintWriter out = response.getWriter();
 	
 		// Write each logging event using the layout
-		for(LoggingEvent event : (List<LoggingEvent>)model.get("events"))
-			out.print(layout.format(event));
+		for(EventProxy event : (List<EventProxy>)model.get("events"))
+			out.print(layout.format(event.getTarget()));
 	}
 }

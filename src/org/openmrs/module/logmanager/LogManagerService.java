@@ -16,12 +16,12 @@ package org.openmrs.module.logmanager;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.spi.LoggingEvent;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.logmanager.log4j.AppenderProxy;
+import org.openmrs.module.logmanager.log4j.EventProxy;
+import org.openmrs.module.logmanager.log4j.LevelProxy;
 import org.openmrs.module.logmanager.log4j.LoggerProxy;
 import org.openmrs.module.logmanager.util.PagingInfo;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,7 +91,7 @@ public interface LogManagerService extends OpenmrsService {
 	 */
 	@Authorized( { Constants.PRIV_VIEW_SERVER_LOG })
 	@Transactional(readOnly=true)
-	public List<LoggingEvent> getAppenderEvents(AppenderProxy appender, Level level, int levelOp, QueryField queryField, String queryValue, PagingInfo paging) throws APIException;
+	public List<EventProxy> getAppenderEvents(AppenderProxy appender, LevelProxy level, int levelOp, QueryField queryField, String queryValue, PagingInfo paging) throws APIException;
 
 	/**
 	 * Gets the logging event with the specified id
@@ -101,7 +101,7 @@ public interface LogManagerService extends OpenmrsService {
 	 */
 	@Authorized( { Constants.PRIV_VIEW_SERVER_LOG })
 	@Transactional(readOnly=true)
-	public LoggingEvent getAppenderEvent(AppenderProxy appender, int id) throws APIException;
+	public EventProxy getAppenderEvent(AppenderProxy appender, int id) throws APIException;
 	
 	/**
 	 * Gets the logging event with the specified id and the previous N logging events
@@ -113,7 +113,7 @@ public interface LogManagerService extends OpenmrsService {
 	 */
 	@Authorized( { Constants.PRIV_VIEW_SERVER_LOG })
 	@Transactional(readOnly=true)
-	public LoggingEvent getAppenderEvent(AppenderProxy appender, int id, List<LoggingEvent> contextEvents, int contextCount) throws APIException;
+	public EventProxy getAppenderEvent(AppenderProxy appender, int id, List<EventProxy> contextEvents, int contextCount) throws APIException;
 	
 	/**
 	 * Updates the specified appender

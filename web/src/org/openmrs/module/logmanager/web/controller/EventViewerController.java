@@ -23,11 +23,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.spi.LoggingEvent;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.log4j.AppenderProxy;
+import org.openmrs.module.logmanager.log4j.EventProxy;
 import org.openmrs.module.logmanager.web.util.IconFactory;
 import org.openmrs.module.logmanager.web.util.WebUtils;
 import org.openmrs.module.logmanager.web.view.EventReportView;
@@ -65,8 +65,8 @@ public class EventViewerController extends ParameterizableViewController {
 		
 		// Find specific event and also its previous N events
 		int eventId = ServletRequestUtils.getIntParameter(request, "eventId", 0);
-		List<LoggingEvent> contextEvents = new ArrayList<LoggingEvent>();
-		LoggingEvent event = svc.getAppenderEvent(appender, eventId, contextEvents, isReport ? Constants.EVENT_REPORT_PREV_EVENTS : -1);
+		List<EventProxy> contextEvents = new ArrayList<EventProxy>();
+		EventProxy event = svc.getAppenderEvent(appender, eventId, contextEvents, isReport ? Constants.EVENT_REPORT_PREV_EVENTS : -1);
 		
 		if (event == null)
 			WebUtils.setErrorMessage(request, Constants.MODULE_ID + ".error.invalidEvent", null);
@@ -74,7 +74,6 @@ public class EventViewerController extends ParameterizableViewController {
 		model.put("event", event);
 		model.put("contextEvents", contextEvents);
 		model.put("levelIcons", IconFactory.getLevelIconMap());	
-		model.put("levelLabels", IconFactory.getLevelLabelMap());
 		
 		if (event != null && isReport)
 			return new ModelAndView(reportView, model);

@@ -15,8 +15,8 @@ package org.openmrs.module.logmanager.propertyeditor;
 
 import junit.framework.Assert;
 
-import org.apache.log4j.Level;
 import org.junit.Test;
+import org.openmrs.module.logmanager.log4j.LevelProxy;
 
 /**
  * Test cases for the class LevelEditor
@@ -27,12 +27,12 @@ public class LevelEditorTest {
 	public void getAsText() {
 		// Test conversion of level enum to integer
 		LevelEditor editor1 = new LevelEditor();
-		editor1.setValue(Level.ERROR);
-		Assert.assertEquals("" + Level.ERROR_INT, editor1.getAsText());
+		editor1.setValue(LevelProxy.ERROR);
+		Assert.assertEquals("" + LevelProxy.ERROR.getIntValue(), editor1.getAsText());
 		
 		LevelEditor editor2 = new LevelEditor();
-		editor2.setValue(Level.TRACE);
-		Assert.assertEquals("" + Level.TRACE_INT, editor2.getAsText());
+		editor2.setValue(LevelProxy.TRACE);
+		Assert.assertEquals("" + LevelProxy.TRACE.getIntValue(), editor2.getAsText());
 		
 		// Test null object, should return empty string
 		LevelEditor editor3 = new LevelEditor();
@@ -43,12 +43,12 @@ public class LevelEditorTest {
 	public void setAsText() {
 		// Test conversion of integer to level enum
 		LevelEditor editor1 = new LevelEditor();
-		editor1.setAsText("" + Level.ERROR_INT);
-		Assert.assertEquals(Level.ERROR, editor1.getValue());
+		editor1.setAsText("" + LevelProxy.ERROR.getIntValue());
+		Assert.assertEquals(LevelProxy.ERROR, editor1.getValue());
 		
 		LevelEditor editor2 = new LevelEditor();
-		editor2.setAsText("" + Level.TRACE_INT);
-		Assert.assertEquals(Level.TRACE, editor2.getValue());
+		editor2.setAsText("" + LevelProxy.TRACE.getIntValue());
+		Assert.assertEquals(LevelProxy.TRACE, editor2.getValue());
 		
 		// Test empty string, should return null object
 		LevelEditor editor3 = new LevelEditor();

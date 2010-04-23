@@ -37,13 +37,13 @@ public class LoggerProxy extends AbstractProxy<Logger> {
 	
 	// Proxied properties
 	protected String name;
-	protected Level level;
+	protected LevelProxy level;
 	protected Set<AppenderProxy> appenders = new HashSet<AppenderProxy>();
 	
 	/**
 	 * Creates a logger proxy for a new logger
 	 */
-	public LoggerProxy(String name, Level level) {
+	public LoggerProxy(String name, LevelProxy level) {
 		this.name = name;
 		this.level = level;
 	}
@@ -57,25 +57,13 @@ public class LoggerProxy extends AbstractProxy<Logger> {
 		this.target = target;
 		
 		this.name = target.getName();
-		this.level = target.getLevel();
+		
+		if (target.getLevel() != null)
+			this.level = new LevelProxy(target.getLevel());
 		
 		Enumeration<Appender> appEnum = target.getAllAppenders();
 		while (appEnum.hasMoreElements())
 			this.appenders.add(new AppenderProxy(appEnum.nextElement()));
-	}
-	
-	/**
-	 * Gets a proxy of the specified logger
-	 * @param name the logger name
-	 * @param force forces logger creation if it doesn't exist
-	 * @return the proxy logger or null if logger doesn't exist
-	 */
-	public static LoggerProxy getLogger(String name, boolean force) {
-		if (force)
-			return new LoggerProxy(LogManager.getLogger(name));
-		
-		Logger target = LogManager.exists(name);	
-		return (target != null) ? new LoggerProxy(target) : null;
 	}
 	
 	/**
@@ -95,7 +83,7 @@ public class LoggerProxy extends AbstractProxy<Logger> {
 		if (target == null)
 			target = LogManager.getLogger(name);
 		
-		target.setLevel(level);
+		target.setLevel(level.getTarget());
 		
 		// For some unknown reason... calling removeAllAppenders() on the
 		// the root logger breaks it, but this is fine
@@ -136,7 +124,7 @@ public class LoggerProxy extends AbstractProxy<Logger> {
 	 * Gets the level of the logger
 	 * @return the level
 	 */
-	public Level getLevel() {
+	public LevelProxy getLevel() {
 		return level;
 	}
 	
@@ -146,16 +134,16 @@ public class LoggerProxy extends AbstractProxy<Logger> {
 	 * @return the level as an integer
 	 */
 	public Integer getLevelInt() {
-		return (level != null) ? level.toInt() : null;
+		return (level != null) ? level.getIntValue() : null;
 	}
 	
 	/**
 	 * Gets the effective level of the logger
 	 * @return the effective level
 	 */
-	public Level getEffectiveLevel() {
+	public LevelProxy getEffectiveLevel() {
 		if (target != null) 
-			return target.getEffectiveLevel();
+			return new LevelProxy(target.getEffectiveLevel());
 		else if (level != null)
 			return level;
 		else
@@ -166,7 +154,7 @@ public class LoggerProxy extends AbstractProxy<Logger> {
 	 * Sets the name of the logger
 	 * @param level the level to set
 	 */
-	public void setLevel(Level level) {
+	public void setLevel(LevelProxy level) {
 		this.level = level;
 	}
 

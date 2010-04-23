@@ -33,7 +33,6 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Appender;
-import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
@@ -50,6 +49,8 @@ import org.openmrs.module.logmanager.db.LogManagerDAO;
 import org.openmrs.module.logmanager.log4j.AppenderProxy;
 import org.openmrs.module.logmanager.log4j.ConfigurationManager;
 import org.openmrs.module.logmanager.log4j.DOMConfigurationBuilder;
+import org.openmrs.module.logmanager.log4j.EventProxy;
+import org.openmrs.module.logmanager.log4j.LevelProxy;
 import org.openmrs.module.logmanager.log4j.LogManagerProxy;
 import org.openmrs.module.logmanager.log4j.LoggerProxy;
 import org.openmrs.module.logmanager.util.LogManagerUtils;
@@ -146,14 +147,14 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	/**
 	 * @see org.openmrs.module.logmanager.LogManagerService#getAppenderEvents(Appender, Level, int, QueryField, String, Paging)
 	 */
-	public List<LoggingEvent> getAppenderEvents(AppenderProxy appender, Level level, int levelOp, QueryField queryField, String queryValue, PagingInfo paging) throws APIException {
+	public List<EventProxy> getAppenderEvents(AppenderProxy appender, LevelProxy level, int levelOp, QueryField queryField, String queryValue, PagingInfo paging) throws APIException {
 
 		Collection<LoggingEvent> eventsAll = appender.getLoggingEvents();
-		List<LoggingEvent> events = new LinkedList<LoggingEvent>();
+		List<EventProxy> events = new LinkedList<EventProxy>();
 		
 		for (LoggingEvent event : eventsAll) {			
-			if (level != null && !testLevel(event.getLevel(), levelOp, level))
-				continue;		
+			if (level != null && !testLevel(new LevelProxy(event.getLevel()), levelOp, level))
+				continue;
 			
 			if (queryValue != null) {
 				switch (queryField) {
@@ -172,7 +173,7 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 				} 
 			}
 			
-			events.add(0, event);
+			events.add(0, new EventProxy(event));
 		}
 		
 		if (paging != null)
@@ -185,15 +186,15 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	/**
 	 * @see org.openmrs.module.logmanager.LogManagerService#getAppenderEvent(org.openmrs.module.logmanager.log4j.AppenderProxy, int)
 	 */
-	public LoggingEvent getAppenderEvent(AppenderProxy appender, int id) {
+	public EventProxy getAppenderEvent(AppenderProxy appender, int id) {
 		return getAppenderEvent(appender, id, null, 0);
 	}
 	
 	/**
 	 * @see org.openmrs.module.logmanager.LogManagerService#getAppenderEvent(AppenderProxy, int, List, int)
 	 */
-	public LoggingEvent getAppenderEvent(AppenderProxy appender, int id, List<LoggingEvent> contextEvents, int contextCount) throws APIException {
-		List<LoggingEvent> events = getAppenderEvents(appender, null, 0, null, null, null);
+	public EventProxy getAppenderEvent(AppenderProxy appender, int id, List<EventProxy> contextEvents, int contextCount) throws APIException {
+		Collection<LoggingEvent> events = appender.getLoggingEvents();
 		LoggingEvent prevEvent = null;
 		
 		for (Iterator<LoggingEvent> iter = events.iterator(); iter.hasNext(); ) {
@@ -204,15 +205,15 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 					// Add next n events in list
 					if (contextEvents != null && contextCount > 0)
 						for (; iter.hasNext() && contextEvents.size() <= contextCount; )
-							contextEvents.add(iter.next());
+							contextEvents.add(new EventProxy(iter.next()));
 					// And previous and next events
 					else if (contextCount == -1) {
-						contextEvents.add(iter.hasNext() ? iter.next() : null);
-						contextEvents.add(prevEvent);
+						contextEvents.add(iter.hasNext() ? new EventProxy(iter.next()) : null);
+						contextEvents.add(prevEvent != null ? new EventProxy(prevEvent) : null);
 					}
 				}
 				
-				return e;
+				return new EventProxy(e);
 			}
 			
 			prevEvent = e;
@@ -383,17 +384,17 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	 * @param level2 the second level value
 	 * @return value of the comparison
 	 */
-	private boolean testLevel(Level level1, int levelOp, Level level2) {
-		if (level1 == Level.ALL || level2 == Level.ALL)
+	private boolean testLevel(LevelProxy level1, int levelOp, LevelProxy level2) {
+		if (level1.getIntValue() == LevelProxy.ALL.getIntValue() || level2.getIntValue() == LevelProxy.ALL.getIntValue())
 			return true;
 		
 		switch (levelOp) {
 		case Constants.BOOL_OP_LE:
-			return (level1.toInt() <= level2.toInt());
+			return (level1.getIntValue() <= level2.getIntValue());
 		case Constants.BOOL_OP_GE:
-			return (level1.toInt() >= level2.toInt());
+			return (level1.getIntValue() >= level2.getIntValue());
 		default:
-			return (level1.toInt() == level2.toInt());
+			return (level1.getIntValue() == level2.getIntValue());
 		}
 	}
 }

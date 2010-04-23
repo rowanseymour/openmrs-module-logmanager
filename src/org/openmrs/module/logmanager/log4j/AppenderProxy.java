@@ -25,7 +25,7 @@ import org.apache.log4j.net.SocketAppender;
 import org.apache.log4j.nt.NTEventLogAppender;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.OptionHandler;
-import org.openmrs.module.logmanager.AbstractProxy;
+import org.openmrs.module.logmanager.AbstractEditableProxy;
 import org.openmrs.module.logmanager.AppenderTypeException;
 import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.openmrs.util.MemoryAppender;
@@ -34,7 +34,7 @@ import org.openmrs.util.MemoryAppender;
  * Used to edit appender objects without passing them directly to the SimpleFormController.
  * This ensures that an appender is only modified if all properties have been validated
  */
-public class AppenderProxy extends AbstractProxy<Appender> {
+public class AppenderProxy extends AbstractEditableProxy<Appender> {
 	
 	protected AppenderType type;
 	protected boolean existing;
@@ -184,8 +184,8 @@ public class AppenderProxy extends AbstractProxy<Appender> {
 	}
 	
 	/**
-	 * Gets the id of this appender
-	 * @return the appender id
+	 * Gets the id
+	 * @return the id
 	 */
 	public int getId() {
 		return target.hashCode();
@@ -281,7 +281,6 @@ public class AppenderProxy extends AbstractProxy<Appender> {
 		
 		// Buffer is a private field in the MemoryAppender class
 		CircularFifoBuffer buffer = (CircularFifoBuffer)LogManagerUtils.getPrivateField(target, "buffer");
-		
 		return buffer;
 	}
 	

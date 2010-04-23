@@ -88,18 +88,18 @@ function onSavePreset() {
 <form method="post" class="box" name="rootLoggerForm">
 	<table cellpadding="2" cellspacing="2">
 		<tr>
-			<th>
+			<th valign="top">
 				<spring:message code="${moduleId}.level"/>:		
 			</th>
-			<td style="padding-right: 40px">				
+			<td valign="top" style="padding-right: 40px">				
 				<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/${levelIcons[rootLogger.level]}"
-						width="16" height="16" title="${levelLabels[rootLogger.level]}" />		
-				${levelLabels[rootLogger.level]}
+						width="16" height="16" />		
+				<spring:message code="${moduleId}.level.${rootLogger.level.label}"/>
 			</td>
-			<th>	
+			<th valign="top">	
 				<spring:message code="${moduleId}.loggers.appenders"/>:
 			</th>
-			<td style="padding-right: 40px">	
+			<td valign="top" style="padding-right: 40px">	
 				<c:forEach var="appender" items="${rootLogger.appenders}" varStatus="status">								
 					<c:choose>
 						<c:when test="${!empty appender.name}">
@@ -111,7 +111,7 @@ function onSavePreset() {
 					</c:choose>	
 				</c:forEach>
 			</td>
-			<td>
+			<td valign="top">
 				<input type="button" value="<spring:message code="general.edit"/>..." 
 					onclick="location.href='logger.form?root'" />
 			</td>
@@ -165,7 +165,7 @@ function onSavePreset() {
 				</td>
 				<td valign="top" width="20">
 					<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/${levelIcons[logger.effectiveLevel]}"
-						width="16" height="16" title="${levelLabels[logger.effectiveLevel]}" />
+						width="16" height="16" title="<spring:message code="${moduleId}.level.${logger.effectiveLevel.label}" />" />
 				</td>
 				<td>
 					<a href="logger.form?logger=${logger.name}">
@@ -173,7 +173,14 @@ function onSavePreset() {
 					</a>
 				</td>
 				<td>
-					${logger.level != null ? levelLabels[logger.level] : levelNullLabel}
+					<c:choose>
+						<c:when test="${logger.level != null}">
+							<spring:message code="${moduleId}.level.${logger.level.label}" />
+						</c:when>
+						<c:otherwise>
+							<i><spring:message code="${moduleId}.level.inherit" /></i>
+						</c:otherwise>
+					</c:choose>
 				<td>
 					<c:forEach var="appender" items="${logger.appenders}" varStatus="status">					
 						<c:choose>

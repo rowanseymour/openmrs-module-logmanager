@@ -15,7 +15,7 @@ package org.openmrs.module.logmanager.propertyeditor;
 
 import java.beans.PropertyEditorSupport;
 
-import org.apache.log4j.Level;
+import org.openmrs.module.logmanager.log4j.LevelProxy;
 
 /**
  * Used to edit a log4j level
@@ -27,7 +27,7 @@ public class LevelEditor extends PropertyEditorSupport {
 	 */
 	@Override
 	public String getAsText() {
-		return "" + (getValue() != null ? ((Level)getValue()).toInt() : "");
+		return "" + (getValue() != null ? ((LevelProxy)getValue()).getIntValue() : "");
 	}
 
 	/**
@@ -37,7 +37,7 @@ public class LevelEditor extends PropertyEditorSupport {
 	public void setAsText(String text) throws IllegalArgumentException {
 		if (!text.isEmpty()) {
 			int ordinal = Integer.parseInt(text);
-			setValue(Level.toLevel(ordinal));
+			setValue(new LevelProxy(ordinal));
 		}
 		else
 			setValue(null);
