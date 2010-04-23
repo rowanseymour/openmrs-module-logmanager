@@ -118,47 +118,52 @@ function logmgr_onClickConfig() {
 	
 	<table cellpadding="2" cellspacing="0" width="100%">
 		<tr>
-			<th align="left">Source</th>
-			<th align="right">
+			<th>
+				<spring:message code="${moduleId}.config.source" />
+				&nbsp;&nbsp;&nbsp;
 				<small>
 					<spring:message code="general.select" />:
 					<a href="javascript:logmgr_onToggleSelectAll(true)"><spring:message code="${moduleId}.all" /></a>
 					<a href="javascript:logmgr_onToggleSelectAll(false)"><spring:message code="general.none" /></a>
 				</small>
 			</th>
+			<th>View</th>
+			<th></th>
 		</tr>
 		
 		<%------------- INTERNAL OPENMRS CONFIG ------------%>
 		
-		<tr class="oddRow">
-			<td align="left" colspan="2">
+		<tr class="evenRow">
+			<td>
 				<input type="checkbox" name="internalConfig" value="1" onclick="logmgr_onClickConfig()" />
-				<spring:message code="${moduleId}.internal" />
-				(<a href="config.form?src=internal">${internalConfigName}</a>)
+				<spring:message code="${moduleId}.internal" />		
 			</td>
+			<td><a href="config.form?src=internal">${internalConfigName}</a></td>
+			<td>&nbsp;</td>
 		</tr>
 		
 		<%------------- EXTERNAL OPENMRS CONFIG ------------%>
 		
 		<tr class="oddRow">
-			<td align="left" colspan="2">
+			<td>
 				<input type="checkbox" name="externalConfig" value="1" onclick="logmgr_onClickConfig()" />
 				<spring:message code="${moduleId}.external" />
-				(<a href="config.form?src=external">${externalConfigName}</a>)
 			</td>
+			<td><a href="config.form?src=external">${externalConfigName}</a></td>
+			<td>&nbsp;</td>
 		</tr>
 	
 		<%--------------- MODULE CONFIGS ---------------%>
 		
 		<c:forEach var="log4jConfig" items="${log4jConfigs}" varStatus="rowStatus">
 			<tr class="<c:choose><c:when test="${rowStatus.index % 2 == 0}">evenRow</c:when><c:otherwise>oddRow</c:otherwise></c:choose>">
-				<td align="left">
+				<td>
 					<input type="checkbox" name="moduleConfigs" value="${log4jConfig.moduleId}" onclick="logmgr_onClickConfig()" />
 					<spring:message code="${moduleId}.module" />:
 					${log4jConfig.moduleId}
-					(<a href="config.form?src=${log4jConfig.moduleId}">${internalConfigName}</a>)
 				</td>
-				<td align="left">
+				<td><a href="config.form?src=${log4jConfig.moduleId}">${internalConfigName}</a></td>
+				<td>
 					<c:choose>
 						<c:when test="${log4jConfig.usesRoot}">
 							<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/icon_warn.png" />

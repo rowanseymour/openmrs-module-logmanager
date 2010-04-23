@@ -15,12 +15,9 @@
 <logmgr_form:form commandName="options" cssClass="box" action="options.htm">
 	<table cellpadding="2" cellspacing="0" width="100%">
 		<tr>
-			<td  width="30%" nowrap="nowrap"><spring:message code="${moduleId}.options.loadExternalConfigOnStartup"/></td>
+			<td width="30%" nowrap="nowrap"><spring:message code="${moduleId}.options.loadExternalConfigOnStartup"/></td>
 			<td>
 				<logmgr_form:checkbox path="loadExternalConfigOnStartup" />
-			</td>
-			<td align="right" valign="top" rowspan="4">
-				<input type="submit" value="<spring:message code="general.save" />" />
 			</td>
 		</tr>
 		<tr>
@@ -40,6 +37,11 @@
 			<td><spring:message code="${moduleId}.options.logUncaughtExceptions"/></td>
 			<td>
 				<logmgr_form:checkbox path="logUncaughtExceptions" />
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<input type="submit" value="<spring:message code="general.save" />" />
 			</td>
 		</tr>
 	</table>

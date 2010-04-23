@@ -239,7 +239,8 @@ function onChangeLayoutType(value) {
 			</tr>
 		</c:if>
 		<tr>
-			<td colspan="2" align="right">
+			<td>&nbsp;</td>
+			<td>
 				<input type="submit" value="<spring:message code="general.save"/>" />
 				<input type="button" value="<spring:message code="general.cancel"/>" onclick="location.href='appender.list'" />
 			</td>

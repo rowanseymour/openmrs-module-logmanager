@@ -16,12 +16,12 @@ function onChangePreset(value) {
 	var deleteBtn = document.presetForm.deletePreset;
 	
 	if (value > 0) {
-		newNameTxt.style.display = "none";
+		newNameTxt.style.visibility = "hidden";
 		loadBtn.disabled = false;
 		deleteBtn.disabled = false;
 	}
 	else {
-		newNameTxt.style.display = "";
+		newNameTxt.style.visibility = "";
 		newNameTxt.focus();
 		loadBtn.disabled = true;
 		deleteBtn.disabled = true;
@@ -43,10 +43,12 @@ function onSavePreset() {
 	<spring:message code="${moduleId}.loggers.loggerPresets" />
 </b>
 <form method="post" class="box" name="presetForm">
-	<table cellpadding="2" cellspacing="0" width="100%">
+	<table cellpadding="2" cellspacing="0">
 		<tr>
-			<th width="150"><spring:message code="${moduleId}.loggers.preset"/></th>
-			<td>
+			<th>
+				<spring:message code="${moduleId}.loggers.preset"/>:
+			</th>
+			<td style="padding-right: 40px">
 				<select name="preset" onchange="onChangePreset(this.value)">
 					<option value="0">&lt;<spring:message code="general.new"/>...&gt;</option>
 					<c:forEach items="${presets}" var="preset">
@@ -84,23 +86,20 @@ function onSavePreset() {
 	<spring:message code="${moduleId}.loggers.rootLogger" />
 </b>
 <form method="post" class="box" name="rootLoggerForm">
-	<table cellpadding="2" cellspacing="2" width="100%">
+	<table cellpadding="2" cellspacing="2">
 		<tr>
-			<th width="150"><spring:message code="${moduleId}.level"/></th>
-			<td>
+			<th>
+				<spring:message code="${moduleId}.level"/>:		
+			</th>
+			<td style="padding-right: 40px">				
 				<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/${levelIcons[rootLogger.level]}"
-						width="16" height="16" title="${levelLabels[rootLogger.level]}" />
-						
-						${levelLabels[rootLogger.level]}
+						width="16" height="16" title="${levelLabels[rootLogger.level]}" />		
+				${levelLabels[rootLogger.level]}
 			</td>
-			<td rowspan="2" align="right" valign="top">
-				<input type="button" value="<spring:message code="general.edit"/>" 
-					onclick="location.href='logger.form?root'" />
-			</td>
-		</tr>
-		<tr>
-			<th><spring:message code="${moduleId}.loggers.appenders"/></th>
-			<td>
+			<th>	
+				<spring:message code="${moduleId}.loggers.appenders"/>:
+			</th>
+			<td style="padding-right: 40px">	
 				<c:forEach var="appender" items="${rootLogger.appenders}" varStatus="status">								
 					<c:choose>
 						<c:when test="${!empty appender.name}">
@@ -112,6 +111,10 @@ function onSavePreset() {
 					</c:choose>	
 				</c:forEach>
 			</td>
+			<td>
+				<input type="button" value="<spring:message code="general.edit"/>..." 
+					onclick="location.href='logger.form?root'" />
+			</td>
 		</tr>
 	</table>
 </form>
@@ -122,14 +125,16 @@ function onSavePreset() {
 	<spring:message code="${moduleId}.loggers.addLogger" />
 </b>
 <form method="get" class="box" name="addForm" action="logger.form">
-	<table cellpadding="2" cellspacing="0" width="100%">
+	<table cellpadding="2" cellspacing="0">
 		<tr>
-			<th width="150"><spring:message code="${moduleId}.loggers.name"/></th>
-			<td>
+			<th>
+				<spring:message code="${moduleId}.loggers.name"/>:
+			</th>
+			<td style="padding-right: 40px">
 				<input type="text" name="logger" style="width: 400px" onkeyup="onChangeAddLoggerName(this.value)" />
 			</td>
-			<td align="right" valign="top">
-				<input type="submit" id="addLogger" value="<spring:message code="general.add"/>" disabled="disabled" />
+			<td valign="top">
+				<input type="submit" id="addLogger" value="<spring:message code="general.add"/>..." disabled="disabled" />
 			</td>
 		</tr>
 	</table>
@@ -144,15 +149,21 @@ function onSavePreset() {
 	<table cellpadding="3" cellspacing="0" width="100%">
 		<tr>
 			<th>&nbsp;</th>
+			<th>&nbsp;</th>
 			<th><spring:message code="general.name"/></th>
 			<th><spring:message code="${moduleId}.level"/></th>
-			<th><spring:message code="${moduleId}.loggers.appenders"/></th>
-			<th>&nbsp;</th>
+			<th><spring:message code="${moduleId}.loggers.appenders"/></th>		
 		</tr>
 	
 		<c:forEach var="logger" items="${loggers}" varStatus="rowStatus">
 			<tr class="<c:choose><c:when test="${rowStatus.index % 2 == 0}">evenRow</c:when><c:otherwise>oddRow</c:otherwise></c:choose>">
-				<td valign="top" width="16">
+				<td valign="top" width="20">
+					<input type="image" src="${pageContext.request.contextPath}/images/trash.gif"
+						onclick="return confirm('<spring:message code="${moduleId}.loggers.confirmDeleteLogger"/>');"
+						name="deleteLogger" value="${logger.name}"
+						title="<spring:message code="general.delete"/>" /></a>
+				</td>
+				<td valign="top" width="20">
 					<img src="${pageContext.request.contextPath}/moduleResources/${moduleId}/images/${levelIcons[logger.effectiveLevel]}"
 						width="16" height="16" title="${levelLabels[logger.effectiveLevel]}" />
 				</td>
@@ -174,12 +185,6 @@ function onSavePreset() {
 							</c:otherwise>
 						</c:choose>
 					</c:forEach>
-				</td>
-				<td align="right">
-					<input type="image" src="${pageContext.request.contextPath}/images/trash.gif"
-						onclick="return confirm('<spring:message code="${moduleId}.loggers.confirmDeleteLogger"/>');"
-						name="deleteLogger" value="${logger.name}"
-						title="<spring:message code="general.delete"/>" /></a>
 				</td>
 			</tr>
 		</c:forEach>
