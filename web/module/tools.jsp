@@ -66,9 +66,6 @@
 					<span class="error"><spring:message code="${moduleId}.error.invalidName" /></span>
 				</c:if>
 			</td>
-			<td rowspan="3" align="right" valign="top">
-				<input type="submit" name="inject" value="<spring:message code="${moduleId}.tools.inject"/>" />
-			</td>
 		</tr>
 		<tr>
 			<th><spring:message code="${moduleId}.level"/></th>
@@ -80,6 +77,12 @@
 			<th><spring:message code="${moduleId}.tools.message"/></th>
 			<td>
 				<textarea name="injectMessage" style="width: 400px" rows="2">${injectMessage}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>
+				<input type="submit" name="inject" value="<spring:message code="${moduleId}.tools.inject"/>" />
 			</td>
 		</tr>
 	</table>
