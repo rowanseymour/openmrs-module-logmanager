@@ -25,8 +25,8 @@ import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openmrs.module.logmanager.Constants;
-import org.openmrs.module.logmanager.log4j.LevelProxy;
-import org.openmrs.module.logmanager.log4j.LogManagerProxy;
+import org.openmrs.module.logmanager.impl.LevelProxy;
+import org.openmrs.module.logmanager.impl.ManagerProxy;
 import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.openmrs.module.logmanager.web.util.WebUtils;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -74,7 +74,7 @@ public class ToolsController extends ParameterizableViewController {
 			if (!LogManagerUtils.isValidLoggerName(injectLoggerName))
 				model.put("loggerNameError", true);
 			else {	
-				LogManagerProxy.logEvent(injectLoggerName, injectLevel, injectMessage);
+				ManagerProxy.logEvent(injectLoggerName, injectLevel, injectMessage);
 				WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".tools.injectSuccess", null);
 				// Clear message
 				model.put("injectMessage", "");

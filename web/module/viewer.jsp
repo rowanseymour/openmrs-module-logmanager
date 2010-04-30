@@ -1,3 +1,4 @@
+<%@ page import="org.openmrs.module.logmanager.impl.LevelProxy" %>
 <%@ include file="/WEB-INF/template/include.jsp" %>
 <%@ include file="template/localInclude.jsp"%>
 
@@ -9,7 +10,7 @@
 <%@ include file="/WEB-INF/view/admin/maintenance/localHeader.jsp"%>
 <%@ include file="template/localHeader.jsp"%>
 
-<c:set var="level_ERROR" value="<%= org.openmrs.module.logmanager.log4j.LevelProxy.ERROR %>" />
+<c:set var="level_ERROR" value="<%= LevelProxy.ERROR %>" />
 
 <style type="text/css">
 #eventsTable td {

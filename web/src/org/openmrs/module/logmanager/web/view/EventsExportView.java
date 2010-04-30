@@ -26,7 +26,7 @@ import org.apache.log4j.Layout;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.xml.XMLLayout;
 import org.openmrs.module.logmanager.Constants;
-import org.openmrs.module.logmanager.log4j.EventProxy;
+import org.openmrs.module.logmanager.impl.EventProxy;
 import org.springframework.web.servlet.view.AbstractView;
 
 /**

@@ -1,4 +1,4 @@
-package org.openmrs.module.logmanager.log4j;
+package org.openmrs.module.logmanager.impl;
 
 import java.util.Map;
 

@@ -11,7 +11,7 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.module.logmanager.log4j;
+package org.openmrs.module.logmanager.impl;
 
 import java.io.File;
 import java.io.FileReader;

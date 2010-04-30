@@ -23,7 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.logmanager.Options;
 import org.openmrs.module.logmanager.Constants;
-import org.openmrs.module.logmanager.log4j.ConfigurationManager;
+import org.openmrs.module.logmanager.impl.ConfigurationManager;
 import org.openmrs.module.logmanager.web.util.WebUtils;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;

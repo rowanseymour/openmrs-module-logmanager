@@ -1,4 +1,3 @@
-<%@ page import="org.openmrs.module.logmanager.log4j.AppenderType" %>
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="template/localInclude.jsp"%>
 

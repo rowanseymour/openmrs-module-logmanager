@@ -16,7 +16,7 @@ package org.openmrs.module.logmanager.web.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.openmrs.module.logmanager.log4j.LevelProxy;
+import org.openmrs.module.logmanager.impl.LevelProxy;
 
 public class IconFactory {
 	protected static Map<LevelProxy, String> levelIcons = new HashMap<LevelProxy, String>();

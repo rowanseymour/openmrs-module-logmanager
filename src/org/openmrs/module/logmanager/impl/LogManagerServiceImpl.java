@@ -46,13 +46,6 @@ import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.Preset;
 import org.openmrs.module.logmanager.QueryField;
 import org.openmrs.module.logmanager.db.LogManagerDAO;
-import org.openmrs.module.logmanager.log4j.AppenderProxy;
-import org.openmrs.module.logmanager.log4j.ConfigurationManager;
-import org.openmrs.module.logmanager.log4j.DOMConfigurationBuilder;
-import org.openmrs.module.logmanager.log4j.EventProxy;
-import org.openmrs.module.logmanager.log4j.LevelProxy;
-import org.openmrs.module.logmanager.log4j.LogManagerProxy;
-import org.openmrs.module.logmanager.log4j.LoggerProxy;
 import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.openmrs.module.logmanager.util.PagingInfo;
 import org.openmrs.util.OpenmrsUtil;
@@ -79,21 +72,21 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	 * @see org.openmrs.module.logmanager.LogManagerService#getLoggers(boolean)
 	 */
 	public List<LoggerProxy> getLoggers(boolean incImplicit) {
-		return LogManagerProxy.getLoggers(incImplicit);
+		return ManagerProxy.getLoggers(incImplicit);
 	}
 	
 	/**
 	 * @see org.openmrs.module.logmanager.LogManagerService#getAppender(int)
 	 */
 	public AppenderProxy getAppender(int id) throws APIException {
-		return LogManagerProxy.getAppender(id);
+		return ManagerProxy.getAppender(id);
 	}
 	
 	/**
 	 * @see org.openmrs.module.logmanager.LogManagerService#getAppenders()
 	 */
 	public Collection<AppenderProxy> getAppenders(boolean sorted) {
-		Set<AppenderProxy> appenders = LogManagerProxy.getAppenders();
+		Set<AppenderProxy> appenders = ManagerProxy.getAppenders();
 			
 		// Optionally sort into a list
 		if (sorted) {
@@ -112,7 +105,7 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	}
 	
 	/**
-	 * @see org.openmrs.module.logmanager.LogManagerService#addAppender(org.openmrs.module.logmanager.log4j.AppenderProxy, java.lang.String)
+	 * @see org.openmrs.module.logmanager.LogManagerService#addAppender(org.openmrs.module.logmanager.impl.AppenderProxy, java.lang.String)
 	 */
 	public void addAppender(AppenderProxy appender, String loggerName)
 			throws APIException {
@@ -184,7 +177,7 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	}
 	
 	/**
-	 * @see org.openmrs.module.logmanager.LogManagerService#getAppenderEvent(org.openmrs.module.logmanager.log4j.AppenderProxy, int)
+	 * @see org.openmrs.module.logmanager.LogManagerService#getAppenderEvent(org.openmrs.module.logmanager.impl.AppenderProxy, int)
 	 */
 	public EventProxy getAppenderEvent(AppenderProxy appender, int id) {
 		return getAppenderEvent(appender, id, null, 0);
@@ -255,7 +248,7 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 		loggerMap.clear();
 		
 		// Add root logger to map
-		LoggerProxy rootLogger = LogManagerProxy.getRootLogger();
+		LoggerProxy rootLogger = ManagerProxy.getRootLogger();
 		loggerMap.put("ROOT", rootLogger.getLevelInt());
 		
 		// Add all other loggers
@@ -288,7 +281,7 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 			String path = OpenmrsUtil.getApplicationDataDirectory() + File.separator + Constants.EXTERNAL_CONFIG_NAME;
 			FileWriter writer = new FileWriter(path);
 
-			Document document = DOMConfigurationBuilder.currentConfiguration();
+			Document document = ConfigurationBuilder.currentConfiguration();
 			LogManagerUtils.writeDocument(document, writer);
 			
 			writer.close();

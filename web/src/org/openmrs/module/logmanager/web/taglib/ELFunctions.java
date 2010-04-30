@@ -18,7 +18,7 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.openmrs.module.logmanager.log4j.EventProxy;
+import org.openmrs.module.logmanager.impl.EventProxy;
 
 /**
  * Functions for use in EL

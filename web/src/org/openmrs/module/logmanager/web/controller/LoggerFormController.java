@@ -13,10 +13,10 @@ import org.apache.log4j.Logger;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
-import org.openmrs.module.logmanager.log4j.AppenderProxy;
-import org.openmrs.module.logmanager.log4j.LevelProxy;
-import org.openmrs.module.logmanager.log4j.LogManagerProxy;
-import org.openmrs.module.logmanager.log4j.LoggerProxy;
+import org.openmrs.module.logmanager.impl.AppenderProxy;
+import org.openmrs.module.logmanager.impl.LevelProxy;
+import org.openmrs.module.logmanager.impl.LoggerProxy;
+import org.openmrs.module.logmanager.impl.ManagerProxy;
 import org.openmrs.module.logmanager.propertyeditor.LevelEditor;
 import org.openmrs.module.logmanager.web.util.WebUtils;
 import org.springframework.validation.BindException;
@@ -122,7 +122,7 @@ public class LoggerFormController extends SimpleFormController {
 		}
 		// Else if root is specified get it
 		else if (request.getParameter("root") != null)
-			return LogManagerProxy.getRootLogger();
+			return ManagerProxy.getRootLogger();
 	
 		// Else create new logger with given name
 		return new LoggerProxy(name, LevelProxy.INFO);

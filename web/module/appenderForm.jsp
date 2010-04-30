@@ -1,4 +1,4 @@
-<%@ page import="org.openmrs.module.logmanager.log4j.LayoutType" %>
+<%@ page import="org.openmrs.module.logmanager.impl.LayoutType" %>
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="template/localInclude.jsp"%>
 

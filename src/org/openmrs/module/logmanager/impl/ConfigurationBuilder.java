@@ -11,7 +11,7 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.module.logmanager.log4j;
+package org.openmrs.module.logmanager.impl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,9 +29,9 @@ import org.w3c.dom.Element;
 /**
  * Builds a DOM representation of the current logging configuration
  */
-public class DOMConfigurationBuilder {
+public class ConfigurationBuilder {
 	
-	protected static final Log log = LogFactory.getLog(DOMConfigurationBuilder.class);
+	protected static final Log log = LogFactory.getLog(ConfigurationBuilder.class);
 	
 	protected static final String LOG4J_NAMESPACE = "http://jakarta.apache.org/log4j/";
 	protected static final String LOG4J_TAG_PREFIX = "log4j";
@@ -88,7 +88,7 @@ public class DOMConfigurationBuilder {
 		Element documentElem = document.getDocumentElement();
 		
 		// Create appender elements
-		for (AppenderProxy appender : LogManagerProxy.getAppenders()) {
+		for (AppenderProxy appender : ManagerProxy.getAppenders()) {
 			String appenderName = appender.getName();
 			// We can't save appenders with no name...
 			if (appenderName != null && !appenderName.isEmpty())
@@ -96,11 +96,11 @@ public class DOMConfigurationBuilder {
 		}
 
 		// Create logger elements	
-		for (LoggerProxy logger : LogManagerProxy.getLoggers(false))
+		for (LoggerProxy logger : ManagerProxy.getLoggers(false))
 			addLoggerElement(document, documentElem, logger);
 		
 		// Create root logger element
-		addLoggerElement(document, documentElem, LogManagerProxy.getRootLogger());
+		addLoggerElement(document, documentElem, ManagerProxy.getRootLogger());
 
 		return document;
 	}

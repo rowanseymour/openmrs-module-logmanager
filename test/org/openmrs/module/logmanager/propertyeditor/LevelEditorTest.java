@@ -16,7 +16,7 @@ package org.openmrs.module.logmanager.propertyeditor;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.openmrs.module.logmanager.log4j.LevelProxy;
+import org.openmrs.module.logmanager.impl.LevelProxy;
 
 /**
  * Test cases for the class LevelEditor

@@ -1,4 +1,4 @@
-<%@ tag language="java" pageEncoding="UTF-8" import="org.openmrs.module.logmanager.log4j.LevelProxy" %>
+<%@ tag language="java" pageEncoding="UTF-8" import="org.openmrs.module.logmanager.impl.LevelProxy" %>
 <%@ taglib prefix="c" uri="/WEB-INF/taglibs/c-rt.tld" %>
 <%@ taglib prefix="spring" uri="/WEB-INF/taglibs/spring.tld" %>
 
@@ -7,7 +7,7 @@
 <%@ attribute name="showALL" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="showAny" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="showInherit" required="false" type="java.lang.Boolean" %>
-<%@ attribute name="value" required="false" type="org.openmrs.module.logmanager.log4j.LevelProxy" %>
+<%@ attribute name="value" required="false" type="org.openmrs.module.logmanager.impl.LevelProxy" %>
 
 <c:set var="level_OFF" value="<%= LevelProxy.OFF.getIntValue() %>" />
 <c:set var="level_FATAL" value="<%= LevelProxy.FATAL.getIntValue() %>" />

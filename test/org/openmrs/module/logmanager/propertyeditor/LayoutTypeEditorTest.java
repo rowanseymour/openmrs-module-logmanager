@@ -16,7 +16,7 @@ package org.openmrs.module.logmanager.propertyeditor;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.openmrs.module.logmanager.log4j.LayoutType;
+import org.openmrs.module.logmanager.impl.LayoutType;
 
 /**
  * Test cases for the class LayoutTypeEditor
