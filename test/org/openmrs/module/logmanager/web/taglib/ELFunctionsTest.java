@@ -44,15 +44,6 @@ public class ELFunctionsTest {
 		Assert.assertTrue(res2 != null && !res2.isEmpty());
 	}
 	
-	//@Test
-	//public void formatLocInfo() {
-		//String res1 = ELFunctions.formatLocInfo(new LocationInfo("test.java", "Foo", "bar", "123"));
-		//String res2 = ELFunctions.formatLocInfo(new LocationInfo("?", "?", "?", "?"));
-		
-		//Assert.assertTrue(res1 != null && !res1.isEmpty());
-		//Assert.assertEquals("Unknown", res2);
-	//}
-	
 	@Test
 	public void formatMessage() {
 		String res1 = ELFunctions.formatMessage("Hello World");
@@ -60,5 +51,11 @@ public class ELFunctionsTest {
 		
 		Assert.assertEquals("Hello World", res1);
 		Assert.assertEquals("X<br/>X&lt;X&gt;X", res2);
+	}
+	
+	@Test
+	public void isStackLineFromOpenMRS() {
+		Assert.assertTrue(ELFunctions.isStackLineFromOpenMRS("\tat org.openmrs.web.filter.StartupFilter.doFilter(StartupFilter.java:82)"));
+		Assert.assertFalse(ELFunctions.isStackLineFromOpenMRS("\tat javax.servlet.http.HttpServlet.service(HttpServlet.java:617)"));
 	}
 }

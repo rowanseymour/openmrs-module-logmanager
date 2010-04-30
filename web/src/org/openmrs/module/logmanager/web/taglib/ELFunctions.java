@@ -76,10 +76,19 @@ public class ELFunctions {
 	
 	/**
 	 * Formats a logging event message by replacing newlines and escaping HTML chars
-	 * @param the message
+	 * @param msg the message
 	 * @return the formatted message string
 	 */ 
 	public static String formatMessage(String msg) {
 		return msg.replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br/>");
+	}
+	
+	/**
+	 * Checks if a line from stack trace is referring to OpenMRS code
+	 * @param line the line
+	 * @return true if its from OpenMRS
+	 */ 
+	public static Boolean isStackLineFromOpenMRS(String line) {
+		return (line != null) ? line.startsWith("\tat org.openmrs.") : false;
 	}
 }

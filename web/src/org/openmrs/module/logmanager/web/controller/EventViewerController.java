@@ -62,23 +62,29 @@ public class EventViewerController extends ParameterizableViewController {
 			appender = svc.getAppender(appId);
 		else
 			appender = AppenderProxy.getSystemAppender();
-		
-		// Find specific event and also its previous N events
-		int eventId = ServletRequestUtils.getIntParameter(request, "eventId", 0);
-		List<EventProxy> contextEvents = new ArrayList<EventProxy>();
-		EventProxy event = svc.getAppenderEvent(appender, eventId, contextEvents, isReport ? Constants.EVENT_REPORT_PREV_EVENTS : -1);
-		
-		if (event == null)
+
+		if (appender == null)
 			WebUtils.setErrorMessage(request, Constants.MODULE_ID + ".error.invalidEvent", null);
+		else {
+			// Find specific event and also its previous N events
+			int eventId = ServletRequestUtils.getIntParameter(request, "eventId", 0);
+			List<EventProxy> contextEvents = new ArrayList<EventProxy>();
+			EventProxy event = svc.getAppenderEvent(appender, eventId, contextEvents, isReport ? Constants.EVENT_REPORT_PREV_EVENTS : -1);
 		
-		model.put("event", event);
-		model.put("contextEvents", contextEvents);
+			if (event == null)
+				WebUtils.setErrorMessage(request, Constants.MODULE_ID + ".error.invalidEvent", null);
+			else {
+				model.put("event", event);
+				model.put("contextEvents", contextEvents);
+				
+				if (isReport)
+					return new ModelAndView(reportView, model);
+			}
+		}
+
 		model.put("levelIcons", IconFactory.getLevelIconMap());	
 		
-		if (event != null && isReport)
-			return new ModelAndView(reportView, model);
-		else
-			return new ModelAndView(getViewName(), model);
+		return new ModelAndView(getViewName(), model);
 	}
 
 	/**

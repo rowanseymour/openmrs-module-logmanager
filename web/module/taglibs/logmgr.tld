@@ -32,4 +32,10 @@
 		<function-signature>java.lang.String formatMessage(java.lang.String)</function-signature>
 	</function>
 
+	<function>
+		<name>isStackLineFromOpenMRS</name>
+		<function-class>org.openmrs.module.logmanager.web.taglib.ELFunctions</function-class>
+		<function-signature>java.lang.Boolean isStackLineFromOpenMRS(java.lang.String)</function-signature>
+	</function>
+	
 </taglib>
