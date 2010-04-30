@@ -77,7 +77,13 @@ public class EventsExportView extends AbstractView {
 		PrintWriter out = response.getWriter();
 	
 		// Write each logging event using the layout
-		for(EventProxy event : (List<EventProxy>)model.get("events"))
+		for(EventProxy event : (List<EventProxy>)model.get("events")) {
 			out.print(layout.format(event.getTarget()));
+			
+			if (format.equals("txt") && event.isThrowableAttached()) {
+				for (String line : event.getThrowableLines())
+					out.println(line);
+			}
+		}
 	}
 }
