@@ -19,10 +19,10 @@ import java.util.List;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
-import org.openmrs.module.logmanager.log4j.AppenderProxy;
-import org.openmrs.module.logmanager.log4j.EventProxy;
-import org.openmrs.module.logmanager.log4j.LevelProxy;
-import org.openmrs.module.logmanager.log4j.LoggerProxy;
+import org.openmrs.module.logmanager.impl.AppenderProxy;
+import org.openmrs.module.logmanager.impl.EventProxy;
+import org.openmrs.module.logmanager.impl.LevelProxy;
+import org.openmrs.module.logmanager.impl.LoggerProxy;
 import org.openmrs.module.logmanager.util.PagingInfo;
 import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
@@ -34,7 +34,7 @@ import org.w3c.dom.Document;
 public interface LogManagerService extends OpenmrsService {
 	
 	/**
-	 * Gets all loggers currently being used by log4j
+	 * Gets all loggers
 	 * @param incImplicit true to include loggers with inherited levels and appenders
 	 * @return the list of loggers
 	 * @throws APIException

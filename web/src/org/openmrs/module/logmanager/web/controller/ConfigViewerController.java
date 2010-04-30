@@ -30,8 +30,8 @@ import org.apache.log4j.xml.Log4jEntityResolver;
 import org.openmrs.module.Module;
 import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.logmanager.Constants;
-import org.openmrs.module.logmanager.log4j.ConfigurationManager;
-import org.openmrs.module.logmanager.log4j.DOMConfigurationBuilder;
+import org.openmrs.module.logmanager.impl.ConfigurationBuilder;
+import org.openmrs.module.logmanager.impl.ConfigurationManager;
 import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.openmrs.module.logmanager.web.view.DocumentXmlView;
 import org.openmrs.util.OpenmrsUtil;
@@ -82,7 +82,7 @@ public class ConfigViewerController extends AbstractController {
 		}
 		else if (source.equals("current")) {
 			// Get the current configuration
-			document = DOMConfigurationBuilder.currentConfiguration();
+			document = ConfigurationBuilder.currentConfiguration();
 		}
 		else {
 			// Look for a module with that as its id

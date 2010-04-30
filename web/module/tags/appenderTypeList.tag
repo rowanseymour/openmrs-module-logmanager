@@ -1,8 +1,8 @@
-<%@ tag language="java" pageEncoding="UTF-8" import="org.openmrs.module.logmanager.log4j.AppenderType" %>
+<%@ tag language="java" pageEncoding="UTF-8" import="org.openmrs.module.logmanager.impl.AppenderType" %>
 <%@ taglib prefix="c" uri="/WEB-INF/taglibs/c-rt.tld" %>
 
 <%@ attribute name="name" required="true" %>
-<%@ attribute name="value" required="false" type="org.openmrs.module.logmanager.log4j.AppenderType" %>
+<%@ attribute name="value" required="false" type="org.openmrs.module.logmanager.impl.AppenderType" %>
 <%@ attribute name="showUnknown" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="showNTEventLog" required="false" type="java.lang.Boolean" %>
 

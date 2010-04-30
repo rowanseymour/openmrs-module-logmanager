@@ -15,8 +15,8 @@ package org.openmrs.module.logmanager.util;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openmrs.module.logmanager.log4j.AppenderProxy;
-import org.openmrs.module.logmanager.log4j.AppenderType;
+import org.openmrs.module.logmanager.impl.AppenderProxy;
+import org.openmrs.module.logmanager.impl.AppenderType;
 import org.openmrs.module.logmanager.util.LogManagerUtils;
 
 /**

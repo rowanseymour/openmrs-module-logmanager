@@ -16,7 +16,7 @@ import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
-import org.openmrs.module.logmanager.log4j.EventProxy;
+import org.openmrs.module.logmanager.impl.EventProxy;
 import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.springframework.web.servlet.view.AbstractView;
 

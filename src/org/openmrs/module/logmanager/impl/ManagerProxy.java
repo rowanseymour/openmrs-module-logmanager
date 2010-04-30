@@ -11,7 +11,7 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.module.logmanager.log4j;
+package org.openmrs.module.logmanager.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,9 +32,9 @@ import org.apache.log4j.Logger;
 /**
  * Proxy class for LogManager methods
  */
-public class LogManagerProxy {
+public class ManagerProxy {
 	
-	protected static final Log log = LogFactory.getLog(LogManagerProxy.class);
+	protected static final Log log = LogFactory.getLog(ManagerProxy.class);
 	
 	/**
 	 * Gets the appender with the specified id

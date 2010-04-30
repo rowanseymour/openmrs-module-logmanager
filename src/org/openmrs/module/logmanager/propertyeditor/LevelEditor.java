@@ -15,10 +15,10 @@ package org.openmrs.module.logmanager.propertyeditor;
 
 import java.beans.PropertyEditorSupport;
 
-import org.openmrs.module.logmanager.log4j.LevelProxy;
+import org.openmrs.module.logmanager.impl.LevelProxy;
 
 /**
- * Used to edit a log4j level
+ * Used to edit a logging level
  */
 public class LevelEditor extends PropertyEditorSupport {
 

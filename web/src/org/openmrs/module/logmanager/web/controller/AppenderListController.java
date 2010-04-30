@@ -25,7 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
-import org.openmrs.module.logmanager.log4j.AppenderProxy;
+import org.openmrs.module.logmanager.impl.AppenderProxy;
 import org.openmrs.module.logmanager.util.LogManagerUtils;
 import org.openmrs.module.logmanager.web.util.ContextProvider;
 import org.openmrs.module.logmanager.web.util.WebUtils;

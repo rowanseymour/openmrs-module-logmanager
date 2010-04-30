@@ -1,4 +1,4 @@
-package org.openmrs.module.logmanager.log4j;
+package org.openmrs.module.logmanager.impl;
 
 import org.apache.log4j.Level;
 import org.openmrs.module.logmanager.AbstractProxy;

@@ -25,9 +25,9 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.Preset;
-import org.openmrs.module.logmanager.log4j.LevelProxy;
-import org.openmrs.module.logmanager.log4j.LogManagerProxy;
-import org.openmrs.module.logmanager.log4j.LoggerProxy;
+import org.openmrs.module.logmanager.impl.LevelProxy;
+import org.openmrs.module.logmanager.impl.LoggerProxy;
+import org.openmrs.module.logmanager.impl.ManagerProxy;
 import org.openmrs.module.logmanager.web.util.IconFactory;
 import org.openmrs.module.logmanager.web.util.WebUtils;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -65,14 +65,14 @@ public class LoggerListController extends ParameterizableViewController {
 		// so that it will be effectively ignored
 		String delLogger = request.getParameter("deleteLogger");
 		if (delLogger != null) {
-			LoggerProxy logToRemove = LogManagerProxy.getLogger(delLogger, false);
+			LoggerProxy logToRemove = ManagerProxy.getLogger(delLogger, false);
 			if (logToRemove != null)
 				logToRemove.makeImplicit(true);
 		}
 		
 		model.put("presets", svc.getPresets());
 		model.put("loggers", svc.getLoggers(false));
-		model.put("rootLogger", LogManagerProxy.getRootLogger());
+		model.put("rootLogger", ManagerProxy.getRootLogger());
 		model.put("levelNullLabel", "<i>&lt;Inherit&gt;</i>");
 		model.put("levelIcons", IconFactory.getLevelIconMap());
 		
@@ -133,7 +133,7 @@ public class LoggerListController extends ParameterizableViewController {
 			
 			// Check for root logger
 			if (name.equals("ROOT")) {
-				LoggerProxy rootLogger = LogManagerProxy.getRootLogger();
+				LoggerProxy rootLogger = ManagerProxy.getRootLogger();
 				rootLogger.setLevel(level);
 				rootLogger.updateTarget();
 			} else {

@@ -21,9 +21,9 @@ import org.apache.log4j.SimpleLayout;
 import org.apache.log4j.xml.XMLLayout;
 import org.junit.Before;
 import org.junit.Test;
-import org.openmrs.module.logmanager.log4j.AppenderProxy;
-import org.openmrs.module.logmanager.log4j.AppenderType;
-import org.openmrs.module.logmanager.log4j.LayoutProxy;
+import org.openmrs.module.logmanager.impl.AppenderProxy;
+import org.openmrs.module.logmanager.impl.AppenderType;
+import org.openmrs.module.logmanager.impl.LayoutProxy;
 
 /**
  * Test cases for the class AppenderProxy
