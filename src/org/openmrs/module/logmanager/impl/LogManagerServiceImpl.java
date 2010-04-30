@@ -258,6 +258,31 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 		
 		dao.savePreset(preset);
 	}
+	
+	/**
+	 * @see org.openmrs.module.logmanager.LogManagerService#activatePreset(org.openmrs.module.logmanager.Preset)
+	 */
+	public void activatePreset(Preset preset) throws APIException {
+		// Nullify all existing loggers
+		for (LoggerProxy logger : getLoggers(false))
+			logger.makeImplicit(false);
+		
+		// Activate each loggers from preset
+		for (Map.Entry<String, Integer> entry : preset.getLoggerMap().entrySet()) {
+			String name = entry.getKey();
+			LevelProxy level = new LevelProxy(entry.getValue());
+			
+			// Check for root logger
+			if (name.equals("ROOT")) {
+				LoggerProxy rootLogger = ManagerProxy.getRootLogger();
+				rootLogger.setLevel(level);
+				rootLogger.updateTarget();
+			} else {
+				LoggerProxy logger = new LoggerProxy(name, level);
+				logger.updateTarget();
+			}
+		}
+	}
 
 	/**
 	 * @see org.openmrs.module.logmanager.LogManagerService#deletePreset(Preset)
