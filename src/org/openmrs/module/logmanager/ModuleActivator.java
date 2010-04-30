@@ -15,6 +15,7 @@ package org.openmrs.module.logmanager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.Activator;
 import org.openmrs.module.logmanager.impl.ConfigurationManager;
 import org.openmrs.module.logmanager.impl.LogManagerServiceImpl;
@@ -56,5 +57,11 @@ public class ModuleActivator implements Activator {
 	 */
 	public void shutdown() {
 		log.info("Shutting down log manager module");
+		
+		LogManagerService svc = Context.getService(LogManagerService.class);
+		
+		// Save external logging configuration
+		if (Options.getCurrent().isSaveExternalConfigOnShutdown())
+			svc.saveConfiguration();
 	}
 }

@@ -13,11 +13,17 @@
 	<spring:message code="${moduleId}.options.moduleOptions" />
 </b>
 <logmgr_form:form commandName="options" cssClass="box" action="options.htm">
-	<table cellpadding="2" cellspacing="0" width="100%">
+	<table cellpadding="2" cellspacing="0">
 		<tr>
-			<td width="30%" nowrap="nowrap"><spring:message code="${moduleId}.options.loadExternalConfigOnStartup"/></td>
+			<td nowrap="nowrap"><spring:message code="${moduleId}.options.loadExternalConfigOnStartup"/></td>
 			<td>
 				<logmgr_form:checkbox path="loadExternalConfigOnStartup" />
+			</td>
+		</tr>
+		<tr>
+			<td><spring:message code="${moduleId}.options.saveExternalConfigOnShutdown"/></td>
+			<td>
+				<logmgr_form:checkbox path="saveExternalConfigOnShutdown" />
 			</td>
 		</tr>
 		<tr>
