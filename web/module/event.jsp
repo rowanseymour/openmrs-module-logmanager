@@ -9,6 +9,12 @@
 <%@ include file="/WEB-INF/view/admin/maintenance/localHeader.jsp"%>
 <%@ include file="template/localHeader.jsp"%>
 
+<style type="text/css">
+.throwableNonOpenMRS {
+	color: #888;
+}
+</style>
+
 <b class="boxHeader">
 	<spring:message code="${moduleId}.viewer.viewLoggingEvent" />
 </b>
@@ -84,8 +90,8 @@
 		<tr>
 			<th valign="top"><spring:message code="${moduleId}.viewer.throwable" /></th>
 			<td>
-				<c:forEach items="${event.throwableLines}" var="throwableLine">
-					<c:out value="${throwableLine}" />
+				<c:forEach items="${event.throwableLines}" var="throwableLine" varStatus="status">
+					<span ${(status.index == 0 || logmgr:isStackLineFromOpenMRS(throwableLine)) ? '' : 'class="throwableNonOpenMRS"'}><c:out value="${throwableLine}" /></span>
 					<br/>
 				</c:forEach>
 			</td>	
