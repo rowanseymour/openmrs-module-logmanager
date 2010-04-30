@@ -150,6 +150,14 @@ public interface LogManagerService extends OpenmrsService {
 	public void saveCurrentLoggersAsPreset(Preset preset) throws APIException;
 	
 	/**
+	 * Activates the specified preset
+	 * @param preset the preset to activate
+	 * @throws APIException
+	 */
+	@Authorized( { Constants.PRIV_MANAGE_SERVER_LOG })
+	public void activatePreset(Preset preset) throws APIException;
+	
+	/**
 	 * Deletes the specified preset
 	 * @param preset the preset to delete
 	 * @throws APIException

@@ -25,7 +25,6 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.logmanager.Constants;
 import org.openmrs.module.logmanager.LogManagerService;
 import org.openmrs.module.logmanager.Preset;
-import org.openmrs.module.logmanager.impl.LevelProxy;
 import org.openmrs.module.logmanager.impl.LoggerProxy;
 import org.openmrs.module.logmanager.impl.ManagerProxy;
 import org.openmrs.module.logmanager.web.util.IconFactory;
@@ -120,27 +119,9 @@ public class LoggerListController extends ParameterizableViewController {
 	private void loadLoggerPreset(int presetId, HttpServletRequest request, Map<String, Object> model) {
 		LogManagerService svc = Context.getService(LogManagerService.class);
 		
+		// Load and activate preset
 		Preset preset = svc.getPreset(presetId);
-		
-		// Nullify all existing loggers
-		for (LoggerProxy logger : svc.getLoggers(false))
-			logger.makeImplicit(false);
-		
-		// Load loggers from preset
-		for (Map.Entry<String, Integer> entry : preset.getLoggerMap().entrySet()) {
-			String name = entry.getKey();
-			LevelProxy level = new LevelProxy(entry.getValue());
-			
-			// Check for root logger
-			if (name.equals("ROOT")) {
-				LoggerProxy rootLogger = ManagerProxy.getRootLogger();
-				rootLogger.setLevel(level);
-				rootLogger.updateTarget();
-			} else {
-				LoggerProxy logger = new LoggerProxy(name, level);
-				logger.updateTarget();
-			}
-		}
+		svc.activatePreset(preset);
 		
 		model.put("activePreset", presetId);
 		
