@@ -25,6 +25,7 @@ public class Options {
 	protected static Options config;
 	
 	protected boolean loadExternalConfigOnStartup;
+	protected boolean saveExternalConfigOnShutdown;
 	protected String systemAppenderName;
 	protected boolean alwaysRecreateSystemAppender;
 	protected boolean logUncaughtExceptions;
@@ -59,6 +60,7 @@ public class Options {
 	 */
 	public void load() {
 		loadExternalConfigOnStartup = loadBooleanOption(Constants.PROP_LOAD_EXTERNAL_CONFIG_ON_STARTUP, Constants.DEF_LOAD_EXTERNAL_CONFIG_ON_STARTUP);
+		saveExternalConfigOnShutdown = loadBooleanOption(Constants.PROP_SAVE_EXTERNAL_CONFIG_ON_SHUTDOWN, Constants.DEF_SAVE_EXTERNAL_CONFIG_ON_SHUTDOWN);
 		systemAppenderName = loadStringOption(Constants.PROP_SYSTEM_APPENDER_NAME, Constants.DEF_SYSTEM_APPENDER_NAME);
 		alwaysRecreateSystemAppender = loadBooleanOption(Constants.PROP_ALWAYS_RECREATE_SYSTEM_APPENDER, Constants.DEF_ALWAYS_RECREATE_SYSTEM_APPENDER);
 		logUncaughtExceptions = loadBooleanOption(Constants.PROP_LOG_UNCAUGHT_EXCEPTIONS, Constants.DEF_LOG_UNCAUGHT_EXCEPTIONS);
@@ -69,6 +71,7 @@ public class Options {
 	 */
 	public void save() {
 		saveOption(Constants.PROP_LOAD_EXTERNAL_CONFIG_ON_STARTUP, loadExternalConfigOnStartup);
+		saveOption(Constants.PROP_SAVE_EXTERNAL_CONFIG_ON_SHUTDOWN, saveExternalConfigOnShutdown);
 		saveOption(Constants.PROP_SYSTEM_APPENDER_NAME, systemAppenderName);
 		saveOption(Constants.PROP_ALWAYS_RECREATE_SYSTEM_APPENDER, alwaysRecreateSystemAppender);
 		saveOption(Constants.PROP_LOG_UNCAUGHT_EXCEPTIONS, logUncaughtExceptions);
@@ -88,6 +91,22 @@ public class Options {
 	 */
 	public void setLoadExternalConfigOnStartup(boolean loadExternalConfigOnStartup) {
 		this.loadExternalConfigOnStartup = loadExternalConfigOnStartup;
+	}
+	
+	/**
+	 * Gets whether the external configuration should be saved on module shutdown
+	 * @return true if configuration should be saved
+	 */
+	public boolean isSaveExternalConfigOnShutdown() {
+		return saveExternalConfigOnShutdown;
+	}
+
+	/**
+	 * Sets whether the external configuration should be saved on module shutdown
+	 * @param saveExternalConfigOnShutdown true if configuration should be saved
+	 */
+	public void setSaveExternalConfigOnShutdown(boolean saveExternalConfigOnShutdown) {
+		this.saveExternalConfigOnShutdown = saveExternalConfigOnShutdown;
 	}
 
 	/**

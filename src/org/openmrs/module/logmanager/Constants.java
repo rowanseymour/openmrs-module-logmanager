@@ -29,12 +29,14 @@ public class Constants {
 	
 	// Global property keys
 	public static final String PROP_LOAD_EXTERNAL_CONFIG_ON_STARTUP = MODULE_ID + ".loadExternalConfigOnStartup";
+	public static final String PROP_SAVE_EXTERNAL_CONFIG_ON_SHUTDOWN = MODULE_ID + ".saveExternalConfigOnShutdown";
 	public static final String PROP_SYSTEM_APPENDER_NAME = MODULE_ID + ".systemAppenderName";
 	public static final String PROP_ALWAYS_RECREATE_SYSTEM_APPENDER = MODULE_ID + ".alwaysRecreateSystemAppender";
 	public static final String PROP_LOG_UNCAUGHT_EXCEPTIONS = MODULE_ID + ".logUncaughtExceptions";
 	
 	// Global property defaults
 	public static final boolean DEF_LOAD_EXTERNAL_CONFIG_ON_STARTUP = true;
+	public static final boolean DEF_SAVE_EXTERNAL_CONFIG_ON_SHUTDOWN = true;
 	public static final String DEF_SYSTEM_APPENDER_NAME = "MEMORY_APPENDER";
 	public static final boolean DEF_ALWAYS_RECREATE_SYSTEM_APPENDER = true;
 	public static final boolean DEF_LOG_UNCAUGHT_EXCEPTIONS = true;

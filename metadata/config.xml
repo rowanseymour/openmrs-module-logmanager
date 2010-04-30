@@ -33,6 +33,12 @@
 	</globalProperty>
 	
 	<globalProperty>
+		<property>@MODULE_ID@.saveExternalConfigOnShutdown</property>
+		<defaultValue>true</defaultValue>
+		<description>Save external configuration on shutdown</description>
+	</globalProperty>
+	
+	<globalProperty>
 		<property>@MODULE_ID@.systemAppenderName</property>
 		<defaultValue>MEMORY_APPENDER</defaultValue>
 		<description>System appender name</description>
