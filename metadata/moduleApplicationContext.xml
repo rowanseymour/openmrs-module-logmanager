@@ -45,6 +45,8 @@
 	<bean id="logMgrEventReportView" class="@MODULE_PACKAGE@.web.view.EventReportView" />
 	
 	<bean id="logMgrDocumentXmlView" class="@MODULE_PACKAGE@.web.view.DocumentXmlView" />
+	
+	<bean id="logMgrAutocompleteView" class="@MODULE_PACKAGE@.web.view.AutocompleteView" />
 
 	<!-- ========================= Controllers ========================= -->
 
@@ -69,6 +71,9 @@
 	<bean id="logMgrLoggerListController" class="@MODULE_PACKAGE@.web.controller.LoggerListController">
 		<property name="viewName">
 			<value>module/@MODULE_ID@/loggerList</value>
+		</property>
+		<property name="autocompleteView">
+			<ref bean="logMgrAutocompleteView" />
 		</property>
 	</bean>
 	

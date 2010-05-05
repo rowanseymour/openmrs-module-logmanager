@@ -76,6 +76,13 @@ public class LogManagerServiceImpl extends BaseOpenmrsService implements LogMana
 	}
 	
 	/**
+	 * @see org.openmrs.module.logmanager.LogManagerService#getLoggers(String, int)
+	 */
+	public List<LoggerProxy> getLoggers(String prefix, int limit) {
+		return ManagerProxy.getLoggers(prefix, limit);
+	}
+	
+	/**
 	 * @see org.openmrs.module.logmanager.LogManagerService#getAppender(int)
 	 */
 	public AppenderProxy getAppender(int id) throws APIException {

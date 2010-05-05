@@ -9,7 +9,18 @@
 <%@ include file="/WEB-INF/view/admin/maintenance/localHeader.jsp"%>
 <%@ include file="template/localHeader.jsp"%>
 
+<openmrs:htmlInclude file="/scripts/jquery/jquery-1.3.2.min.js" />
+<openmrs:htmlInclude file="/scripts/jquery/autocomplete/jquery.autocomplete.min.js" />
+<openmrs:htmlInclude file="/scripts/jquery/autocomplete/jquery.autocomplete.css" />
+
 <script type="text/javascript">
+$(document).ready(function() {
+	$("#addLoggerName").autocomplete(
+		"logger.list",
+		{ extraParams: { json: "" }, matchCase: true, matchContains: false, minChars: 3 }
+	);
+});
+
 function onChangePreset(value) {
 	var newNameTxt = document.presetForm.newPresetName;
 	var loadBtn = document.presetForm.loadPreset;
@@ -131,7 +142,7 @@ function onSavePreset() {
 				<spring:message code="${moduleId}.loggers.name"/>:
 			</th>
 			<td style="padding-right: 40px">
-				<input type="text" name="logger" style="width: 400px" onkeyup="onChangeAddLoggerName(this.value)" />
+				<input type="text" id="addLoggerName" name="logger" style="width: 400px" onkeyup="onChangeAddLoggerName(this.value)" />
 			</td>
 			<td valign="top">
 				<input type="submit" id="addLogger" value="<spring:message code="general.add"/>..." disabled="disabled" />

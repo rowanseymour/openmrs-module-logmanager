@@ -44,6 +44,17 @@ public interface LogManagerService extends OpenmrsService {
 	public List<LoggerProxy> getLoggers(boolean incImplicit) throws APIException;
 	
 	/**
+	 * Gets all loggers where name matches prefix
+	 * @param prefix the name prefix
+	 * @param limit the maximum number of loggers to return
+	 * @return the list of loggers
+	 * @throws APIException
+	 */
+	@Authorized( { Constants.PRIV_VIEW_SERVER_LOG })
+	@Transactional(readOnly=true)
+	public List<LoggerProxy> getLoggers(String prefix, int limit) throws APIException;
+	
+	/**
 	 * Gets the appender with the given id
 	 * @param id the id
 	 * @return the appender
