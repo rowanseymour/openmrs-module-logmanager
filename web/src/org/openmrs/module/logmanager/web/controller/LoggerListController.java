@@ -29,6 +29,7 @@ import org.openmrs.module.logmanager.impl.LoggerProxy;
 import org.openmrs.module.logmanager.impl.ManagerProxy;
 import org.openmrs.module.logmanager.web.util.IconFactory;
 import org.openmrs.module.logmanager.web.util.WebUtils;
+import org.openmrs.module.logmanager.web.view.AutocompleteView;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
@@ -40,6 +41,8 @@ public class LoggerListController extends ParameterizableViewController {
 	
 	protected static final Log log = LogFactory.getLog(LoggerListController.class);
 	
+	protected AutocompleteView autocompleteView;
+	
 	/**
 	 * @see org.springframework.web.servlet.mvc.ParameterizableViewController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
@@ -50,6 +53,13 @@ public class LoggerListController extends ParameterizableViewController {
 		Map<String, Object> model = new HashMap<String, Object>();
 		LogManagerService svc = Context.getService(LogManagerService.class);
 		int presetId = ServletRequestUtils.getIntParameter(request, "preset", 0);
+		
+		if (request.getParameter("json") != null) {
+			String prefix = request.getParameter("q");
+			int limit = ServletRequestUtils.getIntParameter(request, "limit", 10);
+			model.put(autocompleteView.getSourceKey(), svc.getLoggers(prefix, limit));
+			return new ModelAndView(autocompleteView, model);
+		}
 		
 		// Process preset management requests
 		if (request.getParameter("savePreset") != null)
@@ -141,5 +151,21 @@ public class LoggerListController extends ParameterizableViewController {
 		svc.deletePreset(preset);
 		
 		WebUtils.setInfoMessage(request, Constants.MODULE_ID + ".loggers.presetDeleted", null);
+	}
+
+	/**
+	 * Gets the autocomplete view
+	 * @return the autocomplete view
+	 */
+	public AutocompleteView getAutocompleteView() {
+		return autocompleteView;
+	}
+
+	/**
+	 * Sets the autocomplete view
+	 * @param autocompleteView the autocomplete view
+	 */
+	public void setAutocompleteView(AutocompleteView autocompleteView) {
+		this.autocompleteView = autocompleteView;
 	}
 }

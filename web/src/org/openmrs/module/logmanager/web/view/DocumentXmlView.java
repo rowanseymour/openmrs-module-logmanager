@@ -23,7 +23,7 @@ import org.springframework.web.servlet.view.AbstractView;
 import org.w3c.dom.Document;
 
 /**
- * View for XML exports
+ * View to render DOM document as XML
  */
 public class DocumentXmlView extends AbstractView {
 	

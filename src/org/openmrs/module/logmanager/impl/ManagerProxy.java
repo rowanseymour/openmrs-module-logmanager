@@ -107,6 +107,44 @@ public class ManagerProxy {
 	}
 	
 	/**
+	 * Gets all loggers with matching name prefix
+	 * @param prefix the name prefix
+	 * @param limit the maximum number of loggers to return
+	 * @return the list of loggers
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<LoggerProxy> getLoggers(String prefix, int limit) {
+		Enumeration<Logger> loggersEnum = (Enumeration<Logger>)LogManager.getCurrentLoggers();
+		List<Logger> loggers = new ArrayList<Logger>();
+		int count = 0;
+		
+		// Filter based on logger name and max count
+		if (prefix != null) {
+			while (loggersEnum.hasMoreElements() && count < limit) {
+				Logger logger = loggersEnum.nextElement();
+				if (logger.getName().startsWith(prefix)) {
+					loggers.add(logger);
+					count++;
+				}
+			}
+		}
+		
+		// Sort list by logger name
+		Collections.sort(loggers, new Comparator<Logger>() {
+			public int compare(Logger log1, Logger log2) {
+				return log1.getName().compareTo(log2.getName());
+			}
+		});
+		
+		// Convert to proxy objects
+		List<LoggerProxy> proxies = new ArrayList<LoggerProxy>();
+		for (Logger logger : loggers)
+			proxies.add(new LoggerProxy(logger));
+		
+		return proxies;
+	}
+	
+	/**
 	 * Gets the root logger
 	 * @return the root logger
 	 */
