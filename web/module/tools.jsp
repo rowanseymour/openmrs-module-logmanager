@@ -61,7 +61,7 @@
 		<tr>
 			<th width="150"><spring:message code="${moduleId}.logger"/></th>
 			<td>
-				<input type="text" name="injectLoggerName" value="${injectLoggerName}" style="width: 400px" />
+				<logmgr_tag:loggerField id="injectLoggerName" name="injectLoggerName" cssStyle="width: 400px" />
 				<c:if test="${loggerNameError}">
 					<span class="error"><spring:message code="${moduleId}.error.invalidName" /></span>
 				</c:if>
@@ -70,7 +70,7 @@
 		<tr>
 			<th><spring:message code="${moduleId}.level"/></th>
 			<td>
-				<logmgr_tag:levelList name="injectLevel" value="${injectLevel}" showALL="false" showOFF="false" showInherit="false" />
+				<logmgr_tag:levelField name="injectLevel" value="${injectLevel}" showALL="false" showOFF="false" showInherit="false" />
 			</td>
 		</tr>
 		<tr>
@@ -82,7 +82,7 @@
 		<tr>
 			<td></td>
 			<td>
-				<input type="submit" name="inject" value="<spring:message code="${moduleId}.tools.inject"/>" />
+				<input type="submit" id="injectBtn" name="inject" value="<spring:message code="${moduleId}.tools.inject"/>" />
 			</td>
 		</tr>
 	</table>

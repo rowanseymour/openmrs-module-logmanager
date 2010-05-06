@@ -1,3 +1,7 @@
+<%@ taglib prefix="openmrs_tag" tagdir="/WEB-INF/tags" %>
+
+<openmrs:htmlInclude file="/scripts/jquery/jquery-1.3.2.min.js" />
+
 <h2><spring:message code="logmanager.title"/></h2>
 
 <ul id="menu">
