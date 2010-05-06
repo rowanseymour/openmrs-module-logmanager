@@ -33,8 +33,8 @@ function onChangeAddLoggerName(value) {
 }
 
 function onSavePreset() {
-	var presetLst = document.presetForm.preset;
-	return (presetLst.value > 0) ? confirm('<spring:message code="${moduleId}.loggers.confirmUpdatePreset"/>') : true;
+	return ($("#presetList").val() > 0)
+	 ? confirm('<spring:message code="${moduleId}.loggers.confirmUpdatePreset"/>') : true;
 }
 </script>
 
@@ -48,7 +48,7 @@ function onSavePreset() {
 				<spring:message code="${moduleId}.loggers.preset"/>:
 			</th>
 			<td style="padding-right: 40px">
-				<select name="preset" onchange="onChangePreset(this.value)">
+				<select name="preset" id="presetList" onchange="onChangePreset(this.value)">
 					<option value="0">&lt;<spring:message code="general.new"/>...&gt;</option>
 					<c:forEach items="${presets}" var="preset">
 						<option value="${preset.presetId}" ${activePreset == preset.presetId ? 'selected="selected"' : ''}>${preset.name}</option>
