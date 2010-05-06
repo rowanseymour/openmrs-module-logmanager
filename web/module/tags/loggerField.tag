@@ -9,7 +9,7 @@
 <%@ attribute name="onChange" required="false" %>
 
 <openmrs:htmlInclude file="/scripts/jquery/autocomplete/jquery.autocomplete.min.js" />
-<openmrs:htmlInclude file="/moduleResources/logmanager/autocomplete.css" />
+<openmrs:htmlInclude file="/moduleResources/logmanager/autocomplete/autocomplete.css" />
 
 <script type="text/javascript">
 $(document).ready(function() {
