@@ -33,7 +33,7 @@ function clearAppender(id) {
 				<spring:message code="${moduleId}.appenders.type"/>:
 			</th>
 			<td style="padding-right: 40px">
-				<logmgr_tag:appenderTypeList name="newType" showUnknown="false" showNTEventLog="${isWindows}" />
+				<logmgr_tag:appenderTypeField name="newType" showUnknown="false" showNTEventLog="${isWindows}" />
 			</td>		
 			<td>
 				<input type="submit" value="<spring:message code="${moduleId}.create"/>..." />

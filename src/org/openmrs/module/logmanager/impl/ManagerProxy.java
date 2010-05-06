@@ -116,15 +116,14 @@ public class ManagerProxy {
 	public static List<LoggerProxy> getLoggers(String prefix, int limit) {
 		Enumeration<Logger> loggersEnum = (Enumeration<Logger>)LogManager.getCurrentLoggers();
 		List<Logger> loggers = new ArrayList<Logger>();
-		int count = 0;
 		
 		// Filter based on logger name and max count
 		if (prefix != null) {
-			while (loggersEnum.hasMoreElements() && count < limit) {
+			while (loggersEnum.hasMoreElements()) {
 				Logger logger = loggersEnum.nextElement();
 				if (logger.getName().startsWith(prefix)) {
 					loggers.add(logger);
-					count++;
+					
 				}
 			}
 		}
@@ -136,10 +135,14 @@ public class ManagerProxy {
 			}
 		});
 		
-		// Convert to proxy objects
+		// Convert first N loggers to proxy objects
 		List<LoggerProxy> proxies = new ArrayList<LoggerProxy>();
-		for (Logger logger : loggers)
+		int count = 0;
+		for (Logger logger : loggers) {
 			proxies.add(new LoggerProxy(logger));
+			if (++count >= limit)
+				break;
+		}
 		
 		return proxies;
 	}

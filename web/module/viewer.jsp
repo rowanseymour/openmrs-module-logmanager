@@ -74,7 +74,7 @@ function submitViewForm(format) {
 					<option value="1"  ${levelOp == 1  ? 'selected="selected"' : ''}>&ge;</option>
 				</select>
 				
-				<logmgr_tag:levelList name="level" value="${level}" showAny="true" />
+				<logmgr_tag:levelField name="level" value="${level}" showAny="true" />
 				
 				<spring:message code="${moduleId}.viewer.where" />
 				

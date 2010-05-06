@@ -72,7 +72,7 @@ function onChangeLayoutType(value) {
 					<c:choose>
 						<c:when test="${appender.layout.type.ordinal > 0}">
 							<spring:bind path="layout.type">
-								<logmgr_tag:layoutTypeList name="${status.expression}" value="${status.value}" showUnknown="false" onchange="onChangeLayoutType(this.value)" />
+								<logmgr_tag:layoutTypeField name="${status.expression}" value="${status.value}" showUnknown="false" onchange="onChangeLayoutType(this.value)" />
 							</spring:bind>
 							<logmgr_form:input path="layout.conversionPattern" cssStyle="width: 300px; display: ${appender.layout.type.ordinal == 3 ? '' : 'none' }" />
 							<logmgr_form:errors path="layout.conversionPattern" cssClass="error" />
@@ -234,7 +234,7 @@ function onChangeLayoutType(value) {
 						</c:forEach>
 						<option value=""><spring:message code="${moduleId}.other"/>...</option>
 					</select>
-					<input id="attachToOther" name="attachToOther" type="text" style="width: 300px; display: none" />
+					<logmgr_tag:loggerField id="attachToOther" name="attachToOther" cssStyle="width: 300px; display: none" />
 				</td>
 			</tr>
 		</c:if>
