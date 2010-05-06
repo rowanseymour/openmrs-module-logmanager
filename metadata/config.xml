@@ -9,7 +9,7 @@
 	<description>Management of logging for developers</description>
 	<activator>@MODULE_PACKAGE@.ModuleActivator</activator>
 	<updateURL>https://dev.openmrs.org/modules/download/@MODULE_ID@/update.rdf</updateURL>
-	<require_version>1.5.0</require_version>
+	<require_version>1.6.0</require_version>
 	
 	<extension>
 		<point>org.openmrs.uncaughtException</point>
