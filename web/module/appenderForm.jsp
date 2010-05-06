@@ -12,14 +12,22 @@
 
 <script type="text/javascript">
 function onChangeAttachTo(value) {
-	document.getElementById("attachToOther").style.display = (value == "") ? "" : "none";
+	if (value == "")
+		$("#attachToOther").show();
+	else
+		$("#attachToOther").hide();
 }
+
 function onChangeLayoutType(value) {
-	var showPattern = (value == <%= LayoutType.PATTERN.ordinal() %>);
-	var showUseLocation = (value == <%= LayoutType.HTML.ordinal() %> || value == <%= LayoutType.XML.ordinal() %>);
+	if (value == <%= LayoutType.PATTERN.ordinal() %>)
+		$("#layout\\.conversionPattern").show();
+	else
+		$("#layout\\.conversionPattern").hide();
 	
-	document.getElementById("layout.conversionPattern").style.display = showPattern ? "" : "none";
-	document.getElementById("useLocationSpan").style.display = showUseLocation ? "" : "none";
+	if (value == <%= LayoutType.HTML.ordinal() %> || value == <%= LayoutType.XML.ordinal() %>)
+		$("#useLocationSpan").show();
+	else
+		$("#useLocationSpan").hide();
 }
 </script>
 
