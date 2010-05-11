@@ -26,7 +26,7 @@
 			  `preset_id` int(10) unsigned NOT NULL,
 			  `logger` varchar(255) NOT NULL,
 			  `level` int(10) unsigned DEFAULT NULL,
-			  PRIMARY KEY (`preset_id`,`logger`) USING BTREE,
+			  PRIMARY KEY (`preset_id`,`logger`),
 			  KEY `FK_logmanager_logger_preset` (`preset_id`),
 			  CONSTRAINT `FK_logmanager_logger_preset` FOREIGN KEY (`preset_id`) REFERENCES `logmanager_preset` (`preset_id`) ON DELETE CASCADE
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
