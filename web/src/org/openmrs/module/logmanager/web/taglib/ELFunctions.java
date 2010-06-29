@@ -63,7 +63,8 @@ public class ELFunctions {
 	 * @return the formatted location string
 	 */
 	public static String formatLocInfo(EventProxy event) {
-		if (event.getClassName().equals("?") || event.getMethodName().equals("?"))
+		if (event.getClassName() == null || event.getClassName().equals("?") ||
+				event.getMethodName() == null || event.getMethodName().equals("?"))
 			return "Unknown";
 		
 		String clazz = event.getClassName();
