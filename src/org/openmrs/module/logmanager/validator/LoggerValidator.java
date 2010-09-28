@@ -27,7 +27,7 @@ public class LoggerValidator implements Validator {
 	/**
 	 * @see org.springframework.validation.Validator#supports(Class)
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public boolean supports(Class clazz) {
 		return LoggerProxy.class.isAssignableFrom(clazz);
 	}

@@ -30,7 +30,7 @@ public class AutocompleteView extends AbstractView {
 
 	protected String sourceKey = "source";
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected void renderMergedOutputModel(Map model, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {

@@ -33,7 +33,7 @@ public class AppenderValidator implements Validator {
 	/**
 	 * @see org.springframework.validation.Validator#supports(Class)
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public boolean supports(Class clazz) {
 		return AppenderProxy.class.isAssignableFrom(clazz);
 	}
