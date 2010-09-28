@@ -30,7 +30,7 @@ public class DocumentXmlView extends AbstractView {
 	protected String filenameKey = "filename";
 	protected String sourceKey = "source";
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected void renderMergedOutputModel(Map model, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {

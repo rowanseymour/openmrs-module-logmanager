@@ -113,7 +113,7 @@ public class EventProxy extends AbstractProxy<LoggingEvent> {
 	 * Gets the properties map
 	 * @return the properties map
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public Map getProperties() {
 		return target.getProperties();
 	}
