@@ -8,15 +8,11 @@
 <%@ attribute name="cssStyle" required="false" %>
 <%@ attribute name="onChange" required="false" %>
 
-<openmrs:htmlInclude file="/scripts/jquery/autocomplete/jquery.autocomplete.min.js" />
 <openmrs:htmlInclude file="/moduleResources/logmanager/autocomplete/autocomplete.css" />
 
 <script type="text/javascript">
-$(document).ready(function() {
-	$("#${id}").autocomplete(
-		"logger.list",
-		{ extraParams: { json: "" }, matchCase: true, matchContains: false, minChars: 3 }
-	);
+$j(document).ready(function() {
+	$j("#${id}").autocomplete({ source: "logger.list?json", minLength: 3 });
 });
 </script>
 

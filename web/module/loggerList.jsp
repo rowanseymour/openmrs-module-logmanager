@@ -29,11 +29,11 @@ function onChangePreset(value) {
 }
 
 function onChangeAddLoggerName(value) {
-	$('#addLogger').attr('disabled', (value.length == 0) ? 'disabled' : '');
+	$j('#addLogger').attr('disabled', (value.length == 0) ? 'disabled' : '');
 }
 
 function onSavePreset() {
-	return ($("#presetList").val() > 0)
+	return ($j("#presetList").val() > 0)
 	 ? confirm('<spring:message code="${moduleId}.loggers.confirmUpdatePreset"/>') : true;
 }
 </script>
