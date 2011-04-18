@@ -55,9 +55,9 @@ public class LoggerListController extends ParameterizableViewController {
 		int presetId = ServletRequestUtils.getIntParameter(request, "preset", 0);
 		
 		if (request.getParameter("json") != null) {
-			String prefix = request.getParameter("q");
+			String term = request.getParameter("term");
 			int limit = ServletRequestUtils.getIntParameter(request, "limit", 10);
-			model.put(autocompleteView.getSourceKey(), svc.getLoggers(prefix, limit));
+			model.put(autocompleteView.getSourceKey(), svc.getLoggers(term, limit));
 			return new ModelAndView(autocompleteView, model);
 		}
 		

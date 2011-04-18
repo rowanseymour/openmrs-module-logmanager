@@ -42,21 +42,29 @@ public class AutocompleteView extends AbstractView {
 		response.setHeader("Pragma", "No-cache");
 		response.setDateHeader("Expires", 0);
 		response.setHeader("Cache-Control", "no-cache");
-		response.setContentType("text/html");
+		response.setContentType("application/json");
+		
+		writer.write("[");
 		
 		if (source != null) {		
 			if (source instanceof Collection) {
 				Collection<?> collection = (Collection<?>)source;
-				for (Object item : collection) {
-					if (item instanceof LoggerProxy)
-						writer.write(((LoggerProxy)item).getName() + "\n");
-					else
-						writer.write(item.toString() + "\n");
+				Object[] items = collection.toArray();
+				for (int i = 0; i < items.length; i++) {
+					Object item = items[i];
+					String label = (item instanceof LoggerProxy) ? ((LoggerProxy)item).getName() : item.toString();
+					
+					if (i > 0)
+						writer.write(',');
+					
+					writer.write("{\"label\":\"" + label + "\", \"value\":\"" + label + "\"}");
 				}
 			}
 		}
 		else
-			writer.write("ERROR: Source object is null");
+			writer.write("\"ERROR: Source object is null\"");
+		
+		writer.write("]");
 	}
 
 	/**

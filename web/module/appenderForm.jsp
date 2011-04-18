@@ -13,21 +13,21 @@
 <script type="text/javascript">
 function onChangeAttachTo(value) {
 	if (value == "")
-		$("#attachToOther").show();
+		$j("#attachToOther").show();
 	else
-		$("#attachToOther").hide();
+		$j("#attachToOther").hide();
 }
 
 function onChangeLayoutType(value) {
 	if (value == <%= LayoutType.PATTERN.ordinal() %>)
-		$("#layout\\.conversionPattern").show();
+		$j("#layout\\.conversionPattern").show();
 	else
-		$("#layout\\.conversionPattern").hide();
+		$j("#layout\\.conversionPattern").hide();
 	
 	if (value == <%= LayoutType.HTML.ordinal() %> || value == <%= LayoutType.XML.ordinal() %>)
-		$("#useLocationSpan").show();
+		$j("#useLocationSpan").show();
 	else
-		$("#useLocationSpan").hide();
+		$j("#useLocationSpan").hide();
 }
 </script>
 
