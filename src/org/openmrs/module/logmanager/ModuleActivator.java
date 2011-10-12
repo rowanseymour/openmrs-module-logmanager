@@ -16,7 +16,7 @@ package org.openmrs.module.logmanager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.Activator;
+import org.openmrs.module.BaseModuleActivator;
 import org.openmrs.module.logmanager.impl.ConfigurationManager;
 import org.openmrs.module.logmanager.impl.LogManagerServiceImpl;
 
@@ -24,7 +24,7 @@ import org.openmrs.module.logmanager.impl.LogManagerServiceImpl;
  * This class contains the logic that is run every time this module is either
  * started or shutdown
  */
-public class ModuleActivator implements Activator {
+public class ModuleActivator extends BaseModuleActivator {
 
 	private static final Log log = LogFactory.getLog(ModuleActivator.class);
 
