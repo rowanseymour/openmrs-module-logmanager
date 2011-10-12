@@ -40,5 +40,9 @@ public class MaintenanceLinksExtension extends Extension {
 	@Override
 	public MEDIA_TYPE getMediaType() {
 		return MEDIA_TYPE.html;
-	}	
+	}
+	
+	public String getRequiredPrivilege() {
+		return Constants.PRIV_MANAGE_SERVER_LOG;
+	}
 }
