@@ -16,9 +16,9 @@
 	<classpathentry kind="lib" path="lib-common/cglib-2.1_3.jar"/>
 	<classpathentry kind="lib" path="lib-common/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="lib-common/jcommon-1.0.15.jar"/>
-	<classpathentry kind="lib" path="lib-common/web-openmrs-api-1.6.0.12645-.jar"/>
-	<classpathentry kind="lib" path="lib-common/tests-openmrs-api-1.6.0.12645-.jar"/>
-	<classpathentry kind="lib" path="lib-common/openmrs-api-1.6.0.12645-.jar"/>
+	<classpathentry kind="lib" path="lib-common/openmrs-api-1.7.2.19372-dev.jar" sourcepath="/openmrs-1.7.x"/>
+	<classpathentry kind="lib" path="lib-common/tests-openmrs-api-1.7.2.19372-dev.jar"/>
+	<classpathentry kind="lib" path="lib-common/web-openmrs-api-1.7.2.19372-dev.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="owner.project.facets" value="jst.java"/>
