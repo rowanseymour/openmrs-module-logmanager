@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	        http://www.springframework.org/schema/context
+	        http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	        http://www.springframework.org/schema/util
+	        http://www.springframework.org/schema/util/spring-util-2.0.xsd
+	        http://www.springframework.org/schema/aop
+			http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+	<context:component-scan base-package="@MODULE_PACKAGE@" />
+
+	<!-- ========================= URL mappings ========================== -->
+
+	<bean id="logMgrUrlMapping"
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="order">
+			<value>5</value>
+		</property>
+		<property name="mappings">
+			<props>
+				<prop key="module/@MODULE_ID@/viewer.htm">logMgrLogViewerController</prop>
+				<prop key="module/@MODULE_ID@/event.htm">logMgrEventViewerController</prop>
+				<prop key="module/@MODULE_ID@/logger.list">logMgrLoggerListController</prop>
+				<prop key="module/@MODULE_ID@/logger.form">logMgrLoggerFormController</prop>
+				<prop key="module/@MODULE_ID@/appender.list">logMgrAppenderListController</prop>
+				<prop key="module/@MODULE_ID@/appender.form">logMgrAppenderFormController</prop>
+				<prop key="module/@MODULE_ID@/tools.htm">logMgrToolsController</prop>
+				<prop key="module/@MODULE_ID@/config.list">logMgrConfigController</prop>
+				<prop key="module/@MODULE_ID@/config.form">logMgrConfigViewerController</prop>
+				<prop key="module/@MODULE_ID@/options.htm">logMgrOptionsController</prop>
+				
+				<prop key="admin/maintenance/serverLog.form">logMgrLogViewerController</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- ========================= Views ========================= -->
+
+	<bean id="logMgrEventsExportView" class="@MODULE_PACKAGE@.web.view.EventsExportView" />
+	
+	<bean id="logMgrEventReportView" class="@MODULE_PACKAGE@.web.view.EventReportView" />
+	
+	<bean id="logMgrDocumentXmlView" class="@MODULE_PACKAGE@.web.view.DocumentXmlView" />
+	
+	<bean id="logMgrAutocompleteView" class="@MODULE_PACKAGE@.web.view.AutocompleteView" />
+
+	<!-- ========================= Controllers ========================= -->
+
+	<bean id="logMgrLogViewerController" class="@MODULE_PACKAGE@.web.controller.LogViewerController">
+		<property name="viewName">
+			<value>module/@MODULE_ID@/viewer</value>
+		</property>
+		<property name="exportView">
+			<ref bean="logMgrEventsExportView" />
+		</property>
+	</bean>
+	
+	<bean id="logMgrEventViewerController" class="@MODULE_PACKAGE@.web.controller.EventViewerController">
+		<property name="viewName">
+			<value>module/@MODULE_ID@/event</value>
+		</property>
+		<property name="reportView">
+			<ref bean="logMgrEventReportView" />
+		</property>
+	</bean>
+		
+	<bean id="logMgrLoggerListController" class="@MODULE_PACKAGE@.web.controller.LoggerListController">
+		<property name="viewName">
+			<value>module/@MODULE_ID@/loggerList</value>
+		</property>
+		<property name="autocompleteView">
+			<ref bean="logMgrAutocompleteView" />
+		</property>
+	</bean>
+	
+	<bean id="logMgrLoggerFormController" class="@MODULE_PACKAGE@.web.controller.LoggerFormController">
+		<property name="commandName"><value>logger</value></property>
+		<property name="formView"><value>module/@MODULE_ID@/loggerForm</value></property>
+		<property name="successView"><value>logger.list</value></property>
+		<property name="validator">
+			<bean class="@MODULE_PACKAGE@.validator.LoggerValidator" />
+		</property>
+	</bean>
+	
+	<bean id="logMgrAppenderListController" class="@MODULE_PACKAGE@.web.controller.AppenderListController">
+		<property name="viewName">
+			<value>module/@MODULE_ID@/appenderList</value>
+		</property>
+	</bean>
+	
+	<bean id="logMgrAppenderFormController" class="@MODULE_PACKAGE@.web.controller.AppenderFormController">
+		<property name="commandName"><value>appender</value></property>
+		<property name="formView"><value>module/@MODULE_ID@/appenderForm</value></property>
+		<property name="successView"><value>appender.list</value></property>
+		<property name="validator">
+			<bean class="@MODULE_PACKAGE@.validator.AppenderValidator" />
+		</property>
+	</bean>
+	
+	<bean id="logMgrToolsController" class="@MODULE_PACKAGE@.web.controller.ToolsController">
+		<property name="viewName">
+			<value>module/@MODULE_ID@/tools</value>
+		</property>
+	</bean>
+	
+	<bean id="logMgrConfigController" class="@MODULE_PACKAGE@.web.controller.ConfigController">
+		<property name="viewName">
+			<value>module/@MODULE_ID@/config</value>
+		</property>
+	</bean>
+	
+	<bean id="logMgrConfigViewerController" class="@MODULE_PACKAGE@.web.controller.ConfigViewerController">
+		<property name="xmlView">
+			<ref bean="logMgrDocumentXmlView" />
+		</property>
+	</bean>
+	
+	<bean id="logMgrOptionsController" class="@MODULE_PACKAGE@.web.controller.OptionsController">
+		<property name="commandName">
+			<value>options</value>
+		</property>
+		<property name="formView">
+			<value>module/@MODULE_ID@/options</value>
+		</property>
+		<property name="successView">
+			<value>options.htm</value>
+		</property>
+		<property name="validator">
+			<bean class="@MODULE_PACKAGE@.validator.OptionsValidator" />
+		</property>
+	</bean>
+
+	<!-- ========================= Services ========================= -->
+
+	<bean parent="serviceContext">
+		<property name="moduleService">
+			<list>
+				<value>@MODULE_PACKAGE@.LogManagerService</value>
+				<bean
+					class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+					<property name="transactionManager">
+						<ref bean="transactionManager" />
+					</property> <!-- more req stuff -->
+					<property name="target">
+						<bean class="@MODULE_PACKAGE@.impl.LogManagerServiceImpl">
+							<property name="logManagerDAO">
+								<bean class="@MODULE_PACKAGE@.db.hibernate.HibernateLogManagerDAO">
+									<property name="sessionFactory">
+										<ref bean="sessionFactory" />
+									</property>
+								</bean>
+							</property>
+						</bean>
+					</property>
+					<property name="preInterceptors">
+						<list>
+							<ref bean="authorizationInterceptor" />
+						</list>
+					</property>
+					<property name="transactionAttributeSource">
+						<bean
+							class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- ========================= Other beans ========================= -->
+	
+	<bean class="@MODULE_PACKAGE@.web.util.ContextProvider" />
+	
+</beans>
