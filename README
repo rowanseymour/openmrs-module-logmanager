@@ -1,0 +1,4 @@
+Log Manager module for OpenMRS
+==============================
+
+This module allows OpenMRS administrators to easily view log messages and change the log4j configuration at runtime.
