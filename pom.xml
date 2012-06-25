@@ -11,10 +11,10 @@
 	<url>https://wiki.openmrs.org/display/docs/Log+Manager+Module</url>
 
 	<scm>
-		<connection>scm:svn:http://svn.openmrs.org/openmrs-modules/logmanager/trunk/</connection>
-		<developerConnection>scm:svn:http://svn.openmrs.org/openmrs-modules/logmanager/trunk/</developerConnection>
-		<url>http://svn.openmrs.org/openmrs-modules/logmanager/trunk/</url>
-	</scm>
+        <connection>scm:git:https://github.com/rowanseymour/openmrs-module-logmanager/</connection>
+        <developerConnection>scm:git:https://github.com/rowanseymour/openmrs-module-logmanager/</developerConnection>
+        <url>https://github.com/rowanseymour/openmrs-module-logmanager/</url>
+    </scm>
 
 	<modules>
 		<module>api</module>
